@@ -1,0 +1,4 @@
+# Non-project-specific build files:
+project.properties
+CordovaLib.iml
+/build

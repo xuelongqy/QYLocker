@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">QYLocker</string>
+    <string name="launcher_name">@string/app_name</string>
+    <string name="activity_name">@string/launcher_name</string>
+    <string name="accessibility_description">After opening, you can efficiently access the current running program</string>
+    <string name="protection_service">Protection service</string>
+    <string name="traditional_mode">Traditional mode</string>
+    <string name="efficient_mode">Efficient mode</string>
+</resources>

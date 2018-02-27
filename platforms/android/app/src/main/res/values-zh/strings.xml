@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">轻易锁</string>
+    <string name="launcher_name">@string/app_name</string>
+    <string name="activity_name">@string/launcher_name</string>
+    <string name="accessibility_description">开启后能够高效的获取当前运行的程序</string>
+    <string name="protection_service">服务守护</string>
+    <string name="traditional_mode">传统模式</string>
+    <string name="efficient_mode">高效模式</string>
+</resources>
