@@ -10,6 +10,7 @@ import lang from './assets/common/lang/lang'
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
 import 'muse-ui/dist/theme-light.css'
+import VueScroller from 'vue-scroller'
 
 Vue.config.productionTip = false
 
@@ -24,6 +25,9 @@ if (PlatformUtil.isPlatform("Android")){//安卓
 
 // 添加muse-ui
 Vue.use(MuseUI)
+
+// 添加下拉刷新回弹
+Vue.use(VueScroller)
 
 // 添加多国语言支持
 Vue.use(VueI18n)

@@ -21,6 +21,7 @@ class ThisApp {
         // SharedPreferences相关
         val PREFERENCE_PROVIDER_AUTHORITY = "com.qingyi.applocker.preferences"
         val PREFS_LOCK_APPS = "lock_apps"
+        val PREFS_LOCK_APPS_KEY = "LockApps"
         val PREFS_HISTORY = "history"
     }
 }

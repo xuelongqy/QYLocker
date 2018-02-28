@@ -26,6 +26,9 @@ export let cordovaAvailable = function () {
 export let exec = function (success, fail, service, action, args = null) {
   if (cordovaAvailable()){
     cordova.exec(success, fail, service, action, args)
+  }else {
+    if (success != null) success()
+    if (fail != null) success()
   }
 }
 

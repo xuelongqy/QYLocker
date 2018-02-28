@@ -73,10 +73,16 @@
       }
       /*App名称*/
       .al_app_item_name {
+        /*width: calc(100% - 15px - 50px - 48px - 47px - 20px);*/
+        width: calc(100% - 180px);
         line-height: 50px;
         float: left;
         margin: 0 15px;
         font-size: 1rem;
+        text-align: left;
+        white-space:nowrap;
+        text-overflow:ellipsis;
+        overflow:hidden;
       }
       /*按钮盒子*/
       .al_app_item_switch_box, .al_app_item_settings_box {

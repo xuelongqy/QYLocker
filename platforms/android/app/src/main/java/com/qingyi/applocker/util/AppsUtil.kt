@@ -11,6 +11,9 @@ import java.util.ArrayList
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import java.io.IOException
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.util.Log
 
 
 /**
@@ -24,7 +27,7 @@ class AppsUtil(context: Context) {
     //记录上下文
     private val mContext = context
     // Json操作对象
-    var gson = GsonBuilder().setPrettyPrinting().create()
+    private var gson = GsonBuilder().setPrettyPrinting().create()
 
     /**
      * 获取所有应用信息
@@ -35,22 +38,34 @@ class AppsUtil(context: Context) {
      * @return App信息集合
      */
     fun getAllAppsInfo(): ArrayList<AppInfoBean> {
-        //缓存应用信息集合
-        var appInfoList = ArrayList<AppInfoBean>()
-        //获取设备中安装的所有应用信息
-        var packageList = mContext.packageManager.getInstalledPackages(0)
-        //遍历应用信息
-        packageList.forEach {
-            var appInfotmp = AppInfoBean(
-                    appName =  it.applicationInfo.loadLabel(mContext.getPackageManager()).toString(),
-                    packageName = it.packageName,
-                    versionName = it.versionName,
-                    versionCode = it.versionCode,
-                    appIcon = it.applicationInfo.loadIcon(mContext.getPackageManager()),
-                    isSystemAPP = it.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
-            )
-            appInfoList.add(appInfotmp)
+        // 缓存应用信息集合
+        val appInfoList = ArrayList<AppInfoBean>()
+        // 获取设备中安装的所有应用信息
+        val packageList = mContext.packageManager.getInstalledPackages(0)
+        val packageMap = HashMap<String, PackageInfo>()
+        packageList.forEach{
+                packageMap[it.packageName] = it
         }
+        // 获取具有图标启动项的应用
+        val intent = Intent(Intent.ACTION_MAIN, null)
+        intent.addCategory(Intent.CATEGORY_LAUNCHER)
+        val resolveInfoList = mContext.packageManager.queryIntentActivities(intent, 0)
+        //遍历应用信息
+        resolveInfoList.forEach {
+            if (packageMap.containsKey(it.activityInfo.packageName)) {
+                val p = packageMap[it.activityInfo.packageName]!!
+                val appInfoTmp = AppInfoBean(
+                        appName =  p.applicationInfo.loadLabel(mContext.packageManager).toString(),
+                        packageName = p.packageName,
+                        versionName = p.versionName,
+                        versionCode = p.versionCode,
+                        appIcon = p.applicationInfo.loadIcon(mContext.packageManager),
+                        isSystemAPP = p.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
+                )
+                appInfoList.add(appInfoTmp)
+            }
+        }
+        LoggerUtil.logAndroid(Log.INFO, "getAllAppsInfo", "All app num is " + appInfoList.size)
         return appInfoList
     }
 
