@@ -5,6 +5,7 @@ import com.qingyi.applocker.bean.LockAppConfigBean
 import com.crossbowffs.remotepreferences.RemotePreferences
 import android.content.SharedPreferences
 import com.google.gson.GsonBuilder
+import com.qingyi.applocker.filter.AppsFilter
 import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
 
 
@@ -112,6 +113,6 @@ class LockAppsPrefs(val context: Context) {
         var isLock: Boolean = false // 是否开启应用锁
         var theme: String = "" // 主题
         var password: String = "" // 密码
-        var lockApps: ArrayList<LockAppConfigBean> = arrayListOf() // 加锁的应用
+        var lockApps: ArrayList<LockAppConfigBean> = arrayListOf(LockAppConfigBean(ThisApp.PACKAGE_NAME)) // 加锁的应用
     }
 }

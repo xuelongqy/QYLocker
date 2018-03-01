@@ -14,6 +14,7 @@ import java.io.IOException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.util.Log
+import com.qingyi.applocker.filter.AppsFilter
 
 
 /**
@@ -53,6 +54,11 @@ class AppsUtil(context: Context) {
         //遍历应用信息
         resolveInfoList.forEach {
             if (packageMap.containsKey(it.activityInfo.packageName)) {
+                // 验证过滤名单
+                if (AppsFilter.AppsFilterMap.containsKey(it.activityInfo.packageName)){
+                    return@forEach
+                }
+                // 添加应用信息
                 val p = packageMap[it.activityInfo.packageName]!!
                 val appInfoTmp = AppInfoBean(
                         appName =  p.applicationInfo.loadLabel(mContext.packageManager).toString(),

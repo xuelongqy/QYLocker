@@ -1,5 +1,8 @@
 package com.qingyi.applocker.filter
 
+import com.qingyi.applocker.bean.LockAppConfigBean
+import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
+
 /**
  * @Title: AppsFilter类
  * @Package: com.qingyi.applocker.filter
@@ -12,4 +15,10 @@ package com.qingyi.applocker.filter
  * @exception
 */
 class AppsFilter {
+    companion object {
+        // 应用过滤名单
+        val AppsFilterMap:Map<String, LockAppConfigBean> = mapOf(
+                ThisApp.PACKAGE_NAME to LockAppConfigBean(ThisApp.PACKAGE_NAME)
+        )
+    }
 }
