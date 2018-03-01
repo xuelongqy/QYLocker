@@ -16,7 +16,11 @@ export default {
     // 设备准备完成
     deviceReady: false,
     // 状态栏高度
-    topHeight: 0
+    topHeight: 0,
+    // 键盘是否弹起
+    keyboardVisible: false,
+    // 键盘高度
+    keyboardHeight: 0
   },
   // 同步方法
   mutations: {
@@ -27,6 +31,14 @@ export default {
     // 设置状态栏高度
     setTopHeight(state, height) {
       state.topHeight = height
+    },
+    // 设置键盘弹起状态
+    setKeyboardVisible(state, status) {
+      state.keyboardVisible = status
+    },
+    // 设置键盘高度
+    setKeyboardHeight(state, height) {
+      state.keyboardHeight = height
     }
   },
   // 异步方法

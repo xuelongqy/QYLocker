@@ -21,16 +21,19 @@
         <!--App条目-->
         <app-item v-for="appInfo in appsInfoList"
                   :key = 'appInfo.packageName'
-                  :appName="appInfo.appName"
-                  :appIcon="appInfo.appIcon">
+                  :appInfo = "appInfo">
         </app-item>
       </scroller>
     </div>
+    <!--App搜索框-->
+    <app-search :onSearchKey="onSearchKey">
+    </app-search>
   </div>
 </template>
 
 <script>
   import AppItem from './AppItem/AppItem'
+  import AppSearch from './AppSearch/AppSearch'
 
   export default {
     name: "AppList",
@@ -45,25 +48,34 @@
     data() {
       return {
         // 当前激活的选项卡
-        activeTab: 'tabAll'
+        activeTab: 'tabAll',
+        // 搜索关键字
+        searchKey: ""
       }
     },
     // 计算方法
     computed: {
       // 全部应用
       appsInfoList() {
-        return this.$store.state.AppList.allAppsInfo.filter((appInfo) => {
+        // 判断应用类型
+        var appsInfo = this.$store.state.AppList.allAppsInfo.filter((appInfo) => {
           return (this.activeTab === 'tabAll' ||
             (this.activeTab === 'tabNonSys' && !appInfo.isSystemAPP) ||
             (this.activeTab === 'tabSys' && appInfo.isSystemAPP))
         })
+        // 匹配关键字搜索
+        if (this.searchKey == "" || this.searchKey == null)
+          return appsInfo
+        else {
+          return appsInfo.filter((appsInfo) => {
+              return appsInfo.appName.indexOf(this.searchKey) > -1
+            }
+          )
+        }
       }
     },
     // 监听器
     watch: {
-      appsInfoList(newValue, oldValue) {
-        // console.log(newValue)
-      }
     },
     // 方法
     methods: {
@@ -75,11 +87,17 @@
       refreshAppInfo: function (done) {
         done()
         this.$store.dispatch('getAllAppsInfo')
+      },
+      // 搜索关键字改变
+      onSearchKey: function (key) {
+        console.log(key)
+        this.searchKey = key
       }
     },
     // 组件
     components: {
-      'app-item': AppItem
+      'app-item': AppItem,
+      'app-search': AppSearch
     }
   }
 </script>

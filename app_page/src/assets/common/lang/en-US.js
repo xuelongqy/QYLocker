@@ -51,6 +51,7 @@ module.exports = {
   appList: {
     "allApps": "All",
     "sysApps": "System",
-    "nonSysApps": "User"
+    "nonSysApps": "User",
+    "search": "Search"
   }
 }

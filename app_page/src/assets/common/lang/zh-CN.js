@@ -51,6 +51,7 @@ module.exports = {
   appList: {
     "allApps": "所有应用",
     "sysApps": "系统应用",
-    "nonSysApps": "用户应用"
+    "nonSysApps": "用户应用",
+    "search": "搜索"
   }
 }

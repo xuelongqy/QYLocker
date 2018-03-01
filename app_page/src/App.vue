@@ -16,6 +16,21 @@
         // 绑定设备初始化完成事件
         document.addEventListener('deviceready', () => {
           this.$store.dispatch('deviceIsReady')
+          // 注册键盘抬起关闭事件
+          window.addEventListener('keyboardWillShow', (ev) => {
+            this.$store.commit('setKeyboardVisible', true)
+            this.$store.commit('setKeyboardHeight', event.keyboardHeight)
+          })
+          window.addEventListener('keyboardDidShow', (ev) => {
+            // Describe your logic which will be run each time when keyboard is about to be shown.
+            // console.log(event.keyboardHeight);
+          })
+          window.addEventListener('keyboardWillHide', () => {
+            this.$store.commit('setKeyboardVisible', false)
+          })
+          window.addEventListener('keyboardDidHide', () => {
+            // Describe your logic which will be run each time keyboard is closed.
+          })
         }, false)
       }else {
         this.$store.commit('setDeviceReady')

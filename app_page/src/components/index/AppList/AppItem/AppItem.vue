@@ -2,8 +2,8 @@
   <!--App条目-->
   <mu-flat-button class="al_app_item" @click="onAppItem">
     <div class="al_app_item_box">
-      <img :src="appIcon" :alt="appName">
-      <p class="al_app_item_name">{{appName}}</p>
+      <img :src="appInfo.appIcon" :alt="appInfo.appName">
+      <p class="al_app_item_name">{{appInfo.appName}}</p>
       <div class="al_app_item_switch_box">
         <mu-switch/>
       </div>
@@ -19,20 +19,21 @@
     name: "app-item",
     // 参数
     props: {
-      // App名称
-      appName: {
-        type: String,
-        default: ""
-      },
-      // App图标
-      appIcon: {
-        type: String,
-        default: ""
-      },
-      // App包名
-      packageName: {
-        type: String,
-        default: ""
+      // App信息
+      appInfo: {
+        type: Object,
+        default: {
+          "appIcon": "",
+          "appName": "",
+          "isIndependent": false,
+          "isLock": false,
+          "isSystemAPP": true,
+          "packageName": "",
+          "password": "",
+          "theme": "",
+          "versionCode": 0,
+          "versionName": ""
+        }
       }
     },
     // 方法
