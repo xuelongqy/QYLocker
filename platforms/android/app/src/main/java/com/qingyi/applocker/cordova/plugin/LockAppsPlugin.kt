@@ -16,7 +16,6 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import com.google.gson.GsonBuilder
 
-
 /**
  * @Title: LockAppsPlugin类
  * @Package: com.qingyi.applocker.cordova.plugin
@@ -29,6 +28,11 @@ import com.google.gson.GsonBuilder
  * @exception
 */
 class LockAppsPlugin : CordovaPlugin() {
+    // 伴生对象
+    companion object {
+        // 类的标识
+        val TAG = LockAppsPlugin::class.java.simpleName
+    }
 
     // 缓存调用插件的Activity
     lateinit var mActivity: Activity
@@ -37,7 +41,7 @@ class LockAppsPlugin : CordovaPlugin() {
     // 加锁应用配置
     lateinit var lockAppsPrefs: LockAppsPrefs
     // Json操作对象
-    private var gson = GsonBuilder().setPrettyPrinting().create()
+    private val gson = GsonBuilder().create()
 
     /**
      * 重写初始化插件方法
@@ -75,18 +79,31 @@ class LockAppsPlugin : CordovaPlugin() {
     */
     override fun execute(action: String?, args: JSONArray?, callbackContext: CallbackContext?): Boolean {
         when (action) {
+            // 获取基本的配置信息
+            "getLockAppsConfig" -> {
+                callbackContext!!.success(GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
+                        .toJson(lockAppsPrefs.lockAppsConfig))
+                callbackContext.error("{}")
+            }
             // 获取应用列表
             "getAppsInfo" -> {
-                object : Thread() {
-                    override fun run() {
-                        val allAppsInfo = getAllAppsLockInfo()
-                        mActivity.runOnUiThread {
-                            callbackContext!!.success(allAppsInfo)
-                            callbackContext.error("[]")
-                        }
+                cordova.threadPool.execute {
+                    // Cordova多线程处理
+                    val allAppsInfo = getAllAppsLockInfo()
+                    mActivity.runOnUiThread {
+                        callbackContext!!.success(allAppsInfo)
+                        callbackContext.error("[]")
                     }
-                }.start()
+                }
                 return true
+            }
+            // 添加加锁应用
+            "addLockApp" -> {
+                lockAppsPrefs.addLockApp(args!!.getString(0))
+            }
+            // 删除加锁应用
+            "removeLockApp" -> {
+                lockAppsPrefs.removeLockApp(args!!.getString(0))
             }
         }
         return false
@@ -121,9 +138,10 @@ class LockAppsPlugin : CordovaPlugin() {
             allAppsLockInfo[appInfoJsonBean.packageName] = appInfoJsonBean
         }
         // 读取加锁应用
-        for (lockApp in lockAppsPrefs.lockApps) {
-            if (allAppsLockInfo.containsKey(lockApp.packageName)) {
-                val appInfoJsonBean = allAppsLockInfo[lockApp.packageName]!!
+        for ((pkg, lockApp) in lockAppsPrefs.lockAppsConfig.lockApps) {
+            if (allAppsLockInfo.containsKey(pkg)) {
+                val appInfoJsonBean = allAppsLockInfo[pkg]!!
+                appInfoJsonBean.isLock = true
                 appInfoJsonBean.isIndependent = lockApp.isIndependent
                 appInfoJsonBean.theme = lockApp.theme
                 appInfoJsonBean.password = lockApp.password

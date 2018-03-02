@@ -15,6 +15,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.util.Log
 import com.qingyi.applocker.filter.AppsFilter
+import com.qingyi.applocker.preferences.LockAppsPrefs
 
 
 /**
@@ -24,11 +25,11 @@ import com.qingyi.applocker.filter.AppsFilter
  * @author qingyi xuelongqy@foxmail.com
  * @date 2017/8/13 23:56
  */
-class AppsUtil(context: Context) {
+class AppsUtil(val context: Context) {
     //记录上下文
     private val mContext = context
     // Json操作对象
-    private var gson = GsonBuilder().setPrettyPrinting().create()
+    private var gson = GsonBuilder().create()
 
     /**
      * 获取所有应用信息
@@ -54,12 +55,13 @@ class AppsUtil(context: Context) {
         //遍历应用信息
         resolveInfoList.forEach {
             if (packageMap.containsKey(it.activityInfo.packageName)) {
+                val packageName = it.activityInfo.packageName
                 // 验证过滤名单
-                if (AppsFilter.AppsFilterMap.containsKey(it.activityInfo.packageName)){
+                if (AppsFilter.AppsFilterMap.containsKey(packageName)){
                     return@forEach
                 }
                 // 添加应用信息
-                val p = packageMap[it.activityInfo.packageName]!!
+                val p = packageMap[packageName]!!
                 val appInfoTmp = AppInfoBean(
                         appName =  p.applicationInfo.loadLabel(mContext.packageManager).toString(),
                         packageName = p.packageName,
