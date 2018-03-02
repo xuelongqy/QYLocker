@@ -5,7 +5,7 @@
       <img :src="appInfo.appIcon" :alt="appInfo.appName">
       <p class="al_app_item_name">{{appInfo.appName}}</p>
       <div class="al_app_item_switch_box">
-        <mu-switch/>
+        <mu-switch v-model="isLock"/>
       </div>
       <div class="al_app_item_settings_box">
         <mu-icon-button icon="settings" class="al_app_item_settings_icon" @click.stop="onAppLockSettings"/>
@@ -15,10 +15,23 @@
 </template>
 
 <script>
+  import LockAppsUtil from '../../../../assets/util/cordova/lockAppsUtil'
+
   export default {
     name: "app-item",
+    // 数据
+    data() {
+      return {
+        isLock: this.appInfo.isLock
+      }
+    },
     // 参数
     props: {
+      // 下标
+      index: {
+        type: Number,
+        default: -1
+      },
       // App信息
       appInfo: {
         type: Object,
@@ -34,6 +47,22 @@
           "versionCode": 0,
           "versionName": ""
         }
+      }
+    },
+    // 监听器
+    watch: {
+      // 设置应用加锁状态
+      isLock(newValue, oldValue) {
+        if (newValue) {
+          LockAppsUtil.addLockApp(this.appInfo.packageName)
+        }else {
+          LockAppsUtil.removeLockApp(this.appInfo.packageName)
+        }
+        this.$store.commit('updateAppsInfoByView', {
+          index: this.index,
+          key: 'isLock',
+          value: newValue
+        })
       }
     },
     // 方法

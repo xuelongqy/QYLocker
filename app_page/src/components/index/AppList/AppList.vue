@@ -19,8 +19,9 @@
       <scroller
           :on-refresh="refreshAppInfo">
         <!--App条目-->
-        <app-item v-for="appInfo in appsInfoList"
+        <app-item v-for="(appInfo,index) in appsInfoList"
                   :key = 'appInfo.packageName'
+                  :index = 'index'
                   :appInfo = "appInfo">
         </app-item>
       </scroller>
@@ -39,6 +40,8 @@
     name: "AppList",
     // 页面启动时
     created() {
+      // 基本加锁配置信息
+      this.$store.dispatch('getLockAppsConfig')
       // 获取应用信息
       if (this.$store.state.AppList.allAppsInfo.length === 0) {
         this.$store.dispatch('getAllAppsInfo')
