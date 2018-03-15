@@ -131,7 +131,7 @@ class LockerServiceUtil(context: Context) {
     fun startAccessibilityLockerService() {
         //判断是否拥有权限
         if(!haveAccessibilityPermission(mContext)){
-            setAccessibilityPermission(mContext);
+            setAccessibilityPermission(mContext)
             return
         }
         //启动服务

@@ -23,17 +23,17 @@ class MainActivity : BaseHybridActivity(true, false) {
             moveTaskToBack(true)
         }
 
-        // Set by <content src="index.html" /> in config.xml
-        // loadUrl(launchUrl)
-        loadUrl("http://192.168.1.113:8080")
+        // Set by <content src="cordova_index.html" /> in config.xml
+         loadUrl(launchUrl)
+//        loadUrl("https://www.baidu.com")
 
         initMethod()
     }
 
     fun initMethod(){
-        // var lockerServiceUtil = LockerServiceUtil(this)
-        // lockerServiceUtil.startUsageStatsLockerService()
-        // lockerServiceUtil.startAccessibilityLockerService()
-        // LoggerUtil.logAndroid(Log.INFO,"AppInfoList",AppsUtil(this).getAllAppsInfo().toString())
+//         var lockerServiceUtil = LockerServiceUtil(this)
+//        // lockerServiceUtil.startUsageStatsLockerService()
+//         lockerServiceUtil.startAccessibilityLockerService()
+//         LoggerUtil.logAndroid(Log.INFO,"AppInfoList",AppsUtil(this).getAllAppsInfo().toString())
     }
 }

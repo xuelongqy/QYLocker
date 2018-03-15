@@ -7,9 +7,11 @@ import android.app.Service
 import android.content.Intent
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
+import android.widget.Toast
 import com.qingyi.applocker.R
 import com.qingyi.applocker.activity.AppLockActivity
 import com.qingyi.applocker.activity.MainActivity
+import com.qingyi.applocker.preferences.LockAppsPrefs
 import com.qingyi.applocker.util.LoggerUtil
 
 /**
@@ -26,8 +28,10 @@ class AccessibilityLockerService: AccessibilityService() {
         private val NOTICATION_ID = 0x1414
     }
 
-    //缓存当前运行的程序
+    // 缓存当前运行的程序
     private var foregroundPackageName = ""
+    // 加锁应用配置
+    lateinit var lockAppsPrefs: LockAppsPrefs
 
     /**
      * 重写启动命令方法
@@ -42,6 +46,7 @@ class AccessibilityLockerService: AccessibilityService() {
      * @return 启动标识
      */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        lockAppsPrefs = LockAppsPrefs(this)
         return super.onStartCommand(intent, Service.START_FLAG_REDELIVERY, startId)
     }
 
@@ -95,13 +100,14 @@ class AccessibilityLockerService: AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event!!.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             foregroundPackageName = event.packageName.toString()
-            LoggerUtil.logAndroid(Log.INFO,"onAccessibilityEvent", "package=${this.foregroundPackageName}")
+//            LoggerUtil.logAndroid(Log.INFO,"onAccessibilityEvent", "package=${this.foregroundPackageName}")
 
             //模拟应用锁
-//            if (foregroundPackageName.equals("com.android.settings")){
+            if (lockAppsPrefs.lockAppsConfig.lockApps.containsKey(foregroundPackageName)){
 //                var intent = Intent(this,AppLockActivity::class.java)
 //                this.startActivity(intent)
-//            }
+//                Toast.makeText(this, "加锁应用 $foregroundPackageName", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
