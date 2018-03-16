@@ -24,8 +24,8 @@ class MainActivity : BaseHybridActivity(true, false) {
         }
 
         // Set by <content src="cordova_index.html" /> in config.xml
-         loadUrl(launchUrl)
-//        loadUrl("https://www.baidu.com")
+//         loadUrl(launchUrl)
+        loadUrl("http://192.168.1.113:8080")
 
         initMethod()
     }

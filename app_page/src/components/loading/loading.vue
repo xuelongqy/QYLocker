@@ -19,7 +19,7 @@
     }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   #loading {
     position: absolute;
     top: 40%;

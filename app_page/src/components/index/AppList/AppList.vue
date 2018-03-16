@@ -105,7 +105,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   #app_list {
     // 加载盒子,加载时覆盖
     .al_load_box {

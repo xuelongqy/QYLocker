@@ -90,7 +90,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   @import "../../assets/lib/responsive/responsive.css";
   @import "../../../node_modules/animate.css/animate.css";
 

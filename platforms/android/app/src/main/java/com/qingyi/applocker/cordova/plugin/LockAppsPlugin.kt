@@ -14,7 +14,9 @@ import android.util.Base64
 import java.io.ByteArrayOutputStream
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.util.Log
 import com.google.gson.GsonBuilder
+import com.qingyi.applocker.util.LoggerUtil
 
 /**
  * @Title: LockAppsPlugin类

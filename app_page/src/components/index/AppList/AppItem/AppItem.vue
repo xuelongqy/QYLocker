@@ -2,13 +2,19 @@
   <!--App条目-->
   <mu-flat-button class="al_app_item" @click="onAppItem">
     <div class="al_app_item_box">
+      <!--应用图标-->
       <img :src="appInfo.appIcon" :alt="appInfo.appName">
+      <!--应用名称-->
       <p class="al_app_item_name">{{appInfo.appName}}</p>
+      <!--开关盒子-->
       <div class="al_app_item_switch_box">
         <mu-switch v-model="isLock"/>
       </div>
+      <!--设置盒子-->
       <div class="al_app_item_settings_box">
-        <mu-icon-button icon="settings" class="al_app_item_settings_icon" @click.stop="onAppLockSettings"/>
+        <mu-icon-button icon="settings" class="al_app_item_settings_icon"
+                        iconClass="al_app_item_settings_icon_style"
+                        @click.stop="onAppLockSettings"/>
       </div>
     </div>
   </mu-flat-button>
@@ -79,7 +85,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   // App条目
   .al_app_item {
     width: 100%;
@@ -127,7 +133,12 @@
       /*设置按钮*/
       .al_app_item_settings_icon {
         color: grey;
-        margin: 0 10px;
+        margin: 1px 10px;
+
+        .al_app_item_settings_icon_style {
+          width: 24px;
+          height: 26px;
+        }
       }
     }
   }

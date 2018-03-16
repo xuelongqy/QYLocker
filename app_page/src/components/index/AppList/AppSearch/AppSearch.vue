@@ -82,7 +82,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   #app_search {
     position: absolute;
     bottom: 12px;
@@ -103,9 +103,17 @@
       // 搜索文字输入框
       .as_search_input {
         height: 50px;
+        line-height: 50px;
+        text-align: center;
         width: calc(100% - 80px);
         margin: 0 0 0 20px;
-        padding: 4px 0 0 0;
+
+        // muse-ui部分输入框样式
+        .mu-text-field-content {
+          height: 34px;
+          padding: 8px 0;
+          text-align: left;
+        }
       }
       // 搜索按钮
       .as_search_btn {
