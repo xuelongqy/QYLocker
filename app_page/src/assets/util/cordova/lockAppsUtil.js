@@ -50,6 +50,26 @@ export let getAppInfoList = function (callBack) {
 }
 
 /**
+ * @Title: setLockState方法
+ * @Description: 设置上锁状态
+ * @author XueLong xuelongqy@foxmail.com
+ * @date 2018/4/8 15:42
+ * @update_author
+ * @update_time
+ * @version V1.0
+ * @param state 上锁状态
+ * @return
+ * @throws
+*/
+export let setLockState = function (state) {
+  ExecUtil.noCBExec(
+    "LockApps",
+    "setLockState",
+    [state]
+  )
+}
+
+/**
  * @Title: addLockApp方法
  * @Description: 添加加锁应用
  * @author XueLong xuelongqy@foxmail.com
@@ -94,6 +114,7 @@ export let removeLockApp = function (pkg) {
 export default {
   getLockAppsConfig,
   getAppInfoList,
+  setLockState,
   addLockApp,
   removeLockApp
 }

@@ -32,7 +32,7 @@
     <div id="index_app_bar_box" class="animated fadeInDown mu-badge-primary" :style="'padding-top: ' + topHeight + 'px'">
       <mu-appbar :title="this.$t('index.menu')" class="index_header_box" :zDepth="0">
         <mu-icon-button icon="menu" slot="left" @click="sidebarToggle()"/>
-        <mu-icon-button :icon="lockState?'lock_open':'lock_outline'" @click="$store.dispatch('modLockState', !lockState)" slot="right"/>
+        <mu-icon-button :icon="lockState?'lock_outline':'lock_open'" @click="$store.dispatch('modLockState', !lockState)" slot="right"/>
         <mu-icon-button icon="more_vert" slot="right"/>
       </mu-appbar>
     </div>
@@ -73,7 +73,7 @@
       },
       // 获取上锁状态
       lockState: function () {
-        return this.$store.state.Settings.lockState
+        return this.$store.state.LockAppsConfig.lockAppsConfig.isLock
       }
     },
     // 方法

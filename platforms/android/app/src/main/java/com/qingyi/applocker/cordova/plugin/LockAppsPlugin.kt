@@ -99,6 +99,10 @@ class LockAppsPlugin : CordovaPlugin() {
                 }
                 return true
             }
+            // 设置上锁状态
+            "setLockState" -> {
+                lockAppsPrefs.setLockState(args!!.getBoolean(0))
+            }
             // 添加加锁应用
             "addLockApp" -> {
                 lockAppsPrefs.addLockApp(args!!.getString(0))

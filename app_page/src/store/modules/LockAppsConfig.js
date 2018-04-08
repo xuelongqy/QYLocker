@@ -28,7 +28,12 @@ export default {
   mutations: {
     // 设置基本加锁配置信息
     setLockAppsConfig(state, conf) {
-      state.lockAppsConfig = conf
+      // 判断是否为Json格式
+      if (conf instanceof Object) {
+        state.lockAppsConfig = conf
+      }else {
+        state.lockAppsConfig = JSON.parse(conf)
+      }
     },
     // 所有应用信息
     setAllAppsInfo(state, allAppsInfo) {
@@ -43,6 +48,10 @@ export default {
     // 设置加载应用信息状态
     setLoadAppsInfo(state, status) {
       state.loadAppsInfo = status
+    },
+    // 修改上锁状态
+    setLockState(state, lockState) {
+      Vue.set(state.lockAppsConfig, "isLock", lockState)
     },
     // 通过界面操作更新应用列表信息
     updateAppsInfoByView(state, {index, key, value}) {
@@ -67,6 +76,11 @@ export default {
         }
         commit('setAllAppsInfo', appsInfo)
       })
+    },
+    // 修改并同步上锁状态
+    modLockState({ commit }, lockState) {
+      LockAppsUtil.setLockState(lockState)
+      commit('setLockState', lockState)
     }
   }
 }

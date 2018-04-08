@@ -8,25 +8,14 @@
  * @update_time
  * @version V1.0
 */
-
 export default {
   // 数据源
   state: {
-    // 上锁状态
-    lockState: false
   },
   // 同步方法
   mutations: {
-    // 设置上锁状态
-    setLockState(state, lockState) {
-      state.lockState = lockState
-    }
   },
   // 异步方法
   actions: {
-    // 修改并同步上锁状态
-    modLockState({ commit }, lockState) {
-      commit('setLockState', lockState)
-    }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div id="app_list">
     <!--环形加载条-->
-    <div v-if="$store.state.AppList.loadAppsInfo" class="al_load_box">
+    <div v-if="$store.state.LockAppsConfig.loadAppsInfo" class="al_load_box">
       <div class="al_load_bar_box">
         <mu-paper class="al_load_bar" circle :zDepth="3">
           <mu-circular-progress class="al_load_bar_progress" :size="30"/>
@@ -43,7 +43,7 @@
       // 基本加锁配置信息
       this.$store.dispatch('getLockAppsConfig')
       // 获取应用信息
-      if (this.$store.state.AppList.allAppsInfo.length === 0) {
+      if (this.$store.state.LockAppsConfig.allAppsInfo.length === 0) {
         this.$store.dispatch('getAllAppsInfo')
       }
     },
@@ -61,7 +61,7 @@
       // 全部应用
       appsInfoList() {
         // 判断应用类型
-        var appsInfo = this.$store.state.AppList.allAppsInfo.filter((appInfo) => {
+        var appsInfo = this.$store.state.LockAppsConfig.allAppsInfo.filter((appInfo) => {
           return (this.activeTab === 'tabAll' ||
             (this.activeTab === 'tabNonSys' && !appInfo.isSystemAPP) ||
             (this.activeTab === 'tabSys' && appInfo.isSystemAPP))
@@ -109,7 +109,7 @@
   #app_list {
     // 加载盒子,加载时覆盖
     .al_load_box {
-      position: absolute;
+      position: fixed;
       top: 0;
       bottom: 0;
       left: 0;
@@ -118,7 +118,7 @@
     }
     // 环形加载条
     .al_load_bar_box {
-      margin-top: 60px;
+      margin-top: 140px;
       width: 100%;
       text-align: center;
       .al_load_bar {

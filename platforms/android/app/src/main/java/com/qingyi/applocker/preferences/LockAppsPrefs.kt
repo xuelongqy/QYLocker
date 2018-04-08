@@ -122,6 +122,25 @@ class LockAppsPrefs(val context: Context) {
     }
 
     /**
+     * @Title: setLockState方法
+     * @Class: LockAppsPrefs
+     * @Description: 设置上锁状态
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/4/8 15:38
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param state[Boolean] 上锁状态
+     * @return
+     * @throws
+    */
+    fun setLockState(state: Boolean) {
+        LoggerUtil.logAndroid(Log.INFO, TAG, TAG + ".setLockState: state = $state")
+        lockAppsConfig.isLock = state
+        lockAppsJson = gson.toJson(lockAppsConfig)
+    }
+
+    /**
      * @Title: LockAppsConfig类
      * @Package: com.qingyi.applocker.preferences
      * @Description: 加锁App配置
