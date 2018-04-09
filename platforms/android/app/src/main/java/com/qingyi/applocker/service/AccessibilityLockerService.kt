@@ -103,11 +103,11 @@ class AccessibilityLockerService: AccessibilityService() {
 //            LoggerUtil.logAndroid(Log.INFO,"onAccessibilityEvent", "package=${this.foregroundPackageName}")
 
             //模拟应用锁
-            if (lockAppsPrefs.lockAppsConfig.lockApps.containsKey(foregroundPackageName)){
-//                var intent = Intent(this,AppLockActivity::class.java)
-//                this.startActivity(intent)
-//                Toast.makeText(this, "加锁应用 $foregroundPackageName", Toast.LENGTH_SHORT).show()
-            }
+//            if (lockAppsPrefs.lockAppsConfig.lockApps.containsKey(foregroundPackageName)){
+////                var intent = Intent(this,AppLockActivity::class.java)
+////                this.startActivity(intent)
+////                Toast.makeText(this, "加锁应用 $foregroundPackageName", Toast.LENGTH_SHORT).show()
+//            }
         }
     }
 

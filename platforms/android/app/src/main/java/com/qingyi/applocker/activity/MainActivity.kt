@@ -31,9 +31,9 @@ class MainActivity : BaseHybridActivity(true, false) {
     }
 
     fun initMethod(){
-//         var lockerServiceUtil = LockerServiceUtil(this)
-//        // lockerServiceUtil.startUsageStatsLockerService()
-//         lockerServiceUtil.startAccessibilityLockerService()
-//         LoggerUtil.logAndroid(Log.INFO,"AppInfoList",AppsUtil(this).getAllAppsInfo().toString())
+         var lockerServiceUtil = LockerServiceUtil(this)
+        // lockerServiceUtil.startUsageStatsLockerService()
+         lockerServiceUtil.startAccessibilityLockerService()
+         LoggerUtil.logAndroid(Log.INFO,"AppInfoList",AppsUtil(this).getAllAppsInfo().toString())
     }
 }

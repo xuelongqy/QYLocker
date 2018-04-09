@@ -27,7 +27,7 @@ class AppLockActivity: BaseHybridActivity(true, false) {
 
         //加载锁屏界面前端视图
         //loadUrl(launchUrl)
-        loadUrl("http://192.168.42.139:8082")
+        loadUrl("http://www.baidu.com")
 
         initMethod()
     }
