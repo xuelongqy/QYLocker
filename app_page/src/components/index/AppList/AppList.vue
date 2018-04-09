@@ -40,8 +40,6 @@
     name: "AppList",
     // 页面启动时
     created() {
-      // 基本加锁配置信息
-      this.$store.dispatch('getLockAppsConfig')
       // 获取应用信息
       if (this.$store.state.LockAppsConfig.allAppsInfo.length === 0) {
         this.$store.dispatch('getAllAppsInfo')

@@ -38,7 +38,7 @@
     </div>
     <!--主干区域-->
     <div class="index_main animated fadeInRight" :style="'top:'+(56+topHeight)+'px;'">
-      <router-view/>
+        <router-view/>
     </div>
   </div>
 </template>
@@ -57,6 +57,8 @@
     },
     // 页面创建时
     created() {
+      // 基本加锁配置信息
+      this.$store.dispatch('getLockAppsConfig')
       //设置标题
       document.title = this.$t('comm.appName')
       // jquery准备完毕,初始化jquery相关
@@ -83,7 +85,18 @@
         this.sidebarOpen = !this.sidebarOpen
       },
       // 侧边栏菜单选项
-      onSidebarMenuItem() {
+      onSidebarMenuItem(flag) {
+        switch (flag) {
+          case "AppList" :
+            this.$router.push("/index/app-list")
+            break
+          case "LockerTheme" :
+            this.$router.push("/index/theme")
+            break
+          case "Settings" :
+            this.$router.push("/index/settings")
+            break
+        }
         this.sidebarToggle()
       }
     }

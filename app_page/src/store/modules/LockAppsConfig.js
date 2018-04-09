@@ -28,6 +28,9 @@ export default {
   mutations: {
     // 设置基本加锁配置信息
     setLockAppsConfig(state, conf) {
+      if (typeof conf == 'undefined' || conf == null) {
+        return
+      }
       // 判断是否为Json格式
       if (conf instanceof Object) {
         state.lockAppsConfig = conf

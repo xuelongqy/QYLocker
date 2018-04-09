@@ -27,6 +27,17 @@ export default new Router({
           path: 'app-list',
           name: 'app-list',
           component: require('@/components/index/AppList/AppList.vue').default
+        },
+        {
+          path: 'theme',
+          name: 'theme',
+          component: require('@/components/index/Theme/Theme.vue').default
+        },
+
+        {
+          path: 'settings',
+          name: 'settings',
+          component: require('@/components/index/Settings/Settings.vue').default
         }
       ]
     }

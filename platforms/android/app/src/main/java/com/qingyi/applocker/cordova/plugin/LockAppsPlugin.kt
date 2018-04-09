@@ -86,6 +86,7 @@ class LockAppsPlugin : CordovaPlugin() {
                 callbackContext!!.success(GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
                         .toJson(lockAppsPrefs.lockAppsConfig))
                 callbackContext.error("{}")
+                return true
             }
             // 获取应用列表
             "getAppsInfo" -> {
@@ -102,14 +103,17 @@ class LockAppsPlugin : CordovaPlugin() {
             // 设置上锁状态
             "setLockState" -> {
                 lockAppsPrefs.setLockState(args!!.getBoolean(0))
+                return true
             }
             // 添加加锁应用
             "addLockApp" -> {
                 lockAppsPrefs.addLockApp(args!!.getString(0))
+                return true
             }
             // 删除加锁应用
             "removeLockApp" -> {
                 lockAppsPrefs.removeLockApp(args!!.getString(0))
+                return true
             }
         }
         return false
