@@ -1,18 +1,17 @@
 package com.qingyi.applocker.service
 
-import android.app.ActivityManager
-import android.app.IntentService
-import android.app.Notification
-import android.app.Service
+import android.app.*
 import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.util.Log
 import com.qingyi.applocker.R
 import com.qingyi.applocker.activity.MainActivity
-import android.app.PendingIntent
+import android.os.Build
 import com.qingyi.applocker.util.LoggerUtil
+import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
 
 
 /**
@@ -26,10 +25,14 @@ import com.qingyi.applocker.util.LoggerUtil
 class UsageStatsLockerService: IntentService("QYLocker-UsageStatsService") {
 
     companion object {
-        //设置轮询间隔时间
-        private val POLLING_INTERVAL:Long = 100
-        //设置常驻通知栏ID
-        private val NOTICATION_ID = 0x1313
+        // 设置轮询间隔时间
+        private const val POLLING_INTERVAL:Long = 100
+        // 设置常驻通知栏ID
+        private const val NOTICATION_ID = 0x1313
+        // 通道ID
+        const val CHANNEL_ID = ThisApp.PACKAGE_NAME + ".UsageStatsChannel"
+        // 通道名称
+        const val CHANNEL_NAME = "UsageStatsChannel"
     }
 
     //缓存activityManager
@@ -144,23 +147,37 @@ class UsageStatsLockerService: IntentService("QYLocker-UsageStatsService") {
      * @date 2017/8/15 16:02
      */
     fun startNotification() {
+        // 创建通道
+        val notificationChannel: NotificationChannel
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            notificationChannel = NotificationChannel(AccessibilityLockerService.CHANNEL_ID,
+                    AccessibilityLockerService.CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(notificationChannel)
+        }
         //触发事件绑定(开启主程序)
-        var notificationIntent = Intent(this,MainActivity::class.java)
+        val notificationIntent = Intent(this,MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
-        var notification = Notification.Builder(this)
-                //设置启动时间
-                .setWhen(System.currentTimeMillis())
-                //显示通知常驻时间
-                .setShowWhen(true)
-                //设置图标
-                .setSmallIcon(R.mipmap.icon)
-                //扩充通知头部内容,App名字后面
-                .setSubText(getString(R.string.traditional_mode))
-                //设置点击打开主程序
-                .setContentIntent(pendingIntent)
-                //生成Notification
-                .build()
+        // 创建通知
+        val notification: Notification.Builder
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notification = Notification.Builder(this, CHANNEL_ID)
+        }
+        else {
+            notification = Notification.Builder(this)
+        }
+        notification
+            //设置启动时间
+            .setWhen(System.currentTimeMillis())
+            //显示通知常驻时间
+            .setShowWhen(true)
+            //设置图标
+            .setSmallIcon(R.mipmap.icon)
+            //扩充通知头部内容,App名字后面
+            .setSubText(getString(R.string.traditional_mode))
+            //设置点击打开主程序
+            .setContentIntent(pendingIntent)
         //设置为前台服务
-        startForeground(NOTICATION_ID,notification)
+        startForeground(NOTICATION_ID,notification.build())
     }
 }

@@ -5,6 +5,7 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.os.Build
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.widget.Toast
@@ -13,6 +14,13 @@ import com.qingyi.applocker.activity.AppLockActivity
 import com.qingyi.applocker.activity.MainActivity
 import com.qingyi.applocker.preferences.LockAppsPrefs
 import com.qingyi.applocker.util.LoggerUtil
+import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
+import android.app.NotificationManager
+import android.app.NotificationChannel
+import android.content.Context
+import android.graphics.Color
+import com.qingyi.applocker.util.LockAppValidator
+
 
 /**
  * 使用Accessibility方式监听应用启动的服务
@@ -24,14 +32,18 @@ import com.qingyi.applocker.util.LoggerUtil
 class AccessibilityLockerService: AccessibilityService() {
 
     companion object {
-        //设置常驻通知栏ID
-        private val NOTICATION_ID = 0x1414
+        // 设置常驻通知栏ID
+        private const val NOTICATION_ID = 0x1414
+        // 通道ID
+        const val CHANNEL_ID = ThisApp.PACKAGE_NAME + ".AccessibilityChannel"
+        // 通道名称
+        const val CHANNEL_NAME = "AccessibilityChannel"
     }
 
     // 缓存当前运行的程序
     private var foregroundPackageName = ""
-    // 加锁应用配置
-    lateinit var lockAppsPrefs: LockAppsPrefs
+    // 加锁应用验证器
+    private lateinit var lockAppValidator: LockAppValidator
 
     /**
      * 重写启动命令方法
@@ -46,7 +58,6 @@ class AccessibilityLockerService: AccessibilityService() {
      * @return 启动标识
      */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        lockAppsPrefs = LockAppsPrefs(this)
         return super.onStartCommand(intent, Service.START_FLAG_REDELIVERY, startId)
     }
 
@@ -60,6 +71,8 @@ class AccessibilityLockerService: AccessibilityService() {
     override fun onServiceConnected() {
         //启动前台服务
         startNotification()
+        // 初始化验证器
+        lockAppValidator = LockAppValidator(this)
         super.onServiceConnected()
     }
 
@@ -99,14 +112,15 @@ class AccessibilityLockerService: AccessibilityService() {
      */
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event!!.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-            foregroundPackageName = event.packageName.toString()
+            // 验证应用
+            lockAppValidator.validatLockApp(event.packageName.toString(), event.className.toString())
+//            foregroundPackageName = event.packageName.toString()
 //            LoggerUtil.logAndroid(Log.INFO,"onAccessibilityEvent", "package=${this.foregroundPackageName}")
-
             //模拟应用锁
-//            if (lockAppsPrefs.lockAppsConfig.lockApps.containsKey(foregroundPackageName)){
-////                var intent = Intent(this,AppLockActivity::class.java)
-////                this.startActivity(intent)
-////                Toast.makeText(this, "加锁应用 $foregroundPackageName", Toast.LENGTH_SHORT).show()
+//            if (lockAppsPrefs!!.lockAppsConfig.lockApps.containsKey(foregroundPackageName)){
+//                var intent = Intent(this,AppLockActivity::class.java)
+//                this.startActivity(intent)
+//                Toast.makeText(this, "加锁应用 $foregroundPackageName ${event.className}", Toast.LENGTH_SHORT).show()
 //            }
         }
     }
@@ -120,23 +134,37 @@ class AccessibilityLockerService: AccessibilityService() {
      * @date 2017/8/15 16:02
      */
     fun startNotification() {
-        //触发事件绑定(开启主程序)
-        var notificationIntent = Intent(this, MainActivity::class.java)
+        // 创建通道
+        val notificationChannel: NotificationChannel
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            notificationChannel = NotificationChannel(CHANNEL_ID,
+                    CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
+            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(notificationChannel)
+        }
+        // 触发事件绑定(开启主程序)
+        val notificationIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
-        var notification = Notification.Builder(this)
-                //设置启动时间
-                .setWhen(System.currentTimeMillis())
-                //显示通知常驻时间
-                .setShowWhen(true)
-                //设置图标
-                .setSmallIcon(R.mipmap.icon)
-                //扩充通知头部内容,App名字后面
-                .setSubText(getString(R.string.efficient_mode))
-                //设置点击打开主程序
-                .setContentIntent(pendingIntent)
-                //生成Notification
-                .build()
+        // 创建通知
+        val notification: Notification.Builder
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notification = Notification.Builder(this, CHANNEL_ID)
+        }
+        else {
+            notification = Notification.Builder(this)
+        }
+        notification
+            //设置启动时间
+            .setWhen(System.currentTimeMillis())
+            //显示通知常驻时间
+            .setShowWhen(true)
+            //设置图标
+            .setSmallIcon(R.mipmap.icon)
+            //扩充通知头部内容,App名字后面
+            .setSubText(getString(R.string.efficient_mode))
+            //设置点击打开主程序
+            .setContentIntent(pendingIntent)
         //设置为前台服务
-        startForeground(NOTICATION_ID,notification)
+        startForeground(NOTICATION_ID,notification.build())
     }
 }

@@ -58,7 +58,11 @@ class LockAppsPrefs(val context: Context) {
     // 对象初始化
     init {
         // 获取配置
-        lockAppsJson
+        if (cLockAppsJson == null) {
+            lockAppsJson
+        }else {
+            lockAppsConfig = gson.fromJson(cLockAppsJson, LockAppsConfig::class.java)
+        }
     }
 
     /**
