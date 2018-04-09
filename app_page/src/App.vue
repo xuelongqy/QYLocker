@@ -37,7 +37,7 @@
       }
       // 如果设备准备完成跳转主页
       if (this.deviceReady) {
-        this.$router.push("/index")
+        this.$router.replace("/index")
       }
     },
     // 计算方法
@@ -53,7 +53,7 @@
       deviceReady(newValue, oldValue) {
         if (newValue) {
           // 跳转主页
-          this.$router.push("/index")
+          this.$router.replace("/index")
         }
       }
     }

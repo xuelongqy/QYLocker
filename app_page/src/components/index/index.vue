@@ -88,13 +88,13 @@
       onSidebarMenuItem(flag) {
         switch (flag) {
           case "AppList" :
-            this.$router.push("/index/app-list")
+            this.$router.replace("/index/app-list")
             break
           case "LockerTheme" :
-            this.$router.push("/index/theme")
+            this.$router.replace("/index/theme")
             break
           case "Settings" :
-            this.$router.push("/index/settings")
+            this.$router.replace("/index/settings")
             break
         }
         this.sidebarToggle()
