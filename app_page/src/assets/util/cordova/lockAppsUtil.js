@@ -111,10 +111,31 @@ export let removeLockApp = function (pkg) {
   )
 }
 
+/**
+ * @Title: openApp方法
+ * @Description: 启动App
+ * @author XueLong xuelongqy@foxmail.com
+ * @date 2018/4/11 10:32
+ * @update_author
+ * @update_time
+ * @version V1.0
+ * @param pkg 启动应用的包名
+ * @return
+ * @throws
+*/
+export let openApp = function (pkg) {
+  ExecUtil.noCBExec(
+    "LockApps",
+    "openApp",
+    [pkg]
+  )
+}
+
 export default {
   getLockAppsConfig,
   getAppInfoList,
   setLockState,
   addLockApp,
-  removeLockApp
+  removeLockApp,
+  openApp
 }

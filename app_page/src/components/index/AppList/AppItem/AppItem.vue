@@ -75,7 +75,7 @@
     methods: {
       // App条目点击事件
       onAppItem() {
-        alert(this.appName)
+        LockAppsUtil.openApp(this.appInfo.packageName)
       },
       // App锁设置
       onAppLockSettings() {
