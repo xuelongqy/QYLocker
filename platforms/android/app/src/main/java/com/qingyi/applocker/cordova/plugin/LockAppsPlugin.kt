@@ -17,6 +17,9 @@ import android.graphics.Canvas
 import android.util.Log
 import com.google.gson.GsonBuilder
 import com.qingyi.applocker.util.LoggerUtil
+import android.content.Intent
+
+
 
 /**
  * @Title: LockAppsPlugin类
@@ -114,6 +117,11 @@ class LockAppsPlugin : CordovaPlugin() {
             "removeLockApp" -> {
                 lockAppsPrefs.removeLockApp(args!!.getString(0))
                 return true
+            }
+            // 打开应用
+            "openApp" -> {
+                val intent = mActivity.packageManager.getLaunchIntentForPackage(args!!.getString(0))
+                mActivity.startActivity(intent)
             }
         }
         return false
