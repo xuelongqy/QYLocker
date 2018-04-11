@@ -42,6 +42,10 @@ class LockAppValidator(private val mContext: Context) {
      * @version V1.0
     */
     fun validatLockApp(pkg: String, activity: String) {
+        // 判断是否开启应用锁
+        if (!lockAppsPrefs.lockAppsConfig.isLock) {
+            return
+        }
         // 遍历加锁应用列表
         if (lockAppsPrefs.lockAppsConfig.lockApps.containsKey(pkg)){
             val intent = Intent(mContext, AppLockActivity::class.java)

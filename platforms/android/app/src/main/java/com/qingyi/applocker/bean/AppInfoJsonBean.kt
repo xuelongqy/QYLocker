@@ -10,6 +10,7 @@ package com.qingyi.applocker.bean
  * isSystemAPP: 是否为系统应用
  * isLock 是否上锁
  * isIndependent 是否独立设置
+ * themes: 主题(多个,包括密码)
  * theme 主题(独立设置时有效)
  * password 密码(独立设置时有效)
  * @ClassName: AppInfoJsonBean
@@ -25,5 +26,7 @@ data class AppInfoJsonBean(var appName: String = "",
                            var isSystemAPP: Boolean = false,
                            var isLock: Boolean = false,
                            var isIndependent: Boolean = false,
-                           var theme: String = "",
-                           var password: String = "")
+                           var themes: ArrayList<LockAppThemeBean> = arrayListOf()
+//                           var theme: String = "",
+//                           var password: String = ""
+)

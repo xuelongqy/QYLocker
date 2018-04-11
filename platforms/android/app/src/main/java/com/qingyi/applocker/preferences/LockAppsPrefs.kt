@@ -29,6 +29,8 @@ class LockAppsPrefs(val context: Context) {
         val TAG = LockAppsPrefs::class.java.simpleName
         // 加锁应用配置的Json
         private var cLockAppsJson: String? = null
+        // 加锁应用配置对象
+        private var cLockAppsConfig: LockAppsConfig? = null
     }
 
     // 获取加锁应用配置
@@ -52,8 +54,18 @@ class LockAppsPrefs(val context: Context) {
             editor.apply()
             cLockAppsJson = value
         }
+
     // 加锁应用配置对象
-    var lockAppsConfig: LockAppsConfig = LockAppsConfig()
+    var lockAppsConfig: LockAppsConfig
+        get() {
+            if (cLockAppsConfig == null) {
+                update()
+            }
+            return cLockAppsConfig!!
+        }
+        set(value) {
+            cLockAppsConfig = value
+        }
 
     // 对象初始化
     init {

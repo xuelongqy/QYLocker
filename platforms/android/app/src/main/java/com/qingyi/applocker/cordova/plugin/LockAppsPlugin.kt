@@ -161,8 +161,9 @@ class LockAppsPlugin : CordovaPlugin() {
                 val appInfoJsonBean = allAppsLockInfo[pkg]!!
                 appInfoJsonBean.isLock = true
                 appInfoJsonBean.isIndependent = lockApp.isIndependent
-                appInfoJsonBean.theme = lockApp.theme
-                appInfoJsonBean.password = lockApp.password
+                appInfoJsonBean.themes = lockApp.themes
+//                appInfoJsonBean.theme = lockApp.theme
+//                appInfoJsonBean.password = lockApp.password
                 allAppsLockInfo[lockApp.packageName] = appInfoJsonBean
             }
         }
