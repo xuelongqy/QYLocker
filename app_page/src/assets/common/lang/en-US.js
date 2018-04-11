@@ -53,5 +53,9 @@ module.exports = {
     "sysApps": "System",
     "nonSysApps": "User",
     "search": "Search"
+  },
+  theme: {
+    "downloaded": "Downloaded",
+    "store": "Theme store"
   }
 }

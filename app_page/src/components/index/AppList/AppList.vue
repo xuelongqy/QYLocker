@@ -27,8 +27,7 @@
       </scroller>
     </div>
     <!--App搜索框-->
-    <app-search :onSearchKey="onSearchKey">
-    </app-search>
+    <app-search :onSearchKey="onSearchKey"/>
   </div>
 </template>
 
@@ -91,7 +90,6 @@
       },
       // 搜索关键字改变
       onSearchKey: function (key) {
-        console.log(key)
         this.searchKey = key
       }
     },

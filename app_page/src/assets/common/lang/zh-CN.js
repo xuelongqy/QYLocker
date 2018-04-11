@@ -53,5 +53,9 @@ module.exports = {
     "sysApps": "系统应用",
     "nonSysApps": "用户应用",
     "search": "搜索"
+  },
+  theme: {
+    "downloaded": "已下载",
+    "store": "商店"
   }
 }

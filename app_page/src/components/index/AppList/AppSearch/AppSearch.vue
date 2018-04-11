@@ -21,6 +21,11 @@
         class="as_search_btn"
         :icon="isOpen?'close':'search'"
         @click="isOpen = !isOpen"/>
+      <!--确定按钮-->
+      <mu-icon-button v-if="isOpen & onSearch != null"
+                      class="as_search_btn"
+                      icon="arrow_forward"
+                      @click="onSearchBtn"/>
     </div>
   </div>
 </template>
@@ -51,6 +56,10 @@
         type: Function,
         default: function () {}
       },
+      onSearch: {
+        type: Function,
+        default: null
+      }
     },
     // 计算方法
     computed: {
@@ -79,6 +88,14 @@
         this.onSearchKey(newValue)
       }
     },
+    // 方法
+    methods: {
+      onSearchBtn() {
+        if (this.onSearch != null && this.searchKey != null && this.searchKey !== "") {
+          this.onSearch(this.searchKey)
+        }
+      }
+    }
   }
 </script>
 
@@ -105,7 +122,7 @@
         height: 50px;
         line-height: 50px;
         text-align: center;
-        width: calc(100% - 80px);
+        width: calc(100% - 130px);
         margin: 0 0 0 20px;
 
         // muse-ui部分输入框样式
