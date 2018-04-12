@@ -17,7 +17,7 @@ export default {
     // 基本加锁配置信息
     lockAppsConfig: {
       isLock: false,
-      theme: ""
+      theme: "PIN"
     },
     // 所有应用信息
     allAppsInfo: [],

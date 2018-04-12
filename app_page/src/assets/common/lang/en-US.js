@@ -56,6 +56,12 @@ module.exports = {
   },
   theme: {
     "downloaded": "Downloaded",
-    "store": "Theme store"
+    "store": "Theme store",
+    "name": "Name",
+    "author": "Author",
+    "date": "Date",
+    "haveDownloaded": "Downloaded",
+    "used": "Used",
+    "importTheme": "Import local theme"
   }
 }

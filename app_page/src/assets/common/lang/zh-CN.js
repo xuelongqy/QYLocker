@@ -56,6 +56,12 @@ module.exports = {
   },
   theme: {
     "downloaded": "已下载",
-    "store": "商店"
+    "store": "商店",
+    "name": "名称",
+    "author": "作者",
+    "date": "日期",
+    "haveDownloaded": "已下载",
+    "used": "已使用",
+    "importTheme": "导入本地主题"
   }
 }
