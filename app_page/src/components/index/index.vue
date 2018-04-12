@@ -38,7 +38,9 @@
     </div>
     <!--主干区域-->
     <div class="index_main animated fadeInRight" :style="'top:'+(56+topHeight)+'px;'">
+      <keep-alive>
         <router-view/>
+      </keep-alive>
     </div>
   </div>
 </template>
