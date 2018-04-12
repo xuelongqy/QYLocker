@@ -38,7 +38,6 @@ export default {
     },
     // 获取更多的在线主题
     getOnlineThemesInfoMore({commit}) {
-      // commit("setLoadThemeInfo", true)
     }
   }
 }
