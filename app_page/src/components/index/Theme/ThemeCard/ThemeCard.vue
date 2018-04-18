@@ -8,7 +8,7 @@
  @version V1.0
 -->
 <template>
-  <mu-flat-button class="theme_card">
+  <mu-flat-button class="theme_card" @click="onThemeClick">
     <!--主题卡片盒子-->
     <div class="theme_card_box">
       <!--主题图片-->
@@ -61,6 +61,13 @@
           default: false
         }
       },
+      // 方法
+      methods: {
+        // 主题点击事件
+        onThemeClick() {
+          alert("sss")
+        }
+      }
     }
 </script>
 
