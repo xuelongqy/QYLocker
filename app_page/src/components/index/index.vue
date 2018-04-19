@@ -38,7 +38,8 @@
     </div>
     <!--主干区域-->
     <div class="index_main animated fadeInRight" :style="'top:'+(56+topHeight)+'px;'">
-      <keep-alive>
+      <!--让应用列表和主题页面不销毁-->
+      <keep-alive include="AppList,Theme">
         <router-view/>
       </keep-alive>
     </div>

@@ -26,26 +26,21 @@ export default new Router({
         {
           path: 'app-list',
           name: 'app-list',
-          meta: {
-            keepAlive: true // 需要被缓存
-          },
           component: require('@/components/index/AppList/AppList.vue').default
         },
         {
           path: 'theme',
           name: 'theme',
-          meta: {
-            keepAlive: false // 需要被缓存
-          },
           component: require('@/components/index/Theme/Theme.vue').default
         },
-
+        {
+          path: 'theme-info/:id',
+          name: 'theme-info',
+          component: require('@/components/index/ThemeInfo/ThemeInfo.vue').default
+        },
         {
           path: 'settings',
           name: 'settings',
-          meta: {
-            keepAlive: false // 需要被缓存
-          },
           component: require('@/components/index/Settings/Settings.vue').default
         }
       ]

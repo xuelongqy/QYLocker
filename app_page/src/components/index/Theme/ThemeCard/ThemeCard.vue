@@ -48,6 +48,7 @@
           type: Object,
           default() {
             return {
+              id:-1,
               imageUrl: "",
               name: "",
               author: "",
@@ -65,7 +66,7 @@
       methods: {
         // 主题点击事件
         onThemeClick() {
-          alert("sss")
+          this.$router.push("/index/theme-info/" + this.themeInfo.id)
         }
       }
     }
