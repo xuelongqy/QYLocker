@@ -62,6 +62,7 @@ module.exports = {
     "date": "日期",
     "haveDownloaded": "已下载",
     "used": "已使用",
-    "importTheme": "导入本地主题"
+    "importTheme": "导入本地主题",
+    "introduced": "主题介绍"
   }
 }

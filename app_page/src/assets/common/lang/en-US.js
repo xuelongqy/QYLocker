@@ -62,6 +62,7 @@ module.exports = {
     "date": "Date",
     "haveDownloaded": "Downloaded",
     "used": "Used",
-    "importTheme": "Import local theme"
+    "importTheme": "Import local theme",
+    "introduced": "Introduction to the Theme"
   }
 }
