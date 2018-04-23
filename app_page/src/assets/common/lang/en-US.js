@@ -52,7 +52,11 @@ module.exports = {
     "allApps": "All",
     "sysApps": "System",
     "nonSysApps": "User",
-    "search": "Search"
+    "search": "Search",
+    "independentSetting": "Independent setting",
+    "addPwd": "Add password",
+    "filterPage": "Filter page",
+    "setIndependentFail": "Independent setting failed,please verify that the password is added!"
   },
   theme: {
     "downloaded": "Downloaded",

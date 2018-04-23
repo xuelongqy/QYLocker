@@ -131,11 +131,40 @@ export let openApp = function (pkg) {
   )
 }
 
+/**
+ * @Title: setIndependentSettingIState方法
+ * @Description: 设置独立设置状态
+ * @author XueLong xuelongqy@foxmail.com
+ * @date 2018/4/23 13:45
+ * @update_author
+ * @update_time
+ * @version V1.0
+ * @param callBack 回调函数
+ * @param pkg 包名
+ * @param state 状态
+ * @return
+ * @throws
+*/
+export let setIndependentSettingIState = function (callBack, pkg, state) {
+  ExecUtil.exec(
+    function (isSuccess) {
+      callBack(eval(isSuccess))
+    },
+    function (error) {
+      callBack(eval(error))
+    },
+    "LockApps",
+    "setIndependentSettingIState",
+    [pkg, state]
+  )
+}
+
 export default {
   getLockAppsConfig,
   getAppInfoList,
   setLockState,
   addLockApp,
   removeLockApp,
-  openApp
+  openApp,
+  setIndependentSettingIState
 }

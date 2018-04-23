@@ -11,7 +11,7 @@
         <mu-switch v-model="isLock"/>
       </div>
       <!--设置盒子-->
-      <div class="al_app_item_settings_box">
+      <div v-if="isLock" class="al_app_item_settings_box">
         <mu-icon-button icon="settings" class="al_app_item_settings_icon"
                         iconClass="al_app_item_settings_icon_style"
                         @click.stop="onAppLockSettings"/>
@@ -53,6 +53,11 @@
           "versionCode": 0,
           "versionName": ""
         }
+      },
+      // 设置按钮事件
+      onSettings: {
+        type: Function,
+        default: function () {}
       }
     },
     // 监听器
@@ -79,7 +84,7 @@
       },
       // App锁设置
       onAppLockSettings() {
-        alert('appLockSettings')
+        this.onSettings(this.index, this.appInfo)
       }
     },
   }

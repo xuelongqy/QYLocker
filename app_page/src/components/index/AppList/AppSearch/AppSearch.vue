@@ -8,7 +8,7 @@
  @version V1.0
 -->
 <template>
-  <div id="app_search" :style="app_search_height_style">
+  <div class="app_search" :style="app_search_height_style">
     <!--搜索盒子-->
     <div class="as_box" :class="as_box_anim">
       <mu-text-field v-if="isOpen"
@@ -100,7 +100,7 @@
 </script>
 
 <style lang="scss">
-  #app_search {
+  .app_search {
     position: absolute;
     bottom: 12px;
     left: 0;

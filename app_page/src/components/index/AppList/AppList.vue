@@ -22,18 +22,32 @@
         <app-item v-for="(appInfo,index) in appsInfoList"
                   :key = 'appInfo.packageName'
                   :index = 'index'
-                  :appInfo = "appInfo">
+                  :appInfo = "appInfo"
+                  :onSettings = "onSettings">
         </app-item>
       </scroller>
     </div>
     <!--App搜索框-->
     <app-search :onSearchKey="onSearchKey"/>
+    <!--设置弹出框-->
+    <mu-dialog :open="settingsDialogState" @close="onSettingsClose" :title="settingsDialogAppInfo.appName" scrollable>
+      <mu-menu>
+        <!--独立设置-->
+        <mu-switch :label="$t('appList.independentSetting')" labelLeft class="independent_setting_switch" v-model="settingsDialogAppInfo.isIndependent"/>
+        <!--添加密码-->
+        <mu-menu-item :title="$t('appList.addPwd')"/>
+        <!--过滤页面-->
+        <mu-menu-item :title="$t('appList.filterPage')"/>
+      </mu-menu>
+    </mu-dialog>
   </div>
 </template>
 
 <script>
   import AppItem from './AppItem/AppItem'
   import AppSearch from './AppSearch/AppSearch'
+  import LockAppsUtil from '../../../assets/util/cordova/lockAppsUtil'
+  import toastUtil from '../../../assets/util/cordova/toastUtil'
 
   export default {
     name: "AppList",
@@ -50,7 +64,24 @@
         // 当前激活的选项卡
         activeTab: 'tabAll',
         // 搜索关键字
-        searchKey: ""
+        searchKey: "",
+        // 设置框显示状态
+        settingsDialogState: false,
+        // 设置框应用下标
+        settingsDialogAppIndex: -1,
+        // 设置框显示信息
+        settingsDialogAppInfo: {
+          "appIcon": "",
+          "appName": "",
+          "isIndependent": false,
+          "isLock": false,
+          "isSystemAPP": true,
+          "packageName": "",
+          "password": "",
+          "theme": "",
+          "versionCode": 0,
+          "versionName": ""
+        }
       }
     },
     // 计算方法
@@ -72,10 +103,29 @@
             }
           )
         }
+      },
+      // 是否独立设置
+      isIndependentSetting() {
+        return this.settingsDialogAppInfo.isIndependent
       }
     },
     // 监听器
     watch: {
+      // 监听独立设置变化
+      isIndependentSetting(newValue, oldValue) {
+        LockAppsUtil.setIndependentSettingIState((isSuccess)=>{
+          if (isSuccess) {
+            this.$store.commit('updateAppsInfoByView', {
+              index: this.settingsDialogAppIndex,
+              key: 'isIndependent',
+              value: newValue
+            })
+          }else {
+            toastUtil.showLongToast(this.$t('appList.setIndependentFail'))
+            this.settingsDialogAppInfo.isIndependent = oldValue
+          }
+        },this.settingsDialogAppInfo.packageName,newValue)
+      }
     },
     // 方法
     methods: {
@@ -91,6 +141,16 @@
       // 搜索关键字改变
       onSearchKey: function (key) {
         this.searchKey = key
+      },
+      // 设置框事件
+      onSettings: function (index, appInfo) {
+        this.settingsDialogState = true
+        this.settingsDialogAppIndex = index
+        this.settingsDialogAppInfo = appInfo
+      },
+      // 设置框关闭
+      onSettingsClose: function () {
+        this.settingsDialogState = false
       }
     },
     // 组件
@@ -139,5 +199,14 @@
       -webkit-overflow-scrolling: touch;
       z-index: -1;
     }
+  }
+  // 独立设置按钮
+  .independent_setting_switch {
+    display: block;
+    height: 48px;
+    line-height: 48px;
+    width: 100%;
+    padding: 12px 16px;
+    text-align: center;
   }
 </style>

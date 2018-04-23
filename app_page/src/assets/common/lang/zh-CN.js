@@ -52,7 +52,11 @@ module.exports = {
     "allApps": "所有应用",
     "sysApps": "系统应用",
     "nonSysApps": "用户应用",
-    "search": "搜索"
+    "search": "搜索",
+    "independentSetting": "独立设置",
+    "addPwd": "添加密码",
+    "filterPage": "过滤页面",
+    "setIndependentFail": "独立设置失败,请检验是否添加密码!"
   },
   theme: {
     "downloaded": "已下载",
