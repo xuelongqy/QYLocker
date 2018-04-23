@@ -13,7 +13,8 @@ package com.qingyi.applocker.bean
 */
 class LockAppConfigBean (var packageName: String = "",
                          var isIndependent: Boolean = false,
-                         var themes: ArrayList<LockAppThemeBean> = arrayListOf()
+                         var themes: ArrayList<LockAppThemeBean> = arrayListOf(),
+                         var filterActivity: ArrayList<String> = arrayListOf()
 //                         var theme: String = "",
 //                         var password: String = ""
 )

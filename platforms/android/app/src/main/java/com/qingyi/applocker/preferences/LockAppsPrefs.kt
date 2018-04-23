@@ -93,6 +93,7 @@ class LockAppsPrefs(val context: Context) {
     fun update() {
         cLockAppsJson = prefs.getString(ThisApp.PREFS_LOCK_APPS_KEY, null)
         if (cLockAppsJson == null) {
+            lockAppsConfig = LockAppsConfig()
             lockAppsJson = gson.toJson(lockAppsConfig)
         }else {
             lockAppsConfig = gson.fromJson(cLockAppsJson, LockAppsConfig::class.java)

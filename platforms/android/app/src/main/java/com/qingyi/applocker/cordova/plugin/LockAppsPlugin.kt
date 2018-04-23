@@ -182,6 +182,7 @@ class LockAppsPlugin : CordovaPlugin() {
                 appInfoJsonBean.isLock = true
                 appInfoJsonBean.isIndependent = lockApp.isIndependent
                 appInfoJsonBean.themes = lockApp.themes
+                appInfoJsonBean.filterActivity = lockApp.filterActivity
 //                appInfoJsonBean.theme = lockApp.theme
 //                appInfoJsonBean.password = lockApp.password
                 allAppsLockInfo[lockApp.packageName] = appInfoJsonBean

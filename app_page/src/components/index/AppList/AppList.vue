@@ -30,14 +30,19 @@
     <!--App搜索框-->
     <app-search :onSearchKey="onSearchKey"/>
     <!--设置弹出框-->
-    <mu-dialog :open="settingsDialogState" @close="onSettingsClose" :title="settingsDialogAppInfo.appName" scrollable>
-      <mu-menu>
+    <mu-dialog dialogClass="settings_dialog" :open="settingsDialogState" @close="onSettingsClose" :title="isSettingsFilterPage?settingsDialogAppInfo.appName+'-'+$t('appList.filterPage'):settingsDialogAppInfo.appName" scrollable>
+      <!--过滤页面-->
+      <mu-menu v-if="isSettingsFilterPage">
+        <mu-switch labelClass="filter_page_switch_label" :label="' '" labelLeft class="filter_page_switch"/>
+      </mu-menu>
+      <!--设置项-->
+      <mu-menu v-else>
         <!--独立设置-->
         <mu-switch :label="$t('appList.independentSetting')" labelLeft class="independent_setting_switch" v-model="settingsDialogAppInfo.isIndependent"/>
         <!--添加密码-->
         <mu-menu-item :title="$t('appList.addPwd')"/>
         <!--过滤页面-->
-        <mu-menu-item :title="$t('appList.filterPage')"/>
+        <mu-menu-item :title="$t('appList.filterPage')" @click="isSettingsFilterPage = true"/>
       </mu-menu>
     </mu-dialog>
   </div>
@@ -81,7 +86,9 @@
           "theme": "",
           "versionCode": 0,
           "versionName": ""
-        }
+        },
+        // 设置框过滤页面
+        isSettingsFilterPage: false
       }
     },
     // 计算方法
@@ -151,6 +158,7 @@
       // 设置框关闭
       onSettingsClose: function () {
         this.settingsDialogState = false
+        this.isSettingsFilterPage = false
       }
     },
     // 组件
@@ -200,13 +208,29 @@
       z-index: -1;
     }
   }
-  // 独立设置按钮
+  // 设置弹出窗口
+  .settings_dialog {
+    width: 90%;
+  }
+  // 独立开关按钮
   .independent_setting_switch {
-    display: block;
     height: 48px;
     line-height: 48px;
     width: 100%;
     padding: 12px 16px;
     text-align: center;
+  }
+  // 过滤页面开关按钮
+  .filter_page_switch {
+    height: 48px;
+    line-height: 48px;
+    width: 100%;
+    padding-right: 12px;
+  }
+  .filter_page_switch_label {
+    word-break:break-all;
+    width: 80%;
+    font-size: 1rem;
+    line-height: 16px;
   }
 </style>
