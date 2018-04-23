@@ -63,6 +63,9 @@ module.exports = {
     "haveDownloaded": "Downloaded",
     "used": "Used",
     "importTheme": "Import local theme",
-    "introduced": "Introduction to the Theme"
+    "introduced": "Introduction to the Theme",
+    "download": "Download",
+    "use": "Use",
+    "changePwd": "Change password"
   }
 }

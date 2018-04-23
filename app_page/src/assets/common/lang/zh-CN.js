@@ -63,6 +63,9 @@ module.exports = {
     "haveDownloaded": "已下载",
     "used": "已使用",
     "importTheme": "导入本地主题",
-    "introduced": "主题介绍"
+    "introduced": "主题介绍",
+    "download": "下载",
+    "use": "使用",
+    "changePwd": "修改密码"
   }
 }
