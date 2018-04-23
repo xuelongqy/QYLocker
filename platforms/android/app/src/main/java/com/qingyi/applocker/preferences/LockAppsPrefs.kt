@@ -157,6 +157,30 @@ class LockAppsPrefs(val context: Context) {
     }
 
     /**
+     * @Title: setIndependentSettingIState方法
+     * @Class: LockAppsPrefs
+     * @Description: 设置独立设置状态
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/4/23 13:30
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param pkg[String] 包名
+     * @param state[Boolean] 状态
+     * @return [Boolean] 设置是否成功
+     * @throws
+    */
+    fun setIndependentSettingIState(pkg: String, state: Boolean): Boolean {
+        // 判断是否添加过密码
+        if (state && lockAppsConfig.lockApps[pkg]!!.themes.isEmpty()) {
+            return false
+        }
+        lockAppsConfig.lockApps[pkg]!!.isIndependent = state
+        lockAppsJson = gson.toJson(lockAppsConfig)
+        return true
+    }
+
+    /**
      * @Title: LockAppsConfig类
      * @Package: com.qingyi.applocker.preferences
      * @Description: 加锁App配置

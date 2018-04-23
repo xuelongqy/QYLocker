@@ -86,9 +86,11 @@ class LockAppsPlugin : CordovaPlugin() {
         when (action) {
             // 获取基本的配置信息
             "getLockAppsConfig" -> {
-                callbackContext!!.success(GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
-                        .toJson(lockAppsPrefs.lockAppsConfig))
-                callbackContext.error("{}")
+                cordova.threadPool.execute {
+                    callbackContext!!.success(GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
+                            .toJson(lockAppsPrefs.lockAppsConfig))
+                    callbackContext.error("{}")
+                }
                 return true
             }
             // 获取应用列表
@@ -105,23 +107,41 @@ class LockAppsPlugin : CordovaPlugin() {
             }
             // 设置上锁状态
             "setLockState" -> {
-                lockAppsPrefs.setLockState(args!!.getBoolean(0))
+                cordova.threadPool.execute {
+                    lockAppsPrefs.setLockState(args!!.getBoolean(0))
+                }
                 return true
             }
             // 添加加锁应用
             "addLockApp" -> {
-                lockAppsPrefs.addLockApp(args!!.getString(0))
+                cordova.threadPool.execute {
+                    lockAppsPrefs.addLockApp(args!!.getString(0))
+                }
                 return true
             }
             // 删除加锁应用
             "removeLockApp" -> {
-                lockAppsPrefs.removeLockApp(args!!.getString(0))
+                cordova.threadPool.execute {
+                    lockAppsPrefs.removeLockApp(args!!.getString(0))
+                }
                 return true
             }
             // 打开应用
             "openApp" -> {
                 val intent = mActivity.packageManager.getLaunchIntentForPackage(args!!.getString(0))
                 mActivity.startActivity(intent)
+            }
+            // 设置独立设置状态
+            "setIndependentSettingIState" -> {
+                cordova.threadPool.execute {
+                    // Cordova多线程处理
+                    val isSuccess = lockAppsPrefs.setIndependentSettingIState(args!!.getString(0), args!!.getBoolean(1))
+                    mActivity.runOnUiThread {
+                        callbackContext!!.success(isSuccess.toString())
+                        callbackContext.error(false.toString())
+                    }
+                }
+                return true
             }
         }
         return false
