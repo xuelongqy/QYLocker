@@ -35,7 +35,13 @@
     <!--主题底部栏-->
     <mu-paper class="tf_footer" :zDepth="2">
       <!--下载按钮-->
-      <mu-raised-button label="下载" class="demo-raised-button" primary/>
+      <mu-raised-button label="下载" class="tf_operation_btn" primary/>
+      <!--使用按钮-->
+      <!--<mu-raised-button label="使用" class="tf_operation_btn" secondary/>-->
+      <!--修改密码按钮-->
+      <!--<mu-raised-button label="修改密码" class="tf_operation_btn" backgroundColor="#a4c639"/>-->
+      <!--删除按钮-->
+      <mu-icon-button class="tf_delete_btn" icon="delete"/>
     </mu-paper>
   </div>
 </template>
@@ -157,6 +163,13 @@
       // 主题操作按钮
       .tf_operation_btn {
         width: 50%;
+      }
+      // 删除按钮
+      .tf_delete_btn {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        color: darkslategray;
       }
     }
   }
