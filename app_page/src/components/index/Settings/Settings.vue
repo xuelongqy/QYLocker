@@ -26,7 +26,7 @@
                     :settingInfo="$t('')"
                     :settingIcon="'dashboard'"
                     :settingIconColor="'red'"
-                    @click.native="onBgImageSet"/>
+                    @click.native="onLockModelSet"/>
       <!--应用模式选择弹出框-->
       <mu-dialog :open="lockModelDialogShow" :title="$t('settings.lockModelSet')" @close="lockModelDialogShow = false">
         <mu-menu>
@@ -40,7 +40,6 @@
                     :settingInfo="$t('settings.fingerprintSetInfo')"
                     :settingIcon="'fingerprint'"
                     :settingIconColor="'coral'"
-                    @click.native="onBgImageSet"
                     :showSettingSwitch="true"/>
     </div>
 </template>
@@ -64,6 +63,9 @@
       },
       // 背景图片
       onBgImageSet() {
+      },
+      // 应用锁模式
+      onLockModelSet() {
         this.lockModelDialogShow = true
       }
     },
