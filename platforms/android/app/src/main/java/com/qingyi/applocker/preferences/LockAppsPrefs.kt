@@ -182,6 +182,44 @@ class LockAppsPrefs(val context: Context) {
     }
 
     /**
+     * @Title: addFilterActivity方法
+     * @Class: LockAppsPrefs
+     * @Description: 添加过滤Activity
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/4/24 13:18
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param pkg[String] 包名
+     * @param activity[String] 页面
+     * @return
+     * @throws
+    */
+    fun addFilterActivity(pkg: String,activity: String) {
+        lockAppsConfig.lockApps[pkg]!!.filterActivity.add(activity)
+        lockAppsJson = gson.toJson(lockAppsConfig)
+    }
+
+    /**
+     * @Title: removeFilterActivity方法
+     * @Class: LockAppsPrefs
+     * @Description: 删除过滤Activity
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/4/24 13:19
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param pkg[String] 包名
+     * @param activity[String] 页面
+     * @return
+     * @throws
+    */
+    fun removeFilterActivity(pkg: String,activity: String) {
+        lockAppsConfig.lockApps[pkg]!!.filterActivity.remove(activity)
+        lockAppsJson = gson.toJson(lockAppsConfig)
+    }
+
+    /**
      * @Title: LockAppsConfig类
      * @Package: com.qingyi.applocker.preferences
      * @Description: 加锁App配置

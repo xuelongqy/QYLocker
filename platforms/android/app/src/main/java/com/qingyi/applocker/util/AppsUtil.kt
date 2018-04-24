@@ -112,4 +112,28 @@ class AppsUtil(val context: Context) {
         }
         return appsInfoMap
     }
+
+    /**
+     * @Title: getActivitiesByPkg方法
+     * @Class: AppsUtil
+     * @Description: 通过包名获取所有Activities
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/4/24 8:56
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param pkg[String] 包名
+     * @return Activities列表
+     * @throws
+    */
+    fun getActivitiesByPkg(pkg: String): ArrayList<String> {
+        val pkgInfo = mContext.packageManager.getPackageInfo(pkg, PackageManager.GET_ACTIVITIES)
+        val activityList = arrayListOf<String>()
+        pkgInfo.activities.forEach {
+            if (it.name != null) {
+                activityList.add(it.name)
+            }
+        }
+        return activityList
+    }
 }

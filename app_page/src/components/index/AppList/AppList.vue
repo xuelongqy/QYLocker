@@ -33,7 +33,14 @@
     <mu-dialog dialogClass="settings_dialog" :open="settingsDialogState" @close="onSettingsClose" :title="isSettingsFilterPage?settingsDialogAppInfo.appName+'-'+$t('appList.filterPage'):settingsDialogAppInfo.appName" scrollable>
       <!--过滤页面-->
       <mu-menu v-if="isSettingsFilterPage">
-        <mu-switch labelClass="filter_page_switch_label" :label="' '" labelLeft class="filter_page_switch"/>
+        <mu-switch
+          v-for="(activity,index) in settingsFilterPagesActivities" :key="index"
+          class="filter_page_switch"
+          labelClass="filter_page_switch_label"
+          :label="activity"
+          @change="onFilterPageSwitch(activity, $event)"
+          :value="arrContains(settingsDialogAppInfo.filterActivity, activity)"
+          labelLeft />
       </mu-menu>
       <!--设置项-->
       <mu-menu v-else>
@@ -42,7 +49,7 @@
         <!--添加密码-->
         <mu-menu-item :title="$t('appList.addPwd')"/>
         <!--过滤页面-->
-        <mu-menu-item :title="$t('appList.filterPage')" @click="isSettingsFilterPage = true"/>
+        <mu-menu-item :title="$t('appList.filterPage')" @click="onFilterPage"/>
       </mu-menu>
     </mu-dialog>
   </div>
@@ -85,10 +92,13 @@
           "password": "",
           "theme": "",
           "versionCode": 0,
-          "versionName": ""
+          "versionName": "",
+          filterActivity: []
         },
         // 设置框过滤页面
-        isSettingsFilterPage: false
+        isSettingsFilterPage: false,
+        // 过滤页面数据
+        settingsFilterPagesActivities: []
       }
     },
     // 计算方法
@@ -159,6 +169,44 @@
       onSettingsClose: function () {
         this.settingsDialogState = false
         this.isSettingsFilterPage = false
+        this.settingsFilterPagesActivities = []
+      },
+      // 打开过滤页面
+      onFilterPage: function () {
+        this.isSettingsFilterPage = true
+        LockAppsUtil.getActivities((activities)=>{
+          this.settingsFilterPagesActivities = activities
+        },this.settingsDialogAppInfo.packageName)
+      },
+      // 修改过滤页面
+      onFilterPageSwitch: function (activity, event) {
+        // alert(event)
+        // 判断添加还是删除
+        if (event) {
+          LockAppsUtil.addFilterActivity(this.settingsDialogAppInfo.packageName, activity)
+          this.$store.commit('updateAppsInfoByView', {
+            index: this.settingsDialogAppIndex,
+            key: "filterActivity",
+            value: this.settingsDialogAppInfo.filterActivity.push(activity)
+          })
+        }else {
+          LockAppsUtil.removeFilterActivity(this.settingsDialogAppInfo.packageName, activity)
+          this.$store.commit('updateAppsInfoByView', {
+            index: this.settingsDialogAppIndex,
+            key: "filterActivity",
+            value: this.settingsDialogAppInfo.filterActivity.splice(this.settingsDialogAppInfo.filterActivity.indexOf(activity),1)
+          })
+        }
+      },
+      // 判断字符串是否包含
+      arrContains: function (arr, obj) {
+        var i = arr.length
+        while(i--) {
+          if(arr[i] === obj) {
+            return true
+          }
+        }
+        return false
       }
     },
     // 组件

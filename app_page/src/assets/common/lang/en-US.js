@@ -71,5 +71,18 @@ module.exports = {
     "download": "Download",
     "use": "Use",
     "changePwd": "Change password"
+  },
+  settings: {
+    "themeSet": "Theme Settings",
+    "themeSetInfo": "Set the lock screen theme.",
+    "bgImageSet": "Background image",
+    "bgImageSetInfo": "It only shows after the theme is set.",
+    "lockModelSetInfo": {
+      "stackPolling": "Stack polling",
+      "listenApps": "Listen apps",
+      "xposed": "Xposed"
+    },
+    "fingerprintSet": "Fingerprint",
+    "fingerprintSetInfo": "Unlock with fingerprint"
   }
 }

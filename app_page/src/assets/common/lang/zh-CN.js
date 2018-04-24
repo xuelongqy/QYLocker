@@ -71,5 +71,19 @@ module.exports = {
     "download": "下载",
     "use": "使用",
     "changePwd": "修改密码"
+  },
+  settings: {
+    "themeSet": "主题设置",
+    "themeSetInfo": "设置锁屏主题",
+    "bgImageSet": "背景图片",
+    "bgImageSetInfo": "仅在主题中设置后生效",
+    "lockModelSet": "应用锁模式",
+    "lockModelSetInfo": {
+      "stackPolling": "栈顶轮询",
+      "listenApps": "应用监听",
+      "xposed": "Xposed"
+    },
+    "fingerprintSet": "指纹设置",
+    "fingerprintSetInfo": "使用指纹解锁"
   }
 }

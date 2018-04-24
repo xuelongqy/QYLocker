@@ -159,6 +159,75 @@ export let setIndependentSettingIState = function (callBack, pkg, state) {
   )
 }
 
+/**
+ * @Title: getActivities方法
+ * @Description: 获取页面列表
+ * @author XueLong xuelongqy@foxmail.com
+ * @date 2018/4/24 9:19
+ * @update_author
+ * @update_time
+ * @version V1.0
+ * @param callBack 回调函数
+ * @param pkg 包名
+ * @return
+ * @throws
+*/
+export let getActivities = function (callBack, pkg) {
+  ExecUtil.exec(
+    function (activities) {
+      callBack(JSON.parse(activities))
+    },
+    function (error) {
+      callBack(JSON.parse(error))
+    },
+    "LockApps",
+    "getActivities",
+    [pkg]
+  )
+}
+
+/**
+ * @Title: addFilterActivity方法
+ * @Description: 添加过滤页面
+ * @author XueLong xuelongqy@foxmail.com
+ * @date 2018/4/24 13:34
+ * @update_author
+ * @update_time
+ * @version V1.0
+ * @param pkg 包名
+ * @param activity 页面
+ * @return
+ * @throws
+*/
+export let addFilterActivity = function (pkg, activity) {
+  ExecUtil.noCBExec(
+    "LockApps",
+    "addFilterActivity",
+    [pkg,activity]
+  )
+}
+
+/**
+ * @Title: removeFilterActivity方法
+ * @Description: 删除过滤页面
+ * @author XueLong xuelongqy@foxmail.com
+ * @date 2018/4/24 13:34
+ * @update_author
+ * @update_time
+ * @version V1.0
+ * @param pkg 包名
+ * @param activity 页面
+ * @return
+ * @throws
+ */
+export let removeFilterActivity = function (pkg, activity) {
+  ExecUtil.noCBExec(
+    "LockApps",
+    "removeFilterActivity",
+    [pkg,activity]
+  )
+}
+
 export default {
   getLockAppsConfig,
   getAppInfoList,
@@ -166,5 +235,8 @@ export default {
   addLockApp,
   removeLockApp,
   openApp,
-  setIndependentSettingIState
+  setIndependentSettingIState,
+  getActivities,
+  addFilterActivity,
+  removeFilterActivity
 }

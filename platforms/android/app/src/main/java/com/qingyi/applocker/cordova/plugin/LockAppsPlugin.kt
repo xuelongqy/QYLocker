@@ -135,11 +135,37 @@ class LockAppsPlugin : CordovaPlugin() {
             "setIndependentSettingIState" -> {
                 cordova.threadPool.execute {
                     // Cordova多线程处理
-                    val isSuccess = lockAppsPrefs.setIndependentSettingIState(args!!.getString(0), args!!.getBoolean(1))
+                    val isSuccess = lockAppsPrefs.setIndependentSettingIState(args!!.getString(0), args.getBoolean(1))
                     mActivity.runOnUiThread {
                         callbackContext!!.success(isSuccess.toString())
                         callbackContext.error(false.toString())
                     }
+                }
+                return true
+            }
+            // 获取Activity列表
+            "getActivities" -> {
+                cordova.threadPool.execute {
+                    // Cordova多线程处理
+                    val activityList = appsUtil.getActivitiesByPkg(args!!.getString(0))
+                    mActivity.runOnUiThread {
+                        callbackContext!!.success(gson.toJson(activityList))
+                        callbackContext.error("[]")
+                    }
+                }
+                return true
+            }
+            // 添加Activity
+            "addFilterActivity" -> {
+                cordova.threadPool.execute {
+                    lockAppsPrefs.addFilterActivity(args!!.getString(0), args.getString(1))
+                }
+                return true
+            }
+            // 删除Activity
+            "removeFilterActivity" -> {
+                cordova.threadPool.execute {
+                    lockAppsPrefs.removeFilterActivity(args!!.getString(0), args.getString(1))
                 }
                 return true
             }
