@@ -77,6 +77,7 @@ module.exports = {
     "themeSetInfo": "Set the lock screen theme.",
     "bgImageSet": "Background image",
     "bgImageSetInfo": "It only shows after the theme is set.",
+    "lockModelSet": "Lock Model",
     "lockModelSetInfo": {
       "stackPolling": "Stack polling",
       "listenApps": "Listen apps",
