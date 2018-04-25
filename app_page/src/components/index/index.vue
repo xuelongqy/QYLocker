@@ -62,6 +62,8 @@
     created() {
       // 基本加锁配置信息
       this.$store.dispatch('getLockAppsConfig')
+      // 获取设置配置信息
+      this.$store.dispatch('getSettingsConfig')
       //设置标题
       document.title = this.$t('comm.appName')
       // jquery准备完毕,初始化jquery相关

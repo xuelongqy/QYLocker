@@ -22,6 +22,8 @@ class ThisApp {
         const val PREFERENCE_PROVIDER_AUTHORITY = "com.qingyi.applocker.preferences"
         const val PREFS_LOCK_APPS = "lock_apps"
         const val PREFS_LOCK_APPS_KEY = "LockApps"
+        const val PREFS_SETTINGS = "settings"
+        const val PREFS_SETTINGS_KEY = "Settings"
         const val PREFS_HISTORY = "history"
     }
 }

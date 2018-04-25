@@ -16,7 +16,7 @@
           </div>
           <!--开关按钮-->
           <div class="setting_item_switch_box">
-            <mu-switch v-if="showSettingSwitch"/>
+            <mu-switch v-if="showSettingSwitch" :value="settingsSwitchValue" @change="onSettingsSwitch"/>
           </div>
         </div>
       </mu-flat-button>
@@ -52,6 +52,16 @@
       showSettingSwitch: {
         type: Boolean,
         default: false
+      },
+      // 开关值
+      settingsSwitchValue: {
+        type: Boolean,
+        default: false
+      },
+      // 开关值变化
+      onSettingsSwitch: {
+        type: Function,
+        default: function (value) {}
       }
     },
   }
@@ -122,5 +132,14 @@
   }
   .coral {
     background: coral;
+  }
+  .green {
+    background: green;
+  }
+  .blueviolet {
+    background: blueviolet;
+  }
+  .brown {
+    background: brown;
   }
 </style>

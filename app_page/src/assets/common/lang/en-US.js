@@ -73,6 +73,7 @@ module.exports = {
     "changePwd": "Change password"
   },
   settings: {
+    "unselected": "Unselected",
     "themeSet": "Theme Settings",
     "themeSetInfo": "Set the lock screen theme.",
     "bgImageSet": "Background image",
@@ -84,6 +85,18 @@ module.exports = {
       "xposed": "Xposed"
     },
     "fingerprintSet": "Fingerprint",
-    "fingerprintSetInfo": "Unlock with fingerprint"
+    "fingerprintSetInfo": "Unlock with fingerprint",
+    "resetLockSet": "Reset the lock",
+    "resetLockSetInfo": {
+      "oneToOne": "An app is unlocked once",
+      "oneToAll": "All apps are unlocked once",
+      "allToAll": "Unlock every time"
+    },
+    "advancedModeSet": "Advanced Mode",
+    "advancedModeSetInfo": "The information for each lock app is displayed when unlocking",
+    "lockNewAppSet": "Lock new app",
+    "lockNewAppSetInfo": "Ask after installed the new app",
+    "preventUninstallSet": "Prevent uninstall",
+    "preventUninstallSetInfo": "Prevent uninstall of this app"
   }
 }

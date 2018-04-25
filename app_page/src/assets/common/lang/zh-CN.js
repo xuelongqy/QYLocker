@@ -73,6 +73,7 @@ module.exports = {
     "changePwd": "修改密码"
   },
   settings: {
+    "unselected": "未选择",
     "themeSet": "主题设置",
     "themeSetInfo": "设置锁屏主题",
     "bgImageSet": "背景图片",
@@ -84,6 +85,18 @@ module.exports = {
       "xposed": "Xposed"
     },
     "fingerprintSet": "指纹设置",
-    "fingerprintSetInfo": "使用指纹解锁"
+    "fingerprintSetInfo": "使用指纹解锁",
+    "resetLockSet": "重新锁定",
+    "resetLockSetInfo": {
+      "oneToOne": "一个应用一次解锁",
+      "oneToAll": "所有应用一次解锁",
+      "allToAll": "每次都需解锁"
+    },
+    "advancedModeSet": "高级模式",
+    "advancedModeSetInfo": "解锁时显示每个锁定应用的信息",
+    "lockNewAppSet": "锁定新应用",
+    "lockNewAppSetInfo": "安装新应用后询问",
+    "preventUninstallSet": "防止卸载",
+    "preventUninstallSetInfo": "防止卸载此应用"
   }
 }

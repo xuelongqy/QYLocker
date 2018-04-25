@@ -16,7 +16,7 @@ import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
 */
 class SharedPreferencesProvider: RemotePreferenceProvider(
         ThisApp.PREFERENCE_PROVIDER_AUTHORITY, // 提供器标识
-        arrayOf(ThisApp.PREFS_LOCK_APPS, ThisApp.PREFS_HISTORY) // 需要共享的配置
+        arrayOf(ThisApp.PREFS_LOCK_APPS,ThisApp.PREFS_SETTINGS, ThisApp.PREFS_HISTORY) // 需要共享的配置
 ) {
 
     /**
