@@ -19,9 +19,10 @@
         :on-refresh="refresh"
         :on-infinite="infinite">
         <!--导入主题-->
-        <mu-flat-button class="theme_import" v-if="activeTab == 'tabDownload'">
+        <mu-flat-button class="theme_import" v-if="activeTab == 'tabDownload'" @click="onImportTheme">
           {{this.$t('theme.importTheme')}}
         </mu-flat-button>
+        <input id="theme_import_input" type="file" accept="image/*" style="display: none" @change="importThemeChange">
         <!--主题卡片-->
         <theme-card
           v-for="(themeInfo,index) in themeList"
@@ -183,6 +184,25 @@
         for (var index in this.downloadedThemes) {
           if (this.downloadedThemes[index].name == themeName) return true
         }
+      },
+      // 导入主题
+      onImportTheme() {
+        document.getElementById('theme_import_input').click()
+      },
+      // 主题文件选择
+      importThemeChange() {
+        var themeUrl = ""
+        var fileObj = document.getElementById('theme_import_input')
+        var windowURL = window.URL || window.webkitURL;
+        var dataURL;
+        if (fileObj && fileObj.files && fileObj.files[0]) {
+          dataURL = windowURL.createObjectURL(fileObj.files[0]);
+          themeUrl = dataURL
+        } else {
+          dataURL = fileObj.value;
+          themeUrl = dataURL
+        }
+        alert(themeUrl)
       }
     },
     // 组件
