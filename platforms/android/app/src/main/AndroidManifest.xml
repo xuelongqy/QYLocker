@@ -8,6 +8,9 @@
     <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:resizeable="true" android:smallScreens="true" android:xlargeScreens="true" />
     <!--网络访问权限-->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!--文件读写权限-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!--查看最近应用使用情况权限-->
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"

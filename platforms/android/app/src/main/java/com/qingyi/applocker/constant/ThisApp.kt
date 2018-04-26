@@ -15,8 +15,6 @@ class ThisApp {
         const val PACKAGE_NAME = "com.qingyi.applocker"
         // App前端(Html、CSS、JS、Json等)路径
         const val FRONTEND_PATH = "/android_asset/www/"
-        // 保存App信息的json文件路径
-        const val APP_INFO_JSON_FILE_PATH = "/android_asset/data/locker/app_info_map.json"
 
         // SharedPreferences相关
         const val PREFERENCE_PROVIDER_AUTHORITY = "com.qingyi.applocker.preferences"
@@ -25,5 +23,11 @@ class ThisApp {
         const val PREFS_SETTINGS = "settings"
         const val PREFS_SETTINGS_KEY = "Settings"
         const val PREFS_HISTORY = "history"
+
+        // 主题相关
+        const val THEME_PATH = "theme"
+        const val THEME_INFO_FILE = "theme.json"
+        const val THEME_WEBAPP = "webapp"
+        const val THEME_IMAGE = "image"
     }
 }

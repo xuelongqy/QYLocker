@@ -7,4 +7,7 @@
     <string name="protection_service">服务守护</string>
     <string name="traditional_mode">传统模式</string>
     <string name="efficient_mode">高效模式</string>
+    <string name="no_permissions">权限不够</string>
+    <string name="set_permissions">请在设置页面勾选软件所需的权限。</string>
+    <string name="settings">设置</string>
 </resources>

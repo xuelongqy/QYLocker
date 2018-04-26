@@ -21,7 +21,6 @@
                     :settingIcon="'image'"
                     :settingIconColor="'orange'"
                     @click.native="onBgImageSet"/>
-      <input id="settings_bg_image_input" type="file" accept="image/*" style="display: none" @change="bgImageChange">
       <!--应用锁模式-->
       <setting-item :settingName="$t('settings.lockModelSet')"
                     :settingInfo="lockModelSetInfo"
@@ -88,6 +87,7 @@
 <script>
   import SettingItem from './SettingsItem/SettingsItem'
   import settingsUtil from '../../../assets/util/cordova/settingsUtil'
+  import FilePicker from "../../../assets/util/cordova/FilePicker"
 
   export default {
     name: "Settings",
@@ -143,21 +143,10 @@
       },
       // 背景图片
       onBgImageSet() {
-        document.getElementById('settings_bg_image_input').click()
+        FilePicker.chooseFile(this.bgImageChange,this.$t("settings.chooseImage"),"image/*")
       },
       // 背景图片改变
-      bgImageChange() {
-        var imgUrl = ""
-        var fileObj = document.getElementById('settings_bg_image_input')
-        var windowURL = window.URL || window.webkitURL;
-        var dataURL;
-        if (fileObj && fileObj.files && fileObj.files[0]) {
-          dataURL = windowURL.createObjectURL(fileObj.files[0]);
-          imgUrl = dataURL
-        } else {
-          dataURL = fileObj.value;
-          imgUrl = dataURL
-        }
+      bgImageChange(imgUrl) {
         settingsUtil.setBgImageUrl(imgUrl)
         this.$store.commit('updateSettingConfigByView', {
           key: 'bgImageUrl',

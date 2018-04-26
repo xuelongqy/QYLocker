@@ -22,7 +22,6 @@
         <mu-flat-button class="theme_import" v-if="activeTab == 'tabDownload'" @click="onImportTheme">
           {{this.$t('theme.importTheme')}}
         </mu-flat-button>
-        <input id="theme_import_input" type="file" accept="image/*" style="display: none" @change="importThemeChange">
         <!--主题卡片-->
         <theme-card
           v-for="(themeInfo,index) in themeList"
@@ -42,6 +41,8 @@
 <script>
   import ThemeCard from "./ThemeCard/ThemeCard"
   import ThemeSearch from "../AppList/AppSearch/AppSearch"
+  import FilePicker from "../../../assets/util/cordova/FilePicker"
+  import ThemeUtil from "../../../assets/util/cordova/ThemeUtil"
 
   export default {
     name: "Theme",
@@ -187,22 +188,13 @@
       },
       // 导入主题
       onImportTheme() {
-        document.getElementById('theme_import_input').click()
+        FilePicker.chooseFile(this.importThemeChange,this.$t("theme.chooseTheme"),"application/zip")
       },
       // 主题文件选择
-      importThemeChange() {
-        var themeUrl = ""
-        var fileObj = document.getElementById('theme_import_input')
-        var windowURL = window.URL || window.webkitURL;
-        var dataURL;
-        if (fileObj && fileObj.files && fileObj.files[0]) {
-          dataURL = windowURL.createObjectURL(fileObj.files[0]);
-          themeUrl = dataURL
-        } else {
-          dataURL = fileObj.value;
-          themeUrl = dataURL
-        }
-        alert(themeUrl)
+      importThemeChange(themeUrl) {
+        ThemeUtil.importTheme((state)=>{
+          alert(state)
+        },themeUrl)
       }
     },
     // 组件

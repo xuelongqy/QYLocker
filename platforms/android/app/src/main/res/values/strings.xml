@@ -7,4 +7,7 @@
     <string name="protection_service">Protection service</string>
     <string name="traditional_mode">Traditional mode</string>
     <string name="efficient_mode">Efficient mode</string>
+    <string name="no_permissions">Not enough permissions</string>
+    <string name="set_permissions">Please set the permissions required to check the software on the page.</string>
+    <string name="settings">Settings</string>
 </resources>

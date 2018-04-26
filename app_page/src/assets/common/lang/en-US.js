@@ -60,6 +60,7 @@ module.exports = {
   },
   theme: {
     "downloaded": "Downloaded",
+    "chooseImage": "Choose image",
     "store": "Theme store",
     "name": "Name",
     "author": "Author",
@@ -70,7 +71,8 @@ module.exports = {
     "introduced": "Introduction to the Theme",
     "download": "Download",
     "use": "Use",
-    "changePwd": "Change password"
+    "changePwd": "Change password",
+    "chooseTheme": "Choose theme"
   },
   settings: {
     "unselected": "Unselected",

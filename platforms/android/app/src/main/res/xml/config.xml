@@ -19,6 +19,12 @@
     <feature name="Settings">
         <param name="android-package" value="com.qingyi.applocker.cordova.plugin.SettingsPlugin" />
     </feature>
+    <feature name="FilePicker">
+        <param name="android-package" value="com.qingyi.applocker.cordova.plugin.FilePickerPlugin" />
+    </feature>
+    <feature name="Theme">
+        <param name="android-package" value="com.qingyi.applocker.cordova.plugin.ThemePlugin" />
+    </feature>
     <name>QYLocker</name>
     <description>
         An app lock that allows your application lock interface to look anything like it.

@@ -1,12 +1,17 @@
 package com.qingyi.applocker.activity
 
+import android.Manifest
+import android.app.AlertDialog
+import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.util.Log
+import android.provider.Settings
 import android.view.View
-import android.view.WindowManager
-import com.qingyi.applocker.util.LoggerUtil
+import com.qingyi.applocker.R
+import com.tbruyelle.rxpermissions2.RxPermissions
 import org.apache.cordova.CordovaActivity
 
 /**
@@ -22,6 +27,8 @@ open class BaseHybridActivity(): CordovaActivity() {
     private var transparent_StatusBar:Boolean = false
     //导航栏透明
     private var transparent_NavigationBar:Boolean = false
+    // 前往权限设置弹窗
+    lateinit var goSettingsDialog: AlertDialog
 
     constructor(transparent_StatusBar: Boolean, transparent_NavigationBar: Boolean) : this() {
         this.transparent_StatusBar = transparent_StatusBar
@@ -44,6 +51,64 @@ open class BaseHybridActivity(): CordovaActivity() {
     private fun initMethod() {
         //设置状态栏和导航栏
         setStatusBarAndNavigationBar()
+        // 创建前往权限设置弹窗
+        goSettingsDialog = AlertDialog.Builder(this)
+                .setTitle(R.string.no_permissions)
+                .setMessage(R.string.set_permissions)
+                .setPositiveButton(R.string.settings, { dialog: DialogInterface, which: Int ->
+                    val packageURI = Uri.parse("package:" + application.packageName)
+                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI)
+                    startActivity(intent)
+                    dialog.dismiss()
+                }).setCancelable(false).create()
+    }
+
+    /**
+     * @Title: 重写onStart方法
+     * @Class: BaseHybridActivity
+     * @Description: 当页面启动时
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/4/26 11:11
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param
+     * @return
+     * @throws
+    */
+    override fun onStart() {
+        // 申请权限
+        requestPermissions()
+        super.onStart()
+    }
+
+    /**
+     * @Title: requestPermissions方法
+     * @Class: BaseHybridActivity
+     * @Description: 设置权限
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/4/26 11:10
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param
+     * @return
+     * @throws
+    */
+    private fun requestPermissions() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
+        val rxPermissions = RxPermissions(this)
+        rxPermissions
+                .request(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .subscribe { granted ->
+                    if (granted) {
+                        // 所有权限申请成功
+                    } else {
+                        // 权限申请失败,跳转设置页面
+                        goSettingsDialog.show()
+                    }
+                }
     }
 
     /**

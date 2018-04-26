@@ -88,32 +88,6 @@ class AppsUtil(val context: Context) {
     }
 
     /**
-     * 从json文件中获取App信息
-     * @Title: getAppsInfoMapFromJson
-     * @Description: 从json文件中获取App信息
-     * @author qingyi xuelongqy@foxmail.com
-     * @date 2017/9/1 17:27
-     * @return [LinkedHashMap] App信息Map集合
-     */
-    fun getAppsInfoMapFromJson():LinkedHashMap<String, AppInfoJsonBean> {
-        //缓存App信息
-        var appsInfoMap = LinkedHashMap<String,AppInfoJsonBean>()
-        try {
-            //读取App信息的json文件
-            var inputStream = mContext.assets.open(ThisApp.APP_INFO_JSON_FILE_PATH)
-            val length = inputStream.available()
-            val buffer = ByteArray(length)
-            inputStream.read(buffer)
-            var appInfoJsonText = String(buffer)
-            //将字符串转换为Map对象
-            appsInfoMap = gson.fromJson(appInfoJsonText, object: TypeToken<LinkedHashMap<String, AppInfoJsonBean>>(){}.type)
-        }catch (e: IOException){
-
-        }
-        return appsInfoMap
-    }
-
-    /**
      * @Title: getActivitiesByPkg方法
      * @Class: AppsUtil
      * @Description: 通过包名获取所有Activities

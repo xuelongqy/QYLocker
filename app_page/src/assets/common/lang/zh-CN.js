@@ -70,10 +70,12 @@ module.exports = {
     "introduced": "主题介绍",
     "download": "下载",
     "use": "使用",
-    "changePwd": "修改密码"
+    "changePwd": "修改密码",
+    "chooseTheme": "选择主题"
   },
   settings: {
     "unselected": "未选择",
+    "chooseImage": "选择图片",
     "themeSet": "主题设置",
     "themeSetInfo": "设置锁屏主题",
     "bgImageSet": "背景图片",
