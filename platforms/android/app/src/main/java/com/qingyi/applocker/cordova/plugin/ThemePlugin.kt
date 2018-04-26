@@ -55,7 +55,7 @@ class ThemePlugin: CordovaPlugin() {
                 return true
             }
             "getThemeList" -> {
-
+                return true
             }
         }
         return false
