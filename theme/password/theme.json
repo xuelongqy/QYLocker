@@ -1,0 +1,8 @@
+{
+  "name": "Password",
+  "author": "KnoYo",
+  "describe": "使用自定义密码，密码由字母和数字组成。",
+  "date": "2018-04-06",
+  "lockPage": "index.html",
+  "setPwdPage": "setPwd.html"
+}

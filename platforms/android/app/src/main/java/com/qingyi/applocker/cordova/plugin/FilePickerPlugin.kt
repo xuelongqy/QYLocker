@@ -114,29 +114,4 @@ class FilePickerPlugin: CordovaPlugin() {
             }
         }
     }
-
-    /**
-     * @Title: getRealPathFromURI方法
-     * @Class: FilePickerPlugin
-     * @Description: 通过URI获取文件真实地址
-     * @author XueLong xuelongqy@foxmail.com
-     * @date 2018/4/26 9:45
-     * @update_author
-     * @update_time
-     * @version V1.0
-     * @param contentUri[Uri] 文件URI
-     * @return
-     * @throws
-    */
-    private fun getRealPathFromURI(contentUri: Uri): String? {
-        var res: String? = null
-        val proj = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = mActivity!!.contentResolver.query(contentUri, proj, null, null, null)
-        if (cursor.moveToFirst()) {
-            val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            res = cursor.getString(column_index)
-        }
-        cursor.close()
-        return res
-    }
 }

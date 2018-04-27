@@ -28,6 +28,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--设置密码页面-->
+        <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale"
+            android:label="@string/activity_name"
+            android:launchMode="singleTop"
+            android:name=".activity.SetPwdActivity"
+            android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
 
         <!--锁屏界面Activity-->
         <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale"
