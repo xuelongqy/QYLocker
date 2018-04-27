@@ -3,12 +3,12 @@
     <!--主题头部-->
     <mu-paper class="tf_head" :zDepth="2">
       <!--主题名称-->
-      <div class="tf_name">主题名称</div>
+      <div class="tf_name">{{themeInfo.name}}</div>
       <div style="float: right">
         <!--主题作者-->
-        <div class="tf_author">KnoYo</div>
+        <div class="tf_author">{{themeInfo.author}}</div>
         <!--主题日期-->
-        <div class="tf_date">2018-01-12</div>
+        <div class="tf_date">{{themeInfo.date}}</div>
       </div>
     </mu-paper>
     <!--主题主干区域-->
@@ -28,25 +28,27 @@
           {{this.$t("theme.introduced")}}
         </p>
         <p class="tf_introduced">
-          一个简单的主题介绍一个简单的主题介绍一个简单的主题介绍一个简单的主题介绍一个简单的主题介绍一个简单的主题介绍
+          {{themeInfo.describe}}
         </p>
       </mu-paper>
     </div>
     <!--主题底部栏-->
     <mu-paper class="tf_footer" :zDepth="2">
       <!--下载按钮-->
-      <mu-raised-button :label="$t('theme.download')" class="tf_operation_btn" primary/>
+      <mu-raised-button v-if="canDownload" :label="$t('theme.download')" class="tf_operation_btn" primary/>
       <!--使用按钮-->
-      <!--<mu-raised-button :label="$t('theme.use')" class="tf_operation_btn" secondary/>-->
+      <mu-raised-button v-if="canUse" :label="$t('theme.use')" class="tf_operation_btn" secondary @click="useTheme"/>
       <!--修改密码按钮-->
-      <!--<mu-raised-button :label="$t('theme.changePwd')" class="tf_operation_btn" backgroundColor="#a4c639"/>-->
+      <mu-raised-button v-if="canChange" :label="$t('theme.changePwd')" class="tf_operation_btn" backgroundColor="#a4c639"/>
       <!--删除按钮-->
-      <mu-icon-button class="tf_delete_btn" icon="delete"/>
+      <mu-icon-button v-if="canDelete" class="tf_delete_btn" icon="delete" @click="deleteTheme"/>
     </mu-paper>
   </div>
 </template>
 
 <script>
+  import ThemeUtil from "../../../assets/util/cordova/ThemeUtil"
+
   export default {
     name: "ThemeInfo",
     // 数据
@@ -55,10 +57,11 @@
         // 主题信息
         themeInfo: {
           id:-1,
-          images: ["http://a.hiphotos.baidu.com/image/pic/item/b64543a98226cffc6ec00edab5014a90f703eaf4.jpg","http://g.hiphotos.baidu.com/image/h%3D300/sign=5a0f156f57b5c9ea7df305e3e538b622/cf1b9d16fdfaaf519d4aa2db805494eef01f7a2c.jpg","http://a.hiphotos.baidu.com/image/h%3D300/sign=c43e07f052df8db1a32e7a643922dddb/0ff41bd5ad6eddc4c984b29335dbb6fd52663372.jpg",""],
+          images: [],
           name: "",
           author: "",
-          date: ""
+          date: "",
+          describe: ""
         },
         // 轮播参数
         swiperOption: {
@@ -76,8 +79,55 @@
     created() {
       // 判断是否已经下载主题
       // 获取主题信息
-      // alert(this.$route.params.id)
-    }
+      if (this.$route.params.themeTab == "tabDownload") {
+        this.themeInfo = this.$store.state.Theme.downloadedThemes[this.$route.params.index]
+      }else if (this.$route.params.themeTab == "tabStore") {
+        this.themeInfo = this.$store.state.Theme.storeThemes[this.$route.params.index]
+      }
+    },
+    // 计算变量
+    computed: {
+      // 判断是否未下载过的主题
+      isDownloaded() {
+        if (this.$route.params.themeTab== 'tabDownload') return true
+        for (var index in this.this.$store.state.Theme.downloadedThemes) {
+          if (this.$store.state.Theme.downloadedThemes[index].name == this.themeInfo.name) return true
+        }
+        return false
+      },
+      // 可以下载
+      canDownload() {
+        return !this.isDownloaded;
+      },
+      // 可以使用
+      canUse() {
+        return this.isDownloaded && !this.canChange
+      },
+      // 可以修改
+      canChange() {
+        return this.themeInfo.name == this.$store.state.LockAppsConfig.lockAppsConfig.theme
+      },
+      // 可以删除
+      canDelete() {
+        return this.canUse
+      }
+    },
+    // 方法
+    methods: {
+      // 删除主题
+      deleteTheme() {
+        ThemeUtil.deleteTheme(()=>{
+          window.history.back()
+          this.$store.dispatch('getDownloadedThemesInfo')
+        } ,this.themeInfo.name)
+      },
+      // 使用主题
+      useTheme() {
+        ThemeUtil.setThemePwd((state)=> {
+          alert(state)
+        },this.themeInfo.name)
+      }
+    },
   }
 </script>
 
@@ -123,14 +173,14 @@
       // 主题图片盒子
       .tf_images_box {
         width: 100%;
-        height: 250px;
+        height: 300px;
         margin-top: 10px;
         // 轮播器
         .images_swiper {
           height: 100%;
           // 图片
           .tf_images {
-            height: 250px;
+            height: 300px;
             width: auto;
           }
         }
@@ -162,7 +212,7 @@
       line-height: 60px;
       // 主题操作按钮
       .tf_operation_btn {
-        width: 50%;
+        width: 60%;
       }
       // 删除按钮
       .tf_delete_btn {

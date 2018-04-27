@@ -1,3 +1,5 @@
+import ThemeUtil from '../../assets/util/cordova/ThemeUtil'
+
 /**
  * @Title: Theme.js文件
  * @File: Theme.js
@@ -24,6 +26,14 @@ export default {
     // 设置加载主题信息状态
     setLoadThemeInfo(state, status) {
       state.loadThemesInfo = status
+    },
+    // 设置下载主题
+    setDownLoadedThemes(state, themeList) {
+      state.downloadedThemes = themeList
+    },
+    // 设置在线主题
+    setStoreThemes(state, themeList) {
+      state.storeThemes = themeList
     }
   },
   // 异步方法
@@ -31,6 +41,10 @@ export default {
     // 获取下载的主题信息
     getDownloadedThemesInfo({commit}) {
       commit("setLoadThemeInfo", true)
+      ThemeUtil.getThemeList((themeList) => {
+        commit("setDownLoadedThemes", themeList)
+        commit("setLoadThemeInfo", false)
+      })
     },
     // 获取在线主题
     getOnlineThemesInfo({commit}) {

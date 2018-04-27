@@ -147,6 +147,7 @@
       },
       // 背景图片改变
       bgImageChange(imgUrl) {
+        alert(imgUrl)
         settingsUtil.setBgImageUrl(imgUrl)
         this.$store.commit('updateSettingConfigByView', {
           key: 'bgImageUrl',

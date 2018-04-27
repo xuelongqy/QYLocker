@@ -71,7 +71,8 @@ module.exports = {
     "download": "下载",
     "use": "使用",
     "changePwd": "修改密码",
-    "chooseTheme": "选择主题"
+    "chooseTheme": "选择主题",
+    "importFail": "导入失败,请检验主题格式"
   },
   settings: {
     "unselected": "未选择",

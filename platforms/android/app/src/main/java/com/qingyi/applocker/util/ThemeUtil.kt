@@ -2,7 +2,6 @@ package com.qingyi.applocker.util
 
 import android.content.Context
 import android.util.Log
-import android.webkit.MimeTypeMap
 import com.google.gson.GsonBuilder
 import com.qingyi.applocker.bean.ThemeBean
 import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
@@ -27,6 +26,8 @@ class ThemeUtil(val context: Context) {
     companion object {
         // 类的标识
         val TAG = ThemeUtil::class.java.simpleName
+        // 内置主题名字
+        val BUILTIN_THEME_LIST = arrayListOf("Pattern","PIN","Password")
     }
 
     // Json操作对象
@@ -61,7 +62,7 @@ class ThemeUtil(val context: Context) {
             while ({line = themeInfoReader.readLine();line}() != null) {
                 themeInfo += line
             }
-            var themeBean: ThemeBean
+            val themeBean: ThemeBean
             try {
                 themeBean = gson.fromJson(themeInfo, ThemeBean::class.java)
                 LoggerUtil.logAndroid(Log.INFO, "importTheme", "ThemeName = ${themeBean.name}")
@@ -75,6 +76,32 @@ class ThemeUtil(val context: Context) {
         }else {
             LoggerUtil.logAndroid(Log.INFO, "importTheme", "is not theme file")
             return false
+        }
+    }
+
+    /**
+     * @Title: deleteTheme方法
+     * @Class: ThemeUtil
+     * @Description: 删除主题
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/4/27 11:10
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param themeName[String] 主题名称
+     * @return
+     * @throws
+    */
+    fun deleteTheme(themeName:String) {
+        // 获取当前主题目录
+        val themeDir = File(getThemePath() + File.separator + themeName)
+        if (themeDir.exists() && themeDir.isDirectory) {
+            // 删除主题目录
+            try {
+                FileUtil.deleteDir(themeDir)
+            }catch (e: Exception) {
+                LoggerUtil.logAndroid(Log.WARN, "deleteTheme", "Delete theme failure. Exception=${e.localizedMessage}")
+            }
         }
     }
 
@@ -104,37 +131,47 @@ class ThemeUtil(val context: Context) {
      * @update_time
      * @version V1.0
      * @param themeName[String] 主题名字
+     * @param themesDir[File] 主题目录
      * @return [ThemeBean] 主题信息
      * @throws
     */
     fun getThemeByName(themeName: String):ThemeBean? {
+        // 主题目录
+        val themesDir = File(getThemePath() + File.separator + themeName)
         // 判断主题是否存在
-        val themeDir = File(getThemePath() + File.separator + themeName)
-        if (!themeDir.exists()) return null
+        if (!themesDir.exists()) return null
         // 获取主题基本信息
-        val themeInfoReader = BufferedReader(InputStreamReader(File(themeDir.absolutePath + File.separator + ThisApp.THEME_INFO_FILE).inputStream()))
+        val themeInfoReader = BufferedReader(InputStreamReader(File(themesDir.absolutePath + File.separator + ThisApp.THEME_INFO_FILE).inputStream()))
         var themeInfo = ""
         var line: String? = null
         while ({line = themeInfoReader.readLine();line}() != null) {
             themeInfo += line
         }
-        var themeBean: ThemeBean
+        val themeBean: ThemeBean
         try {
             themeBean = gson.fromJson(themeInfo, ThemeBean::class.java)
         }catch (e: Exception) {
             return null
         }
         // 获取主题图片
-        val imageDir = File(themeDir.absolutePath + File.separator + ThisApp.THEME_IMAGE)
+        val imageDir = File(themesDir.absolutePath + File.separator + ThisApp.THEME_IMAGE)
         val imageFiels = imageDir.listFiles { file->
             MediaCheck.isImage(file)
         }
         for (image in imageFiels) {
-            themeBean.imageUrl.add(image.absolutePath)
+            themeBean.images.add(ImageBase64Util.imageToBase64(image.absolutePath))
         }
         // 转换页面地址
-        themeBean.lockPage = themeDir.absolutePath + File.separator + themeBean.lockPage
-        themeBean.setPwdPage = themeDir.absolutePath + File.separator + themeBean.setPwdPage
+        themeBean.lockPage = if (themeBean.lockPage.contains("http://") || themeBean.lockPage.contains("https://"))
+            themeBean.lockPage
+        else
+            "file:" + themesDir.absolutePath + File.separator + ThisApp.THEME_WEBAPP + File.separator + themeBean.lockPage
+        themeBean.setPwdPage = if (themeBean.setPwdPage.contains("http://") || themeBean.setPwdPage.contains("https://"))
+            themeBean.setPwdPage
+        else
+            "file:" + themesDir.absolutePath + File.separator + ThisApp.THEME_WEBAPP + File.separator + themeBean.setPwdPage
+        // 判断是否为默认主题
+        if (BUILTIN_THEME_LIST.contains(themeName)) themeBean.isBuiltIn = false
         return themeBean
     }
 
@@ -164,7 +201,15 @@ class ThemeUtil(val context: Context) {
             file.isDirectory
         }
         for (themeDir in themeDirs) {
-            themeList.add(getThemeByName(themeDir.absolutePath.replace(getThemePath(), ""))!!)
+            var theme: ThemeBean? = null
+            try {
+                theme = getThemeByName(themeDir.absolutePath.replace(getThemePath(), ""))
+                if (theme != null) {
+                    themeList.add(theme)
+                }
+            }catch (e: Exception) {
+                LoggerUtil.logAndroid(Log.WARN, "getThemeList", "Get theme from{${themeDir.absolutePath}} failure. Exception=${e.localizedMessage}")
+            }
         }
         return themeList
     }

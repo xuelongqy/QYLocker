@@ -27,6 +27,7 @@
           v-for="(themeInfo,index) in themeList"
           :key = 'themeInfo.name'
           :index = 'index'
+          :themeTab = 'activeTab'
           :isDownloaded = 'isDownloadedTheme(themeInfo.name)'
           :themeInfo = 'themeInfo'/>
       </scroller>
@@ -43,6 +44,7 @@
   import ThemeSearch from "../AppList/AppSearch/AppSearch"
   import FilePicker from "../../../assets/util/cordova/FilePicker"
   import ThemeUtil from "../../../assets/util/cordova/ThemeUtil"
+  import toastUtil from "../../../assets/util/cordova/toastUtil"
 
   export default {
     name: "Theme",
@@ -54,80 +56,26 @@
         // 搜索关键字
         searchKey: "",
         // 缓存加载完成回调
-        infiniteDoneCallback: null,
-        // 下载的主题
-        downloadedThemes: [
-          {
-            id:0,
-            imageUrl: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523524052725&di=bcbaa3e03290bb1d6edc942134418305&imgtype=0&src=http%3A%2F%2Fs11.sinaimg.cn%2Flarge%2F001ndUTJgy6P7a6eyJY9a%26690",
-            name: "图案",
-            author: "KnoYo",
-            date: "2018-01-05"
-          },
-          {
-            id:1,
-            imageUrl: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523524114090&di=7629190fb3369220de024271e798cce0&imgtype=0&src=http%3A%2F%2Fc11.eoemarket.com%2Fapp0%2F699%2F699717%2Fscreen%2F3454157.jpg",
-            name: "PIN",
-            author: "KnoYo",
-            date: "2018-01-06"
-          },
-          {
-            id:2,
-            imageUrl: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523524647758&di=b4648a10795cecc06ab927838075de3a&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01f55357877f0b0000018c1b4dfe99.jpg",
-            name: "滑动",
-            author: "KnoYo",
-            date: "2018-01-07"
-          },
-          {
-            id:3,
-            imageUrl: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1524119808&di=64972412a8bdbc1cc8a93e498c28daa5&imgtype=jpg&er=1&src=http%3A%2F%2Fattach.bbs.miui.com%2Fforum%2F201610%2F04%2F155701dnntm2cctynnhyx2.png",
-            name: "数字",
-            author: "KnoYo",
-            date: "2018-01-07"
-          }
-        ],
-        // 商店的主题
-        storeThemes: [
-          {
-            id:4,
-            imageUrl: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523524796163&di=53da2bbaf09e91007a428308baaf7b0f&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01cdb5563095366ac72548789738c4.png%401280w_1l_2o_100sh.png",
-            name: "起航",
-            author: "KnoYo",
-            date: "2018-01-05"
-          },
-          {
-            id:5,
-            imageUrl: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523524825809&di=5c42d16aa287be919493768894512f5b&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F016689591c02abb5b3086ed4131abe.jpg%401280w_1l_2o_100sh.png",
-            name: "足球",
-            author: "KnoYo",
-            date: "2018-01-06"
-          },
-          {
-            id:6,
-            imageUrl: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523524950217&di=4f2691a543b92cbed7d5c0280474203e&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01ea105568a7da00000127160b24f3.jpg%40900w_1l_2o_100sh.jpg",
-            name: "下拉",
-            author: "KnoYo",
-            date: "2018-01-07"
-          },
-          {
-            id:7,
-            imageUrl: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1524119808&di=64972412a8bdbc1cc8a93e498c28daa5&imgtype=jpg&er=1&src=http%3A%2F%2Fattach.bbs.miui.com%2Fforum%2F201610%2F04%2F155701dnntm2cctynnhyx2.png",
-            name: "数字",
-            author: "KnoYo",
-            date: "2018-01-07"
-          }
-        ]
+        infiniteDoneCallback: null
+      }
+    },
+    // 页面创建时
+    created() {
+      // 获取应用信息
+      if (this.$store.state.Theme.downloadedThemes.length === 0) {
+        this.$store.dispatch('getDownloadedThemesInfo')
       }
     },
     // 计算方法
     computed: {
+      // 主题列表
       themeList() {
         // 判断Tab的模式
         var themes = []
         if (this.activeTab == "tabDownload") {
-          themes = this.downloadedThemes
+          themes = this.$store.state.Theme.downloadedThemes
         }else if (this.activeTab == "tabStore") {
-          themes = this.storeThemes
+          themes = this.$store.state.Theme.storeThemes
         }else {
           return []
         }
@@ -185,6 +133,7 @@
         for (var index in this.downloadedThemes) {
           if (this.downloadedThemes[index].name == themeName) return true
         }
+        return false
       },
       // 导入主题
       onImportTheme() {
@@ -193,7 +142,11 @@
       // 主题文件选择
       importThemeChange(themeUrl) {
         ThemeUtil.importTheme((state)=>{
-          alert(state)
+          if (state) {
+            this.$store.dispatch('getDownloadedThemesInfo')
+          }else {
+            toastUtil.showLongToast(this.$t("theme.importFail"))
+          }
         },themeUrl)
       }
     },

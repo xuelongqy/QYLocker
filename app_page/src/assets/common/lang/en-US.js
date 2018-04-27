@@ -72,7 +72,8 @@ module.exports = {
     "download": "Download",
     "use": "Use",
     "changePwd": "Change password",
-    "chooseTheme": "Choose theme"
+    "chooseTheme": "Choose theme",
+    "importFail": "Import failed, please check the theme format"
   },
   settings: {
     "unselected": "Unselected",

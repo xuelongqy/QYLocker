@@ -19,9 +19,11 @@ data class ThemeBean (
         // 主题名字
         var name:String = "",
         // 图片地址
-        var imageUrl:ArrayList<String> = arrayListOf(),
+        var images:ArrayList<String> = arrayListOf(),
         // 主题作者
         var author:String = "",
+        // 主题描述
+        var describe:String = "",
         // 主题版本
         var version:String = "",
         // 主题日期
@@ -29,5 +31,7 @@ data class ThemeBean (
         // 锁屏页面
         var lockPage:String = "",
         // 设置密码页面
-        var setPwdPage:String = ""
+        var setPwdPage:String = "",
+        // 自带主题(不可卸载)
+        var isBuiltIn:Boolean = false
 )

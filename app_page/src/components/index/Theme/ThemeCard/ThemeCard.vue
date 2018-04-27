@@ -12,7 +12,7 @@
     <!--主题卡片盒子-->
     <div class="theme_card_box">
       <!--主题图片-->
-      <img class="theme_img" :src="themeInfo.imageUrl" :alt="themeInfo.name" onerror="src='./static/image/ic_broken_image_grey.png'"/>
+      <img class="theme_img" :src="themeInfo.images[0]" :alt="themeInfo.name" onerror="src='./static/image/ic_broken_image_grey.png'"/>
       <!--已使用标签-->
       <mu-badge v-if="themeInfo.name == $store.state.LockAppsConfig.lockAppsConfig.theme"
         :content="this.$t('theme.used')" class="theme_badge" primary slot="right"/>
@@ -49,7 +49,7 @@
           default() {
             return {
               id:-1,
-              imageUrl: "",
+              images: [],
               name: "",
               author: "",
               date: ""
@@ -60,13 +60,23 @@
         isDownloaded: {
           type: Boolean,
           default: false
+        },
+        // 主题下标
+        index: {
+          type: Number,
+          default: -1
+        },
+        // 主题选项(下载/网络)
+        themeTab: {
+          type: String,
+          default: ""
         }
       },
       // 方法
       methods: {
         // 主题点击事件
         onThemeClick() {
-          this.$router.push("/index/theme-info/" + this.themeInfo.id)
+          this.$router.push("/index/theme-info/" + this.themeTab + "/" + this.index)
         }
       }
     }
@@ -90,7 +100,7 @@
       // 主题图片
       .theme_img {
         display: block;
-        width: 100px;
+        width: 85px;
         height: 140px;
         float: left;
       }

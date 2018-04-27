@@ -34,7 +34,7 @@ export default new Router({
           component: require('@/components/index/Theme/Theme.vue').default
         },
         {
-          path: 'theme-info/:id',
+          path: 'theme-info/:themeTab/:index',
           name: 'theme-info',
           component: require('@/components/index/ThemeInfo/ThemeInfo.vue').default
         },
