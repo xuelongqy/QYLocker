@@ -152,8 +152,6 @@
     },
     // 组件
     components: {
-      ThemeSearch,
-      ThemeCard,
       'theme-card': ThemeCard,
       'theme-search': ThemeSearch
     }

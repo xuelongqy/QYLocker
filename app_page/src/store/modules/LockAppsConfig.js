@@ -17,7 +17,7 @@ export default {
     // 基本加锁配置信息
     lockAppsConfig: {
       isLock: false,
-      theme: "PIN"
+      theme: ""
     },
     // 所有应用信息
     allAppsInfo: [],
@@ -59,6 +59,9 @@ export default {
     // 通过界面操作更新应用列表信息
     updateAppsInfoByView(state, {index, key, value}) {
       Vue.set(state.allAppsInfo[index], key, value)
+    },
+    setTheme(state, theme) {
+      Vue.set(state.lockAppsConfig, "theme", theme)
     }
   },
   // 异步方法

@@ -39,7 +39,7 @@
       <!--使用按钮-->
       <mu-raised-button v-if="canUse" :label="$t('theme.use')" class="tf_operation_btn" secondary @click="useTheme"/>
       <!--修改密码按钮-->
-      <mu-raised-button v-if="canChange" :label="$t('theme.changePwd')" class="tf_operation_btn" backgroundColor="#a4c639"/>
+      <mu-raised-button v-if="canChange" :label="$t('theme.changePwd')" class="tf_operation_btn" backgroundColor="#a4c639" @click="useTheme"/>
       <!--删除按钮-->
       <mu-icon-button v-if="canDelete" class="tf_delete_btn" icon="delete" @click="deleteTheme"/>
     </mu-paper>
@@ -48,6 +48,7 @@
 
 <script>
   import ThemeUtil from "../../../assets/util/cordova/ThemeUtil"
+  import ToastUtil from "../../../assets/util/cordova/toastUtil"
 
   export default {
     name: "ThemeInfo",
@@ -124,7 +125,14 @@
       // 使用主题
       useTheme() {
         ThemeUtil.setThemePwd((state)=> {
-          alert(state)
+          // 判断主题是否设置成功
+          if (state) {
+            // 修改Vuex-Store仓库中的数据
+            this.$store.commit('setTheme', this.themeInfo.name)
+            ToastUtil.showLongToast(this.$t('theme.themeSetSuccess'))
+          }else {
+            ToastUtil.showLongToast(this.$t('theme.themeNoSet'))
+          }
         },this.themeInfo.name)
       }
     },

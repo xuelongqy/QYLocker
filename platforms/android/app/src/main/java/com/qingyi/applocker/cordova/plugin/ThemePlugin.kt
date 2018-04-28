@@ -9,7 +9,9 @@ import org.apache.cordova.CordovaPlugin
 import org.apache.cordova.CordovaWebView
 import org.json.JSONArray
 import android.content.Intent
+import android.util.Log
 import com.qingyi.applocker.activity.SetPwdActivity
+import com.qingyi.applocker.util.LoggerUtil
 
 
 class ThemePlugin: CordovaPlugin() {
@@ -89,6 +91,36 @@ class ThemePlugin: CordovaPlugin() {
                 intent.putExtra(SetPwdActivity.SET_PWD_TYPE, SetPwdActivity.SET_PWD)
                 intent.putExtra(SetPwdActivity.THEME_NAME, args!!.getString(0))
                 this.cordova.startActivityForResult(this, intent, SET_PWD_REQUEST)
+                return true
+            }
+            // 取消设置密码
+            "cancelSetPwd" -> {
+                if (mActivity is SetPwdActivity) {
+                    (mActivity as SetPwdActivity).cancelSetPwd()
+                }
+                return true
+            }
+            // 使用主题并设置密码
+            "setPassword" -> {
+                cordova.threadPool.execute {
+                    if (mActivity is SetPwdActivity) {
+                        (mActivity as SetPwdActivity).setThemeAndPwd(args!!.getString(0))
+                    }
+                }
+                return true
+            }
+            // 解锁屏幕
+            "unlock" -> {
+                cordova.threadPool.execute {
+                    // 设置密码时,验证上一次密码
+                    if (mActivity is SetPwdActivity) {
+                        val isUnlock = (mActivity as SetPwdActivity).verifyPassword(args!!.getString(0))
+                        // 返回密码错误
+                        if (!isUnlock) {
+                            callbackContext!!.success(isUnlock.toString())
+                        }
+                    }
+                }
                 return true
             }
         }

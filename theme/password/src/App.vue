@@ -11,6 +11,8 @@ export default {
 </script>
 
 <style lang="scss">
+  @import "../node_modules/animate.css/animate.css";
+
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -18,7 +20,6 @@ export default {
     position: fixed;
     height: 100%;
     width: 100%;
-    background: blue;
   }
   body {
     padding: 0;

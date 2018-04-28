@@ -72,7 +72,9 @@ module.exports = {
     "use": "使用",
     "changePwd": "修改密码",
     "chooseTheme": "选择主题",
-    "importFail": "导入失败,请检验主题格式"
+    "importFail": "导入失败,请检验主题格式",
+    "themeSetSuccess": "主题设置成功",
+    "themeNoSet": "主题未设置"
   },
   settings: {
     "unselected": "未选择",

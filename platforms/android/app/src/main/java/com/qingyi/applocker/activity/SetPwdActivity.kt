@@ -3,8 +3,10 @@ package com.qingyi.applocker.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import com.qingyi.applocker.bean.ThemeBean
 import com.qingyi.applocker.preferences.LockAppsPrefs
+import com.qingyi.applocker.util.LoggerUtil
 import com.qingyi.applocker.util.ThemeUtil
 
 class SetPwdActivity: BaseHybridActivity(true, false) {
@@ -74,7 +76,7 @@ class SetPwdActivity: BaseHybridActivity(true, false) {
             this.finish()
         }
         // 设置返回参数
-        resultIntent.putExtra(SET_PWD_STATE, true)
+        resultIntent.putExtra(SET_PWD_STATE, false)
         setResult(Activity.RESULT_OK, resultIntent)
         // 初始化主题工具
         themeUtil = ThemeUtil(this)
@@ -93,15 +95,65 @@ class SetPwdActivity: BaseHybridActivity(true, false) {
     }
 
     // 验证上一次密码
-    fun vaildLastPwd() {
+    private fun vaildLastPwd() {
         loadUrl(lockTheme!!.lockPage)
     }
     // 设置密码
-    fun setNowPwd() {
+    private fun setNowPwd() {
         loadUrl(themeBean!!.setPwdPage)
     }
-    // 重新验证密码
-    fun vauldNowPws() {
-        loadUrl(themeBean!!.lockPage)
+    // 取消设置
+    fun cancelSetPwd() {
+        resultIntent.putExtra(SET_PWD_STATE, false)
+        this.finish()
+    }
+
+    /**
+     * @Title: setThemeAndPwd方法
+     * @Class: SetPwdActivity
+     * @Description: 设置主题和密码
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/4/28 14:56
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param pwd[String] 密码
+     * @return
+     * @throws
+    */
+    fun setThemeAndPwd(pwd:String) {
+        try {
+            lockAppsPrefs.setThemeAndPwd(themeName!!, pwd)
+        }catch (e: Exception) {
+            // 设置失败
+            LoggerUtil.logAndroid(Log.WARN, "$TAG-setThemeAndPwd", "Exception=${e.localizedMessage}")
+            resultIntent.putExtra(SET_PWD_STATE, false)
+            this.finish()
+        }
+        resultIntent.putExtra(SET_PWD_STATE, true)
+        this.finish()
+    }
+
+    /**
+     * @Title: verifyPassword方法
+     * @Class: SetPwdActivity
+     * @Description: 验证密码
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/4/28 15:57
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param pwd[String] 密码
+     * @return [Boolean] 密码是否正确
+     * @return
+     * @throws
+    */
+    fun verifyPassword(pwd:String):Boolean {
+        val isRight = lockAppsPrefs.verifyPassword(pwd)
+        // 判断密码是否正确
+        if (isRight) {
+            setNowPwd()
+        }
+        return isRight
     }
 }
