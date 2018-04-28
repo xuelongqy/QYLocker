@@ -9,6 +9,8 @@ import com.google.gson.GsonBuilder
 import com.google.gson.annotations.Expose
 import com.qingyi.applocker.util.LoggerUtil
 import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
+import java.security.MessageDigest
+import kotlin.experimental.and
 
 
 /**
@@ -217,6 +219,71 @@ class LockAppsPrefs(val context: Context) {
     fun removeFilterActivity(pkg: String,activity: String) {
         lockAppsConfig.lockApps[pkg]!!.filterActivity.remove(activity)
         lockAppsJson = gson.toJson(lockAppsConfig)
+    }
+
+    /**
+     * @Title: setThemeAndPwd方法
+     * @Class: LockAppsPrefs
+     * @Description: 设置主题和方法
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/4/28 15:00
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param theme[String] 主题
+     * @param pwd[String] 密码
+     * @return
+     * @throws
+    */
+    fun setThemeAndPwd(theme:String, pwd:String) {
+        lockAppsConfig.theme = theme
+        lockAppsConfig.password = encryptedPwd(pwd)
+        lockAppsJson = gson.toJson(lockAppsConfig)
+    }
+
+    /**
+     * @Title: encryptedPwd方法
+     * @Class: LockAppsPrefs
+     * @Description: 加密密码
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/4/28 15:05
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param pwd[String] 密码
+     * @return [String] 密文
+     * @throws
+     */
+    private fun encryptedPwd(password:String):String {
+        val instance = MessageDigest.getInstance("MD5")//获取md5加密对象
+        val digest = instance.digest(password.toByteArray())//对字符串加密，返回字节数组
+        val sb = StringBuffer()
+        for (b in digest) {
+            var i :Int = b.toInt() and 0xff//获取低八位有效值
+            var hexString = Integer.toHexString(i)//将整数转化为16进制
+            if (hexString.length < 2) {
+                hexString = "0$hexString"//如果是一位的话，补0
+            }
+            sb.append(hexString)
+        }
+        return sb.toString()
+    }
+
+    /**
+     * @Title: verifyPassword方法
+     * @Class: LockAppsPrefs
+     * @Description: 验证密码
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/4/28 15:56
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param pwd[String] 密码
+     * @return [Boolean] 密码是否正确
+     * @throws
+    */
+    fun verifyPassword(pwd:String):Boolean {
+        return lockAppsConfig.password == encryptedPwd(pwd)
     }
 
     /**
