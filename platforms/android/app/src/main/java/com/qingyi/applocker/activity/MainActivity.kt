@@ -25,8 +25,8 @@ class MainActivity : BaseHybridActivity(true, false) {
 
         // Set by <content src="cordova_index.html" /> in config.xml
 //         loadUrl(launchUrl)
-        loadUrl("http://192.168.1.113:8080")
-//        loadUrl("http://192.168.1.5:8080")
+//        loadUrl("http://192.168.1.113:8080")
+        loadUrl("http://192.168.1.4:8080")
 
         initMethod()
     }

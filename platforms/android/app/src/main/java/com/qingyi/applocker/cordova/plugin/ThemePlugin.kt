@@ -3,15 +3,15 @@ package com.qingyi.applocker.cordova.plugin
 import android.app.Activity
 import com.google.gson.GsonBuilder
 import com.qingyi.applocker.util.ThemeUtil
-import org.apache.cordova.CallbackContext
-import org.apache.cordova.CordovaInterface
-import org.apache.cordova.CordovaPlugin
-import org.apache.cordova.CordovaWebView
 import org.json.JSONArray
 import android.content.Intent
 import android.util.Log
+import com.qingyi.applocker.activity.AppLockActivity
 import com.qingyi.applocker.activity.SetPwdActivity
+import com.qingyi.applocker.preferences.SettingsPrefs
+import com.qingyi.applocker.util.ImageBase64Util
 import com.qingyi.applocker.util.LoggerUtil
+import org.apache.cordova.*
 
 
 class ThemePlugin: CordovaPlugin() {
@@ -19,6 +19,8 @@ class ThemePlugin: CordovaPlugin() {
     private var mActivity: Activity? = null
     // 主题工具
     private lateinit var themeUtil: ThemeUtil
+    // 设置配置
+    private lateinit var settingsPrefs:SettingsPrefs
     // Json操作对象
     private val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
     // 设置密码请求码
@@ -42,6 +44,7 @@ class ThemePlugin: CordovaPlugin() {
         mActivity = cordova!!.activity
         // 初始化变量
         themeUtil = ThemeUtil(mActivity!!)
+        settingsPrefs = SettingsPrefs(mActivity!!)
     }
 
     /**
@@ -120,6 +123,52 @@ class ThemePlugin: CordovaPlugin() {
                             callbackContext!!.success(isUnlock.toString())
                         }
                     }
+                    // 解锁应用时,验证密码
+                    else if (mActivity is AppLockActivity) {
+                        val isUnlock = (mActivity as AppLockActivity).verifyPassword(args!!.getString(0))
+                        // 返回密码错误
+                        if (!isUnlock) {
+                            callbackContext!!.success(isUnlock.toString())
+                        }
+                    }
+                }
+                return true
+            }
+            // 获取指纹状态
+            "isFingerprint" -> {
+                cordova.threadPool.execute {
+                    // 设置密码时验证,返回不支持指纹
+                    if (mActivity is SetPwdActivity) {
+                        callbackContext!!.success(false.toString())
+                        callbackContext.error(false.toString())
+                    }
+                    // 解锁界面,获取是否使用者指纹
+                    else if (mActivity is AppLockActivity) {
+                        callbackContext!!.success((mActivity as AppLockActivity).isFingerprint().toString())
+                        callbackContext.error(false.toString())
+                    }
+                }
+                return true
+            }
+            // 设置指纹监听
+            "setFingerprintListener" -> {
+                cordova.threadPool.execute {
+                    // 判断是否为解锁页面
+                    if (mActivity is AppLockActivity) {
+                        // 设置监听回调
+                        val mPlugin = PluginResult(PluginResult.Status.NO_RESULT)
+                        mPlugin.keepCallback = true
+                        callbackContext!!.sendPluginResult(mPlugin)
+                        (mActivity as AppLockActivity).fingerprintCallbackContext = callbackContext
+                    }
+                }
+                return true
+            }
+            // 获取背景图片
+            "getBgImg" -> {
+                cordova.threadPool.execute {
+                    callbackContext!!.success(ImageBase64Util.imageToBase64(settingsPrefs.settingsConfig.bgImageUrl))
+                    callbackContext.error("")
                 }
                 return true
             }

@@ -4,18 +4,12 @@ import android.content.Context
 import com.qingyi.applocker.bean.AppInfoBean
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
-import com.qingyi.applocker.bean.AppInfoJsonBean
-import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
-import java.util.LinkedHashMap
 import java.util.ArrayList
 import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
-import java.io.IOException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.util.Log
 import com.qingyi.applocker.filter.AppsFilter
-import com.qingyi.applocker.preferences.LockAppsPrefs
 
 
 /**

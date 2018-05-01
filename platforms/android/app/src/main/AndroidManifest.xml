@@ -11,6 +11,8 @@
     <!--文件读写权限-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!--指纹权限-->
+    <uses-permission-sdk-23 android:name="android.permission.USE_FINGERPRINT" />
     <!--查看最近应用使用情况权限-->
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
@@ -41,6 +43,7 @@
         <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale"
             android:label="@string/activity_name"
             android:launchMode="singleTop"
+            android:allowTaskReparenting="true"
             android:excludeFromRecents="true"
             android:exported="true"
             android:taskAffinity=""

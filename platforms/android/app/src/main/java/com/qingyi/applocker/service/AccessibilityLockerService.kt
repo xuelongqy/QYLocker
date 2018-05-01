@@ -17,8 +17,10 @@ import com.qingyi.applocker.util.LoggerUtil
 import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
 import android.app.NotificationManager
 import android.app.NotificationChannel
+import android.app.usage.UsageEvents
 import android.content.Context
 import android.graphics.Color
+import com.qingyi.applocker.filter.AppsFilter
 import com.qingyi.applocker.util.LockAppValidator
 
 
@@ -40,8 +42,8 @@ class AccessibilityLockerService: AccessibilityService() {
         const val CHANNEL_NAME = "AccessibilityChannel"
     }
 
-    // 缓存当前运行的程序
-    private var foregroundPackageName = ""
+    // 缓存栈顶应用
+    private var topPkg: String? = null
     // 加锁应用验证器
     private lateinit var lockAppValidator: LockAppValidator
 
@@ -111,17 +113,24 @@ class AccessibilityLockerService: AccessibilityService() {
      * @param event 当前应用的事件
      */
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        if (event!!.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-            // 验证应用
-            lockAppValidator.validatLockApp(event.packageName.toString(), event.className.toString())
-//            foregroundPackageName = event.packageName.toString()
-//            LoggerUtil.logAndroid(Log.INFO,"onAccessibilityEvent", "package=${this.foregroundPackageName}")
-            //模拟应用锁
-//            if (lockAppsPrefs!!.lockAppsConfig.lockApps.containsKey(foregroundPackageName)){
-//                var intent = Intent(this,AppLockActivity::class.java)
-//                this.startActivity(intent)
-//                Toast.makeText(this, "加锁应用 $foregroundPackageName ${event.className}", Toast.LENGTH_SHORT).show()
-//            }
+        if (event == null) return
+        // LoggerUtil.logAndroid(Log.INFO,"onAccessibilityEvent", "package=${event!!.packageName} activity=${event.className}")
+        if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            // 判断是否过滤名单应用和页面
+            if (AppsFilter.PackageFilterList.contains(event.packageName.toString()) || AppsFilter.ActivityFilterList.contains(event.className.toString())) {
+                return
+            }
+            // 判断是否为锁屏页面
+            if (event.packageName.toString() == this.application.packageName && event.className.toString() == AppLockActivity::class.java.name) {
+                topPkg = event.packageName.toString()
+                return
+            }
+            // 验证上一次是否为同一个应用
+            if (topPkg == null || topPkg != event.packageName.toString()) {
+                // 验证应用
+                lockAppValidator.validatLockApp(event.packageName.toString(), event.className.toString())
+            }
+            topPkg = event.packageName.toString()
         }
     }
 
@@ -133,7 +142,7 @@ class AccessibilityLockerService: AccessibilityService() {
      * @author qingyi xuelongqy@foxmail.com
      * @date 2017/8/15 16:02
      */
-    fun startNotification() {
+    private fun startNotification() {
         // 创建通道
         val notificationChannel: NotificationChannel
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {

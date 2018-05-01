@@ -66,8 +66,86 @@ export let unlock = function (callBack, pwd) {
   )
 }
 
+/**
+ * @Title: getBgImg方法
+ * @Description: 获取背景图片
+ * @author XueLong xuelongqy@foxmail.com
+ * @date 2018/4/28 16:22
+ * @update_author
+ * @update_time
+ * @version V1.0
+ * @param callBack 回调函数,返回背景图片,异常返回为""
+ * @return
+ * @throws
+ */
+export let getBgImg = function (callBack) {
+  ExecUtil.exec(
+    function (img) {
+      callBack(img)
+    },
+    function (error) {
+      callBack(error)
+    },
+    "Theme",
+    "getBgImg"
+  )
+}
+
+/**
+ * @Title: isFingerprint方法
+ * @Description: 获取是否支持指纹
+ * @author XueLong xuelongqy@foxmail.com
+ * @date 2018/4/28 16:22
+ * @update_author
+ * @update_time
+ * @version V1.0
+ * @param callBack 回调函数,返回是否支持指纹
+ * @return
+ * @throws
+ */
+export let isFingerprint = function (callBack) {
+  ExecUtil.exec(
+    function (is) {
+      callBack(eval(is))
+    },
+    function (error) {
+      callBack(eval(error))
+    },
+    "Theme",
+    "isFingerprint"
+  )
+}
+
+/**
+ * @Title: setFingerprintListener方法
+ * @Description: 设置指纹监听事件
+ * @author XueLong xuelongqy@foxmail.com
+ * @date 2018/4/28 16:22
+ * @update_author
+ * @update_time
+ * @version V1.0
+ * @param callBack 回调函数,判断指纹是否成功以及提示信息格式为{ "success":false,"msg":"" }
+ * @return
+ * @throws
+ */
+export let setFingerprintListener = function (callBack) {
+  ExecUtil.exec(
+    function (data) {
+      callBack(data)
+    },
+    function (error) {
+      callBack(error)
+    },
+    "Theme",
+    "setFingerprintListener"
+  )
+}
+
 export default {
   cancelSetPwd,
   setPassword,
-  unlock
+  unlock,
+  getBgImg,
+  isFingerprint,
+  setFingerprintListener
 }

@@ -11,7 +11,7 @@
   <div id="lock_page">
     <!--背景图片盒子-->
     <div class="lp_bg_box">
-      <img class="lp_bg_img" src="http://t12.baidu.com/it/u=3390519500,805792182&fm=173&app=25&f=JPEG?w=640&h=1138&s=328DD60669AB432438DD2F59030050F6" onerror="src='./static/image/transparent.png'">
+      <img class="lp_bg_img" :src="bgImageUrl" onerror="src='./static/image/transparent.png'">
     </div>
     <!--软件图标盒子-->
     <div class="lp_app_icon_box">
@@ -43,7 +43,7 @@
     </mu-dialog>
     <!--指纹盒子-->
     <div class="lp_fingerprint_box">
-      <v-fingerprint/>
+      <v-fingerprint v-if="isFingerprint"/>
     </div>
   </div>
 </template>
@@ -61,8 +61,28 @@
         // 密码
         password: "",
         // 密码错误弹窗
-        pwdWrongDialog: false
+        pwdWrongDialog: false,
+        // 背景图片
+        bgImageUrl: "",
+        // 是否支持指纹
+        isFingerprint: false
       }
+    },
+    // 页面创建时
+    created() {
+      // 绑定设备初始化完成事件
+      document.addEventListener('deviceready', () => {
+        // 获取背景图片
+        ThemeUtil.getBgImg((img) => {
+          this.bgImageUrl = img
+        })
+        // 获取是否支持指纹
+        ThemeUtil.isFingerprint((is) => {
+          this.isFingerprint = is
+        })
+        // 设置指纹监听
+        ThemeUtil.setFingerprintListener(this.fingerprintListener)
+      })
     },
     // 组件
     components: {
@@ -79,6 +99,19 @@
             this.pwdWrongDialog = true
           }
         },this.password)
+      },
+      // 指纹监听事件
+      fingerprintListener(data) {
+        alert(JSON.stringify(data))
+        // if (data instanceof Object) {
+        //   if (!data.success) {
+        //     alert(data.msg)
+        //   }
+        // }else {
+        //   alert(data)
+        // }
+        // 重新设置指纹事件
+        ThemeUtil.setFingerprintListener(this.fingerprintListener)
       }
     }
   }

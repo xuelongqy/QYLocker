@@ -10,6 +10,9 @@ import android.util.Log
 import com.qingyi.applocker.R
 import com.qingyi.applocker.activity.MainActivity
 import android.os.Build
+import com.qingyi.applocker.activity.AppLockActivity
+import com.qingyi.applocker.filter.AppsFilter
+import com.qingyi.applocker.util.LockAppValidator
 import com.qingyi.applocker.util.LoggerUtil
 import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
 
@@ -35,8 +38,12 @@ class UsageStatsLockerService: IntentService("QYLocker-UsageStatsService") {
         const val CHANNEL_NAME = "UsageStatsChannel"
     }
 
-    //缓存activityManager
-    lateinit var activityManager:ActivityManager
+    // 缓存activityManager
+    private lateinit var activityManager:ActivityManager
+    // 缓存栈顶应用
+    private var topPkg: String? = null
+    // 加锁应用验证器
+    private lateinit var lockAppValidator: LockAppValidator
 
     /**
      * 重写创建监听方法
@@ -47,7 +54,7 @@ class UsageStatsLockerService: IntentService("QYLocker-UsageStatsService") {
      */
     override fun onCreate() {
         super.onCreate()
-        LoggerUtil.logAndroid(Log.INFO,"UsageStatsLockerService.onCreate", "UsageStatsLockerService start!");
+        LoggerUtil.logAndroid(Log.INFO,"UsageStatsLockerService.onCreate", "UsageStatsLockerService start!")
         activityManager = ((getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager?)!!)
     }
 
@@ -66,6 +73,8 @@ class UsageStatsLockerService: IntentService("QYLocker-UsageStatsService") {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         //启动前台服务
         startNotification()
+        // 初始化验证器
+        lockAppValidator = LockAppValidator(this)
         return super.onStartCommand(intent, Service.START_FLAG_REDELIVERY, startId)
     }
 
@@ -94,33 +103,47 @@ class UsageStatsLockerService: IntentService("QYLocker-UsageStatsService") {
     override fun onHandleIntent(intent: Intent?) {
         //轮询获取
         while (true){
-            LoggerUtil.logAndroid(Log.INFO,"UsageStatsLockerService.onHandleIntent", "package=${getLauncherTopPackageName()}")
-
-            //启动时间间隔
+            // 启动时间间隔
             try {
                 Thread.sleep(POLLING_INTERVAL)
             } catch (e: InterruptedException) {
                 e.printStackTrace()
             }
+            // 获取栈顶应用信息
+            val event = getLauncherTop()
+            // 判断是否过滤名单应用和页面
+            if (AppsFilter.PackageFilterList.contains(event.packageName.toString()) || AppsFilter.ActivityFilterList.contains(event.className.toString())) {
+                return
+            }
+            // 判断是否为锁屏页面
+            if (event.packageName.toString() == this.application.packageName && event.className.toString() == AppLockActivity::javaClass.name) {
+                topPkg = event.packageName.toString()
+                continue
+            }
+            // 验证上一次是否为同一个应用
+            if (topPkg == null || topPkg != event.packageName.toString()) {
+                // 验证应用
+                lockAppValidator.validatLockApp(event.packageName.toString(), event.className.toString())
+            }
+            topPkg = event.packageName.toString()
+            //LoggerUtil.logAndroid(Log.INFO,"UsageStatsLockerService.onHandleIntent", "package=${getLauncherTop()}")
         }
     }
 
     /**
      * 获取栈顶应用的包名
-     * @Title: getLauncherTopPackageName
+     * @Title: getLauncherTop
      * @Description: 获取栈顶应用的包名
      * @author qingyi xuelongqy@foxmail.com
      * @date 2017/8/15 1:08
      * @return 栈顶应用的包名
      */
-    fun getLauncherTopPackageName(): String {
+    private fun getLauncherTop(): UsageEvents.Event {
         //获取UsageStatsManager对象
         val sUsageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
         //设置获取应用使用情况的开始时间和截至时间
         val endTime = System.currentTimeMillis()
         val beginTime = endTime - 5000
-        //缓存获取的栈顶应用的包名
-        var result = ""
         val event = UsageEvents.Event()
         val usageEvents = sUsageStatsManager.queryEvents(beginTime, endTime)
         //遍历最近时间应用的使用情况
@@ -128,14 +151,10 @@ class UsageStatsLockerService: IntentService("QYLocker-UsageStatsService") {
             usageEvents.getNextEvent(event)
             //判断栈顶应用
             if (event.eventType == UsageEvents.Event.MOVE_TO_FOREGROUND) {
-                result = event.packageName
+                return event
             }
         }
-        //判断是否正确获取
-        if (!android.text.TextUtils.isEmpty(result)) {
-            return result
-        }
-        return ""
+        return event
     }
 
     /**
@@ -146,7 +165,7 @@ class UsageStatsLockerService: IntentService("QYLocker-UsageStatsService") {
      * @author qingyi xuelongqy@foxmail.com
      * @date 2017/8/15 16:02
      */
-    fun startNotification() {
+    private fun startNotification() {
         // 创建通道
         val notificationChannel: NotificationChannel
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {

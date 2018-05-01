@@ -109,6 +109,7 @@ class FilePickerPlugin: CordovaPlugin() {
                     if (this.chooseFileCallbackContext != null) {
                         val file = File(uri.toString())
                         this.chooseFileCallbackContext!!.success(FilePathUtil.getFilePathByUri(mActivity!!, uri))
+                        //this.chooseFileCallbackContext!!.success(uri.toString())
                     }
                 }
             }

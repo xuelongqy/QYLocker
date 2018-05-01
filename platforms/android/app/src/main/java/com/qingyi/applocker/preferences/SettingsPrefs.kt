@@ -45,7 +45,7 @@ class SettingsPrefs(val context: Context) {
         }
         set(value) {// 设置并同步配置
             val editor: SharedPreferences.Editor = prefs.edit()
-            editor.putString(ThisApp.PREFS_LOCK_APPS_KEY, value)
+            editor.putString(ThisApp.PREFS_SETTINGS_KEY, value)
             editor.apply()
             cSettingsJson = value
         }
@@ -86,7 +86,7 @@ class SettingsPrefs(val context: Context) {
      * @throws
      */
     fun update() {
-        cSettingsJson = prefs.getString(ThisApp.PREFS_LOCK_APPS_KEY, null)
+        cSettingsJson = prefs.getString(ThisApp.PREFS_SETTINGS_KEY, null)
         if (cSettingsJson == null) {
             settingsConfig = SettingsConfig()
             settingsJson = gson.toJson(settingsConfig)
@@ -178,7 +178,7 @@ class SettingsPrefs(val context: Context) {
             // 应用锁模式
             var lockModel: String = "listenApps",
             // 重新锁定
-            var resetLockModel: String = "oneToOne",
+            var resetLockModel: String = ThisApp.ONE_TO_ONE,
             // 使用指纹
             var useFingerprint: Boolean = false,
             // 高级模式
