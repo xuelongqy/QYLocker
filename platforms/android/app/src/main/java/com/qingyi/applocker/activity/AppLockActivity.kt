@@ -2,8 +2,10 @@ package com.qingyi.applocker.activity
 
 import android.os.Bundle
 import android.content.Intent
+import android.graphics.Color
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat
 import android.util.Log
+import com.qingyi.applocker.R
 import com.qingyi.applocker.bean.ThemeBean
 import com.qingyi.applocker.preferences.HistoryPrefs
 import com.qingyi.applocker.preferences.LockAppsPrefs
@@ -12,7 +14,10 @@ import com.qingyi.applocker.util.FingerprintUtil
 import com.qingyi.applocker.util.LoggerUtil
 import com.qingyi.applocker.util.ThemeUtil
 import org.apache.cordova.CallbackContext
+import org.apache.cordova.CordovaWebView
+import org.apache.cordova.CordovaWebViewImpl
 import org.apache.cordova.PluginResult
+import org.apache.cordova.engine.SystemWebViewEngine
 import org.json.JSONObject
 
 
@@ -55,6 +60,8 @@ class AppLockActivity: BaseHybridActivity(true, false) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_app_lock)
+        init()
 
         // enable Cordova apps to be started in the background
         val extras = intent.extras
@@ -70,6 +77,32 @@ class AppLockActivity: BaseHybridActivity(true, false) {
             // 加载锁屏界面前端视图
             loadUrl(lockTheme!!.lockPage)
         }
+    }
+
+    /**
+     * @Title: 重写makeWebView方法
+     * @Class: AppLockActivity
+     * @Description: 创建WebView控件
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/2 16:28
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param
+     * @return
+     * @throws
+    */
+    override fun makeWebView(): CordovaWebView {
+        val cordovaWebView = CordovaWebViewImpl(SystemWebViewEngine(findViewById(R.id.al_web_view)))
+        return cordovaWebView
+    }
+    override fun createViews() {
+        if (preferences.contains("BackgroundColor")) {
+            val backgroundColor = preferences.getInteger("BackgroundColor", Color.WHITE)
+            // Background of activity:
+            appView.view.setBackgroundColor(backgroundColor)
+        }
+        appView.view.requestFocusFromTouch()
     }
 
     // 初始化操作

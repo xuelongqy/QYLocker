@@ -6,21 +6,16 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import android.view.accessibility.AccessibilityEvent
-import android.widget.Toast
 import com.qingyi.applocker.R
 import com.qingyi.applocker.activity.AppLockActivity
 import com.qingyi.applocker.activity.MainActivity
-import com.qingyi.applocker.preferences.LockAppsPrefs
-import com.qingyi.applocker.util.LoggerUtil
 import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
 import android.app.NotificationManager
 import android.app.NotificationChannel
-import android.app.usage.UsageEvents
 import android.content.Context
-import android.graphics.Color
 import com.qingyi.applocker.filter.AppsFilter
+import com.qingyi.applocker.receiver.ScreenBroadcastReceiver
 import com.qingyi.applocker.util.LockAppValidator
 
 
@@ -46,6 +41,8 @@ class AccessibilityLockerService: AccessibilityService() {
     private var topPkg: String? = null
     // 加锁应用验证器
     private lateinit var lockAppValidator: LockAppValidator
+    // 屏幕广播接收器
+    private var screenBroadcastReceiver: ScreenBroadcastReceiver? = null
 
     /**
      * 重写启动命令方法
@@ -75,6 +72,11 @@ class AccessibilityLockerService: AccessibilityService() {
         startNotification()
         // 初始化验证器
         lockAppValidator = LockAppValidator(this)
+        // 初始化屏幕广播接收器
+        if (screenBroadcastReceiver == null) {
+            screenBroadcastReceiver = ScreenBroadcastReceiver(this)
+        }
+        screenBroadcastReceiver!!.start()
         super.onServiceConnected()
     }
 
@@ -98,8 +100,12 @@ class AccessibilityLockerService: AccessibilityService() {
      * @param intent 上下文
      */
     override fun onUnbind(intent: Intent?): Boolean {
-        //关闭前台服务
+        // 关闭前台服务
         stopForeground(true)
+        // 停止屏幕广播接收器
+        if (screenBroadcastReceiver != null) {
+            screenBroadcastReceiver!!.stop()
+        }
         return super.onUnbind(intent)
     }
 
