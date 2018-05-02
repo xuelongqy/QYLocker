@@ -13,6 +13,7 @@ package com.qingyi.applocker.bean
  * password: 密码
 */
 data class LockAppThemeBean (
+        var name: String = "",
         var theme: String = "",
         var password: String = ""
 )

@@ -3,18 +3,9 @@ package com.qingyi.applocker.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.R.attr.action
 import com.qingyi.applocker.preferences.HistoryPrefs
 import android.os.PowerManager
 import android.content.IntentFilter
-import com.qingyi.applocker.receiver.ScreenBroadcastReceiver.ScreenStateListener
-
-
-
-
-
-
-
 
 /**
  * @Title: ScreenBroadcastReceiver类
@@ -95,7 +86,11 @@ class ScreenBroadcastReceiver(private val mContext: Context, private val mScreen
      * @throws
     */
     fun start() {
+        // 启动时清除历史
+        HistoryPrefs(mContext).cleanHistory()
+        // 注册接收器监听
         registerListener()
+        // 获取当前屏幕状态
         getScreenState()
     }
 

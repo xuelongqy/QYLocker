@@ -17,13 +17,20 @@
     </FrameLayout>
 
     <!--侧边栏-->
-    <ListView android:id="@+id/al_left_drawer"
+    <LinearLayout
+        android:id="@+id/al_left_drawer"
         android:layout_width="240dp"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        android:divider="#33333333"
-        android:dividerHeight="0dp"
-        android:background="#ffeeeeee"
-        android:scrollbars="none"/>
+        android:layout_gravity="start">
+        <!--密码列表-->
+        <ListView
+            android:id="@+id/al_pwd_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:choiceMode="singleChoice"
+            android:divider="#33333333"
+            android:dividerHeight="0dp"
+            android:background="#00000000"/>
+    </LinearLayout>
 </android.support.v4.widget.DrawerLayout>
