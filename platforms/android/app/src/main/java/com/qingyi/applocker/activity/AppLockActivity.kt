@@ -1,10 +1,7 @@
 package com.qingyi.applocker.activity
 
-import android.app.ActivityManager
-import android.content.Context
 import android.os.Bundle
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat
 import android.util.Log
 import com.qingyi.applocker.bean.ThemeBean
@@ -15,6 +12,7 @@ import com.qingyi.applocker.util.FingerprintUtil
 import com.qingyi.applocker.util.LoggerUtil
 import com.qingyi.applocker.util.ThemeUtil
 import org.apache.cordova.CallbackContext
+import org.apache.cordova.PluginResult
 import org.json.JSONObject
 
 
@@ -101,14 +99,18 @@ class AppLockActivity: BaseHybridActivity(true, false) {
                 // 指纹异常
                 override fun onAuthenticateError(errMsgId: Int, errString: CharSequence?) {
                     if (fingerprintCallbackContext != null) {
-                        fingerprintCallbackContext!!.success(JSONObject(hashMapOf<String,Any>("success" to false, "msg" to errString.toString())))
+                        val mPlugin = PluginResult(PluginResult.Status.OK, JSONObject(hashMapOf<String,Any>("success" to false, "msg" to errString.toString())))
+                        mPlugin.keepCallback = true
+                        fingerprintCallbackContext!!.sendPluginResult(mPlugin)
                     }
                     LoggerUtil.logAndroid(Log.INFO, "FingerPrintVerify", errString.toString())
                 }
                 // 验证失败
                 override fun onAuthenticateFailed() {
                     if (fingerprintCallbackContext != null) {
-                        fingerprintCallbackContext!!.success(JSONObject(hashMapOf<String,Any>("success" to false, "msg" to "")))
+                        val mPlugin = PluginResult(PluginResult.Status.OK, JSONObject(hashMapOf<String,Any>("success" to false, "msg" to "")))
+                        mPlugin.keepCallback = true
+                        fingerprintCallbackContext!!.sendPluginResult(mPlugin)
                     }
                     LoggerUtil.logAndroid(Log.INFO, "FingerPrintVerify", "failed")
                 }
@@ -174,6 +176,22 @@ class AppLockActivity: BaseHybridActivity(true, false) {
             this.finish()
         }
         return isRight
+    }
+
+    /**
+     * @Title: getThemeData方法
+     * @Class: AppLockActivity
+     * @Description: 获取主题额外数据
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/2 13:42
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @return [String] 主题数据
+     * @throws
+    */
+    fun getThemeData():String {
+        return themeUtil.getThemeData(lockTheme!!.name)
     }
 
     /**

@@ -28,6 +28,7 @@ class ThisApp {
         // 主题相关
         const val THEME_PATH = "theme"
         const val THEME_INFO_FILE = "theme.json"
+        const val THEME_DATA_FILE = "data.json"
         const val THEME_WEBAPP = "webapp"
         const val THEME_IMAGE = "image"
 

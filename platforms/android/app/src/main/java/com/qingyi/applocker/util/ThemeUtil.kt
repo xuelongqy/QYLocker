@@ -5,10 +5,9 @@ import android.util.Log
 import com.google.gson.GsonBuilder
 import com.qingyi.applocker.bean.ThemeBean
 import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
-import java.io.BufferedReader
-import java.io.File
-import java.io.InputStreamReader
 import java.util.zip.ZipFile
+import java.io.*
+
 
 /**
  * @Title: ThemeUtil类
@@ -48,7 +47,7 @@ class ThemeUtil(val context: Context) {
     */
     fun importTheme(filePath: String):Boolean {
         // 获取主题文件
-        var theme = ZipFile(filePath)
+        var theme = ZipFile(File(filePath))
         // 验证目录结构
         val themeJsonEntry = theme.getEntry(ThisApp.THEME_INFO_FILE)
         val webappEntry = theme.getEntry(ThisApp.THEME_WEBAPP)
@@ -137,11 +136,11 @@ class ThemeUtil(val context: Context) {
     */
     fun getThemeByName(themeName: String):ThemeBean? {
         // 主题目录
-        val themesDir = File(getThemePath() + File.separator + themeName)
+        val themeDir = File(getThemePath() + File.separator + themeName)
         // 判断主题是否存在
-        if (!themesDir.exists()) return null
+        if (!themeDir.exists()) return null
         // 获取主题基本信息
-        val themeInfoReader = BufferedReader(InputStreamReader(File(themesDir.absolutePath + File.separator + ThisApp.THEME_INFO_FILE).inputStream()))
+        val themeInfoReader = BufferedReader(InputStreamReader(File(themeDir.absolutePath + File.separator + ThisApp.THEME_INFO_FILE).inputStream()))
         var themeInfo = ""
         var line: String? = null
         while ({line = themeInfoReader.readLine();line}() != null) {
@@ -154,22 +153,22 @@ class ThemeUtil(val context: Context) {
             return null
         }
         // 获取主题图片
-        val imageDir = File(themesDir.absolutePath + File.separator + ThisApp.THEME_IMAGE)
-        val imageFiels = imageDir.listFiles { file->
+        val imageDir = File(themeDir.absolutePath + File.separator + ThisApp.THEME_IMAGE)
+        val imageFiles = imageDir.listFiles { file->
             MediaCheck.isImage(file)
         }
-        for (image in imageFiels) {
+        for (image in imageFiles) {
             themeBean.images.add(ImageBase64Util.imageToBase64(image.absolutePath))
         }
         // 转换页面地址
         themeBean.lockPage = if (themeBean.lockPage.contains("http://") || themeBean.lockPage.contains("https://"))
             themeBean.lockPage
         else
-            "file:" + themesDir.absolutePath + File.separator + ThisApp.THEME_WEBAPP + File.separator + themeBean.lockPage
+            "file:" + themeDir.absolutePath + File.separator + ThisApp.THEME_WEBAPP + File.separator + themeBean.lockPage
         themeBean.setPwdPage = if (themeBean.setPwdPage.contains("http://") || themeBean.setPwdPage.contains("https://"))
             themeBean.setPwdPage
         else
-            "file:" + themesDir.absolutePath + File.separator + ThisApp.THEME_WEBAPP + File.separator + themeBean.setPwdPage
+            "file:" + themeDir.absolutePath + File.separator + ThisApp.THEME_WEBAPP + File.separator + themeBean.setPwdPage
         // 判断是否为默认主题
         if (BUILTIN_THEME_LIST.contains(themeName)) themeBean.isBuiltIn = false
         return themeBean
@@ -212,5 +211,81 @@ class ThemeUtil(val context: Context) {
             }
         }
         return themeList
+    }
+
+    /**
+     * @Title: setThemeData方法
+     * @Class: ThemeUtil
+     * @Description: 设置主题额外数据
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/2 11:24
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param themeName[String] 主题名称
+     * @return
+     * @throws
+    */
+    fun setThemeData(themeName: String, data: String) {
+        // 主题目录
+        val themeDir = File(getThemePath() + File.separator + themeName)
+        // 判断主题是否存在
+        if (!themeDir.exists()) return
+        // 将数据写入文件
+        val fileOutputStream: FileOutputStream
+        var bufferedWriter: BufferedWriter? = null
+        try {
+            /**
+             * "data"为文件名,MODE_PRIVATE表示如果存在同名文件则覆盖，
+             * 还有一个MODE_APPEND表示如果存在同名文件则会往里面追加内容
+             */
+            fileOutputStream = File(themeDir.absolutePath + File.separator + ThisApp.THEME_DATA_FILE).outputStream()
+            bufferedWriter = BufferedWriter(
+                    OutputStreamWriter(fileOutputStream))
+            bufferedWriter.write(data)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            try {
+                if (bufferedWriter != null) {
+                    bufferedWriter.close()
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    /**
+     * @Title: getThemeData方法
+     * @Class: ThemeUtil
+     * @Description: 主题获取额外数据
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/2 11:25
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param themeName[String] 主题名称
+     * @return
+     * @throws
+    */
+    fun getThemeData(themeName: String):String {
+        // 数据文件
+        val dataFile = File(getThemePath() + File.separator + themeName + File.separator + ThisApp.THEME_DATA_FILE)
+        // 主题数据
+        var themeData = ""
+        // 判断文件是否存在
+        if (!dataFile.exists()) return themeData
+        // 获取主题数据
+        try {
+            val themeDataReader = BufferedReader(InputStreamReader(dataFile.inputStream()))
+            var line: String? = null
+            while ({line = themeDataReader.readLine();line}() != null) {
+                themeData += line
+            }
+        }catch (e: Exception) {
+            LoggerUtil.logAndroid(Log.WARN, "getThemeData", "Exception = ${e.localizedMessage}")
+        }
+        return themeData
     }
 }

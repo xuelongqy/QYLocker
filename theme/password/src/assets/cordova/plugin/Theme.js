@@ -141,11 +141,58 @@ export let setFingerprintListener = function (callBack) {
   )
 }
 
+/**
+ * @Title: getThemeData方法
+ * @Description: 获取主题额外数据
+ * @author XueLong xuelongqy@foxmail.com
+ * @date 2018/5/2 13:55
+ * @update_author
+ * @update_time
+ * @version V1.0
+ * @param callBack 回调函数,返回主题额外数据
+ * @return
+ * @throws
+*/
+export let getThemeData = function (callBack) {
+  ExecUtil.exec(
+    function (data) {
+      callBack(data)
+    },
+    function (error) {
+      callBack(error)
+    },
+    "Theme",
+    "getThemeData"
+  )
+}
+
+/**
+ * @Title: setThemeData方法
+ * @Description: 设置主题额外数据
+ * @author XueLong xuelongqy@foxmail.com
+ * @date 2018/5/2 13:57
+ * @update_author
+ * @update_time
+ * @version V1.0
+ * @param data 主题数据
+ * @return
+ * @throws
+*/
+export let setThemeData = function (data) {
+  ExecUtil.noCBExec(
+    "Theme",
+    "setThemeData",
+    [data]
+  )
+}
+
 export default {
   cancelSetPwd,
   setPassword,
   unlock,
   getBgImg,
   isFingerprint,
-  setFingerprintListener
+  setFingerprintListener,
+  getThemeData,
+  setThemeData
 }

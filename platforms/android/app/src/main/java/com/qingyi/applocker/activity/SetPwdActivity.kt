@@ -43,6 +43,8 @@ class SetPwdActivity: BaseHybridActivity(true, false) {
     private var themeBean:ThemeBean? = null
     // 以前设置加锁的主题
     private var lockTheme:ThemeBean? = null
+    // 是否为验证密码
+    private var isVerifyPassword = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,10 +98,12 @@ class SetPwdActivity: BaseHybridActivity(true, false) {
 
     // 验证上一次密码
     private fun vaildLastPwd() {
+        isVerifyPassword = true
         loadUrl(lockTheme!!.lockPage)
     }
     // 设置密码
     private fun setNowPwd() {
+        isVerifyPassword = false
         loadUrl(themeBean!!.setPwdPage)
     }
     // 取消设置
@@ -155,5 +159,45 @@ class SetPwdActivity: BaseHybridActivity(true, false) {
             setNowPwd()
         }
         return isRight
+    }
+
+    /**
+     * @Title: getThemeData方法
+     * @Class: SetPwdActivity
+     * @Description: 获取主题额外数据
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/2 13:43
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @return [String] 主题数据
+     * @throws
+    */
+    fun getThemeData():String {
+        // 判断是否为验证密码
+        if (isVerifyPassword) {
+            return themeUtil.getThemeData(lockTheme!!.name)
+        }else {
+            return themeUtil.getThemeData(themeBean!!.name)
+        }
+    }
+
+    /**
+     * @Title: setThemeData方法
+     * @Class: SetPwdActivity
+     * @Description: 设置主题额外数据
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/2 13:47
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param data[String] 数据
+     * @return
+     * @throws
+    */
+    fun setThemeData(data: String) {
+        if (!isVerifyPassword) {
+            themeUtil.setThemeData(themeBean!!.name, data)
+        }
     }
 }

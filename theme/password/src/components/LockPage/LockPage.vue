@@ -43,7 +43,7 @@
     </mu-dialog>
     <!--指纹盒子-->
     <div class="lp_fingerprint_box">
-      <v-fingerprint v-if="isFingerprint"/>
+      <v-fingerprint ref="fingerprint" v-if="isFingerprint"/>
     </div>
   </div>
 </template>
@@ -102,16 +102,19 @@
       },
       // 指纹监听事件
       fingerprintListener(data) {
-        alert(JSON.stringify(data))
-        // if (data instanceof Object) {
-        //   if (!data.success) {
-        //     alert(data.msg)
-        //   }
-        // }else {
-        //   alert(data)
-        // }
-        // 重新设置指纹事件
-        ThemeUtil.setFingerprintListener(this.fingerprintListener)
+        if (data instanceof Object) {
+          if (!data.success) {
+            if (data.msg == "") {
+              // 密码错误
+              this.$refs.fingerprint.failed()
+            }else {
+              // 密码异常
+              this.$refs.fingerprint.error(data.msg)
+            }
+          }
+        }else {
+          console.log(data)
+        }
       }
     }
   }
@@ -165,7 +168,7 @@
     // 指纹盒子
     .lp_fingerprint_box {
       position: absolute;
-      bottom: 80px;
+      top: 80%;
       left: 0;
       right: 0;
       width: 100%;

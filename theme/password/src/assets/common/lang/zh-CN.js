@@ -17,7 +17,8 @@ module.exports = {
   },
   lockPage: {
     "password": "密码",
-    "inputPwd": "请输入密码"
+    "inputPwd": "请输入密码",
+    "fingerprintFailed": "无法识别"
   },
   setPwdPage: {
     "inputPwd": "请输入密码",

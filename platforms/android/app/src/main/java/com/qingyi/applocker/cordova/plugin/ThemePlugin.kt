@@ -172,6 +172,32 @@ class ThemePlugin: CordovaPlugin() {
                 }
                 return true
             }
+            // 设置主题数据(主题所需自定义的额外数据)
+            "setThemeData" -> {
+                cordova.threadPool.execute {
+                    // 仅仅在设置主题页面使用
+                    if (mActivity is SetPwdActivity) {
+                        (mActivity as SetPwdActivity).setThemeData(args!!.getString(0))
+                    }
+                }
+                return true
+            }
+            // 获取主题数据(主题所需自定义的额外数据)
+            "getThemeData" -> {
+                cordova.threadPool.execute {
+                    // 设置主题界面
+                    if (mActivity is SetPwdActivity) {
+                        callbackContext!!.success((mActivity as SetPwdActivity).getThemeData())
+                        callbackContext.error("")
+                    }
+                    // 解锁界面
+                    else if(mActivity is AppLockActivity){
+                        callbackContext!!.success((mActivity as AppLockActivity).getThemeData())
+                        callbackContext.error("")
+                    }
+                }
+                return true
+            }
         }
         return false
     }

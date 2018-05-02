@@ -17,7 +17,8 @@ module.exports = {
   },
   lockPage: {
     "password": "Password",
-    "inputPwd": "Please enter password"
+    "inputPwd": "Please enter password",
+    "fingerprintFailed": "Unable to identify"
   },
   setPwdPage: {
     "inputPwd": "Please enter password",
