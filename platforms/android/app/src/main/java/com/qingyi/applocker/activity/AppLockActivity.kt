@@ -5,6 +5,9 @@ import android.content.Intent
 import android.graphics.Color
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat
 import android.util.Log
+import android.view.KeyEvent
+import android.view.View
+import android.widget.ArrayAdapter
 import com.qingyi.applocker.R
 import com.qingyi.applocker.bean.LockAppInfo
 import com.qingyi.applocker.bean.ThemeBean
@@ -15,6 +18,7 @@ import com.qingyi.applocker.util.AppsUtil
 import com.qingyi.applocker.util.FingerprintUtil
 import com.qingyi.applocker.util.LoggerUtil
 import com.qingyi.applocker.util.ThemeUtil
+import kotlinx.android.synthetic.main.activity_app_lock.*
 import org.apache.cordova.CallbackContext
 import org.apache.cordova.CordovaWebView
 import org.apache.cordova.CordovaWebViewImpl
@@ -61,6 +65,8 @@ class AppLockActivity: BaseHybridActivity(true, false) {
     private lateinit var fingerprintUtil: FingerprintUtil
     // 指纹回调
     var fingerprintCallbackContext: CallbackContext? = null
+    // 密码名字
+    private lateinit var pwdName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,6 +87,8 @@ class AppLockActivity: BaseHybridActivity(true, false) {
             // 加载锁屏界面前端视图
             loadUrl(lockTheme!!.lockPage)
         }
+        // 初始化界面
+        initView()
     }
 
     /**
@@ -97,7 +105,7 @@ class AppLockActivity: BaseHybridActivity(true, false) {
      * @throws
     */
     override fun makeWebView(): CordovaWebView {
-        val cordovaWebView = CordovaWebViewImpl(SystemWebViewEngine(findViewById(R.id.al_web_view)))
+        val cordovaWebView = CordovaWebViewImpl(SystemWebViewEngine(al_web_view))
         return cordovaWebView
     }
     override fun createViews() {
@@ -169,9 +177,87 @@ class AppLockActivity: BaseHybridActivity(true, false) {
         // 初始化主题工具
         themeUtil = ThemeUtil(this)
         // 获取加锁主题
-        if (lockAppsPrefs.lockAppsConfig.theme != "") {
+        if (lockAppsPrefs.lockAppsConfig.lockApps[pkgName!!]!!.isIndependent) {
+            // 检验是否独立设置
+            lockTheme = themeUtil.getThemeByName(lockAppsPrefs.lockAppsConfig.lockApps[pkgName!!]!!.themes[0].theme)
+            pwdName = lockAppsPrefs.lockAppsConfig.lockApps[pkgName!!]!!.themes[0].name
+        }
+        else if (lockAppsPrefs.lockAppsConfig.theme != "") {
             // 检验是否设置过密码
             lockTheme = themeUtil.getThemeByName(lockAppsPrefs.lockAppsConfig.theme)
+            pwdName = getString(R.string.master_pwd)
+        }
+    }
+
+    /**
+     * @Title: initView方法
+     * @Class: AppLockActivity
+     * @Description: 初始化视图
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/3 22:21
+     * @update_author
+     * @update_time
+     * @param
+     * @return
+     * @throws
+     * @version V1.0
+    */
+    private fun initView() {
+        // 获取并设置解锁应用信息
+        val lockAppInfo = appsUtil.getAppInfoByPkg(pkgName!!)
+        al_app_name.text = lockAppInfo.applicationInfo.loadLabel(this.packageManager).toString()
+        al_app_icon.setImageDrawable(lockAppInfo.applicationInfo.loadIcon(this.packageManager))
+        // 设置包名和页面信息
+        al_pkg_text.text = pkgName
+        al_act_text.text = activity
+        // 是否显示页面信息
+        if (settingsPrefs.settingsConfig.advancedMode) {
+            al_page_info.visibility = View.VISIBLE
+        }else {
+            al_page_info.visibility = View.GONE
+        }
+        // 设置密码列表
+        val pwds = arrayListOf<String>()
+        // 判断是否独立设置
+        if (!lockAppsPrefs.lockAppsConfig.lockApps[pkgName!!]!!.isIndependent) {
+            pwds.add(getString(R.string.master_pwd))
+        }
+        // 添加独立设置中的密码
+        for (theme in lockAppsPrefs.lockAppsConfig.lockApps[pkgName!!]!!.themes) {
+            pwds.add(theme.name)
+        }
+        val pwdsAdapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, pwds)
+        al_pwd_list.adapter = pwdsAdapter
+        // 设置列表监听事件
+        al_pwd_list.setOnItemClickListener { parent, view, position, id ->
+            al_drawer_layout.closeDrawers()
+            // 如果没有改变则不做处理
+            if (this.pwdName == pwds[position]) {
+                return@setOnItemClickListener
+            }
+            // 获取主题
+            var lockTheme: ThemeBean? = null
+            // 判断是否为主密码
+            if (pwds[position] == getString(R.string.master_pwd)) {
+                lockTheme = themeUtil.getThemeByName(lockAppsPrefs.lockAppsConfig.theme)
+                this.lockTheme = lockTheme
+                this.pwdName = pwds[position]
+                loadUrl(this.lockTheme!!.lockPage)
+                return@setOnItemClickListener
+            }
+            // 遍历密码列表
+            for (theme in lockAppsPrefs.lockAppsConfig.lockApps[pkgName!!]!!.themes) {
+                if (theme.name == pwds[position]) {
+                    lockTheme = themeUtil.getThemeByName(theme.theme)
+                    if (lockTheme != null) {
+                        // 切换解锁页面
+                        this.lockTheme = lockTheme
+                        this.pwdName = pwds[position]
+                        loadUrl(this.lockTheme!!.lockPage)
+                    }
+                    return@setOnItemClickListener
+                }
+            }
         }
     }
 
@@ -206,11 +292,22 @@ class AppLockActivity: BaseHybridActivity(true, false) {
      * @version V1.0
     */
     fun verifyPassword(pwd:String):Boolean {
-        val isRight = lockAppsPrefs.verifyPassword(pwd)
+        val isRight:Boolean
+        // 判断使用默认密码还是独立设置的密码
+        if (this.pwdName == getString(R.string.master_pwd)) {
+            isRight = lockAppsPrefs.verifyPassword(pwd)
+        }else {
+            isRight = lockAppsPrefs.verifyPasswordByPwdName(pkgName!!, pwdName, pwd)
+        }
         // 判断密码是否正确
         if (isRight) {
             // 添加历史
             historyPrefs.addHistory(pkgName!!, settingsPrefs.settingsConfig.resetLockModel)
+            // 是否过滤页面
+            if (al_filter_switch.isChecked) {
+                // 添加过滤页面
+                lockAppsPrefs.addFilterActivity(pkgName!!, activity!!)
+            }
             // 关闭页面
             this.finish()
         }
@@ -257,10 +354,13 @@ class AppLockActivity: BaseHybridActivity(true, false) {
      * @author qingyi xuelongqy@foxmail.com
      * @date 2017/9/13 15:35
      */
-    override fun onBackPressed() {
-        //返回桌面
-        val homeIntent = Intent(Intent.ACTION_MAIN)
-        homeIntent.addCategory(Intent.CATEGORY_HOME)
-        this.startActivity(homeIntent)
+    override fun dispatchKeyEvent(event: KeyEvent?): Boolean {
+        if (event!!.keyCode == KeyEvent.KEYCODE_BACK) {
+            //返回桌面
+            val homeIntent = Intent(Intent.ACTION_MAIN)
+            homeIntent.addCategory(Intent.CATEGORY_HOME)
+            this.startActivity(homeIntent)
+        }
+        return super.dispatchKeyEvent(event)
     }
 }

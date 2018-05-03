@@ -126,4 +126,22 @@ class AppsUtil(val context: Context) {
         lockAppInfo.icon = ImageBase64Util.drawableToBase64(pkgInfo.applicationInfo.loadIcon(mContext.packageManager))
         return lockAppInfo
     }
+
+    /**
+     * @Title: getAppInfoByPkg方法
+     * @Class: AppsUtil
+     * @Description: 通过包名获取应用信息
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/3 22:29
+     * @update_author
+     * @update_time
+     * @param pkg[String] 应用包名
+     * @return [PackageInfo] 应用信息
+     * @return
+     * @throws
+     * @version V1.0
+    */
+    fun getAppInfoByPkg(pkg: String): PackageInfo {
+        return mContext.packageManager.getPackageInfo(pkg, 0)
+    }
 }

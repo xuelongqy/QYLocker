@@ -288,6 +288,31 @@ class LockAppsPrefs(val context: Context) {
     }
 
     /**
+     * @Title: verifyPasswordByPwdName方法
+     * @Class: LockAppsPrefs
+     * @Description: 根据独立设置的密码名字验证密码
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/3 23:22
+     * @update_author
+     * @update_time
+     * @param pkg[String] 包名
+     * @param pwdName[String] 密码名字
+     * @param pwd[String] 密码
+     * @return [Boolean] 密码是否正确
+     * @return
+     * @throws
+     * @version V1.0
+    */
+    fun verifyPasswordByPwdName(pkg:String, pwdName:String, pwd:String):Boolean {
+        for (theme in lockAppsConfig.lockApps[pkg]!!.themes) {
+            if (theme.name == pwdName) {
+                return theme.password == encryptedPwd(pwd)
+            }
+        }
+        return false
+    }
+
+    /**
      * @Title: addPwd方法
      * @Class: LockAppsPrefs
      * @Description: 添加密码
@@ -327,6 +352,10 @@ class LockAppsPrefs(val context: Context) {
         for (lockAppThemeBean in  lockAppsConfig.lockApps[pkg]!!.themes) {
             if (lockAppThemeBean.name == name) {
                 lockAppsConfig.lockApps[pkg]!!.themes.remove(lockAppThemeBean)
+                // 如果没有密码则取消独立模式
+                if (lockAppsConfig.lockApps[pkg]!!.themes.isEmpty()) {
+                    lockAppsConfig.lockApps[pkg]!!.isIndependent = false
+                }
                 lockAppsJson = gson.toJson(lockAppsConfig)
                 break
             }

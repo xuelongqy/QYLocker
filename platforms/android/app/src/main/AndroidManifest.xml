@@ -23,7 +23,7 @@
             android:label="@string/activity_name"
             android:launchMode="singleTop"
             android:name=".activity.MainActivity"
-            android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
+            android:theme="@android:style/Theme.Material.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize">
             <intent-filter android:label="@string/launcher_name">
                 <action android:name="android.intent.action.MAIN" />
@@ -35,7 +35,7 @@
             android:label="@string/activity_name"
             android:launchMode="singleTop"
             android:name=".activity.SetPwdActivity"
-            android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
+            android:theme="@android:style/Theme.Material.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize">
         </activity>
 
@@ -48,7 +48,7 @@
             android:exported="true"
             android:taskAffinity=""
             android:name=".activity.AppLockActivity"
-            android:theme="@android:style/Theme.DeviceDefault.NoActionBar"
+            android:theme="@android:style/Theme.Material.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize"
             >
         </activity>

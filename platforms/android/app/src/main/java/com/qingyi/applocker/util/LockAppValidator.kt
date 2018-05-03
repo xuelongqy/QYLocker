@@ -68,10 +68,6 @@ class LockAppValidator(private val mContext: Context) {
             intent.putExtra(AppLockActivity.PKG, pkg)
             intent.putExtra(AppLockActivity.ACT, activity)
             mContext.startActivity(intent)
-            // 判断是否显示页面信息
-            if (settingsPrefs.settingsConfig.advancedMode) {
-                Toast.makeText(mContext, "Package: $pkg\nActivity: $activity", Toast.LENGTH_LONG).show()
-            }
         }else {
             // 判断是否为每次解锁,是则清空历史
             if (settingsPrefs.settingsConfig.resetLockModel == ThisApp.ALL_TO_ALL && !historyPrefs.historyConfig.history.isEmpty()) {

@@ -15,4 +15,8 @@
     <string name="input_pwd_name">请输入密码名字</string>
     <string name="not_empty">不能为空</string>
     <string name="name_exists">名字已存在</string>
+    <string name="package_label">包名: </string>
+    <string name="activity_label">页面: </string>
+    <string name="filter">过滤</string>
+    <string name="master_pwd">主密码</string>
 </resources>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/al_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -19,7 +20,7 @@
     <!--侧边栏-->
     <LinearLayout
         android:id="@+id/al_left_drawer"
-        android:layout_width="240dp"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:background="@android:color/white"
         android:orientation="vertical"
@@ -27,7 +28,7 @@
         <!--头部应用信息-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="180dp"
             android:gravity="center_vertical"
             android:background="#03a9f4">
             <ImageView
@@ -56,55 +57,63 @@
             android:background="#00000000"/>
         <!--底部页面信息-->
         <LinearLayout
+            android:id="@+id/al_page_info"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:orientation="horizontal">
+            android:layout_height="120dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="#fafafa">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:gravity="center_vertical">
-                <!--标签-->
+                <!--包名-->
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center|right">
-                    <!--包名标签-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:text="Package: "/>
-                    <!--页面标签-->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:text="Activity: "/>
-                </LinearLayout>
-                <!--信息-->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     android:gravity="center|left">
-                    <!--包名-->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:text="com.***"/>
-                    <!--页面-->
+                        android:textColor="@android:color/black"
+                        android:text="@string/package_label"/>
+                    <TextView
+                        android:id="@+id/al_pkg_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"/>
+                </LinearLayout>
+                <!--页面-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center|left">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:text="com.***"/>
+                        android:textColor="@android:color/black"
+                        android:text="@string/activity_label"/>
+                    <TextView
+                        android:id="@+id/al_act_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"/>
                 </LinearLayout>
             </LinearLayout>
+            <Switch
+                android:id="@+id/al_filter_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:text="@string/filter" />
         </LinearLayout>
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>

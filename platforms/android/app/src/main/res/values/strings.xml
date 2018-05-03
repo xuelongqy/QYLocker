@@ -15,4 +15,8 @@
     <string name="input_pwd_name">Please enter password name</string>
     <string name="not_empty">Can not be empty</string>
     <string name="name_exists">The name already exists</string>
+    <string name="package_label">Package: </string>
+    <string name="activity_label">Activity: </string>
+    <string name="filter">Filter</string>
+    <string name="master_pwd">The master password</string>
 </resources>

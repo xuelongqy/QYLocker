@@ -156,6 +156,7 @@ class SetPwdActivity: BaseHybridActivity(true, false) {
                         else {
                             // 判断名字是否存在
                             var nameExists = false
+                            if (editText.text.toString() == getString(R.string.master_pwd)) nameExists = true
                             for (theme in lockAppsPrefs.lockAppsConfig.lockApps[pkgName!!]!!.themes) {
                                 if (theme.name == editText.text.toString()) nameExists = true
                             }
