@@ -228,6 +228,19 @@ export let removeFilterActivity = function (pkg, activity) {
   )
 }
 
+/**
+ * 删除应用密码
+ * @param pkg 应用包名
+ * @param name 密码名字
+ */
+export let removeAppPwd = function (pkg, name) {
+  ExecUtil.noCBExec(
+    "LockApps",
+    "removeAppPwd",
+    [pkg,name]
+  )
+}
+
 export default {
   getLockAppsConfig,
   getAppInfoList,
@@ -238,5 +251,6 @@ export default {
   setIndependentSettingIState,
   getActivities,
   addFilterActivity,
-  removeFilterActivity
+  removeFilterActivity,
+  removeAppPwd
 }

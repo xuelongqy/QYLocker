@@ -48,8 +48,7 @@
           "isLock": false,
           "isSystemAPP": true,
           "packageName": "",
-          "password": "",
-          "theme": "",
+          "themes":[],
           "versionCode": 0,
           "versionName": ""
         }
@@ -84,7 +83,16 @@
       },
       // App锁设置
       onAppLockSettings() {
-        this.onSettings(this.index, this.appInfo)
+        // 获取应用下标
+        var appIndex = -1
+        for (var index in this.$store.state.LockAppsConfig.allAppsInfo) {
+          if (this.$store.state.LockAppsConfig.allAppsInfo[index].packageName == this.appInfo.packageName) {
+            appIndex = index
+            break
+          }
+        }
+        // 调用设置回调
+        this.onSettings(appIndex, this.appInfo)
       }
     },
   }

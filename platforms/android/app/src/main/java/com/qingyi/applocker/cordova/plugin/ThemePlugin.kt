@@ -8,7 +8,9 @@ import android.content.Intent
 import android.util.Log
 import com.qingyi.applocker.activity.AppLockActivity
 import com.qingyi.applocker.activity.SetPwdActivity
+import com.qingyi.applocker.bean.LockAppInfo
 import com.qingyi.applocker.preferences.SettingsPrefs
+import com.qingyi.applocker.util.AppsUtil
 import com.qingyi.applocker.util.ImageBase64Util
 import com.qingyi.applocker.util.LoggerUtil
 import org.apache.cordova.*
@@ -91,8 +93,9 @@ class ThemePlugin: CordovaPlugin() {
                 // 跳转到设置密码页面
                 this.setPwdCallbackContext = callbackContext
                 val intent = Intent(mActivity, SetPwdActivity::class.java)
-                intent.putExtra(SetPwdActivity.SET_PWD_TYPE, SetPwdActivity.SET_PWD)
                 intent.putExtra(SetPwdActivity.THEME_NAME, args!!.getString(0))
+                intent.putExtra(SetPwdActivity.IS_APP_ADD_PWD, args.getBoolean(1))
+                intent.putExtra(SetPwdActivity.PKG_NAME, args.getString(2))
                 this.cordova.startActivityForResult(this, intent, SET_PWD_REQUEST)
                 return true
             }
@@ -105,10 +108,8 @@ class ThemePlugin: CordovaPlugin() {
             }
             // 使用主题并设置密码
             "setPassword" -> {
-                cordova.threadPool.execute {
-                    if (mActivity is SetPwdActivity) {
-                        (mActivity as SetPwdActivity).setThemeAndPwd(args!!.getString(0))
-                    }
+                if (mActivity is SetPwdActivity) {
+                    (mActivity as SetPwdActivity).setThemeAndPwd(args!!.getString(0))
                 }
                 return true
             }
@@ -194,6 +195,17 @@ class ThemePlugin: CordovaPlugin() {
                     else if(mActivity is AppLockActivity){
                         callbackContext!!.success((mActivity as AppLockActivity).getThemeData())
                         callbackContext.error("")
+                    }
+                }
+                return true
+            }
+            // 获取上锁应用信息
+            "getLockAppInfo" -> {
+                cordova.threadPool.execute {
+                    // 仅对解锁界面有用
+                    if(mActivity is AppLockActivity){
+                        callbackContext!!.success(gson.toJson((mActivity as AppLockActivity).getLockAppInfo()))
+                        callbackContext.error(gson.toJson(LockAppInfo()))
                     }
                 }
                 return true

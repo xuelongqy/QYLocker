@@ -1,6 +1,7 @@
 package com.qingyi.applocker.activity
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,17 +9,20 @@ import com.qingyi.applocker.bean.ThemeBean
 import com.qingyi.applocker.preferences.LockAppsPrefs
 import com.qingyi.applocker.util.LoggerUtil
 import com.qingyi.applocker.util.ThemeUtil
+import android.widget.Toast
+import android.content.DialogInterface
+import android.view.View
+import android.widget.EditText
+import com.qingyi.applocker.R
+
 
 class SetPwdActivity: BaseHybridActivity(true, false) {
     // 伴生对象
     companion object {
         // 类的标识
         val TAG = SetPwdActivity::class.java.simpleName
-        // 设置类型
-        val SET_PWD_TYPE = "set_pwd_type"
-        val SET_PWD = "set_pwd"
-        val ADD_PWD = "add_pwd"
-        val DEL_PWD = "del_pwd"
+        // 是否为添加密码
+        val IS_APP_ADD_PWD = "is_app_add_pwd"
         // 主题名字
         val THEME_NAME = "theme_name"
         // 应用包名
@@ -27,10 +31,9 @@ class SetPwdActivity: BaseHybridActivity(true, false) {
         val SET_PWD_STATE = "set_pwd_state"
     }
 
-    // 设置类型(设置密码/修改密码)
-    private var setPwdType:String? = null
     // 主题名字
     private var themeName:String? = null
+    private var isAppAddPwd = false
     // 应用包名
     private var pkgName:String? = null
     // 页面返回参数
@@ -60,7 +63,11 @@ class SetPwdActivity: BaseHybridActivity(true, false) {
 
         //加载锁屏界面前端视图
         //loadUrl(launchUrl)
-        if (lockTheme == null) {
+        if (isAppAddPwd) {
+            // 判断是否为添加密码
+            setNowPwd()
+        }
+        else if (lockTheme == null) {
             // 判断之前是否设置过密码
             setNowPwd()
         }else {
@@ -69,12 +76,12 @@ class SetPwdActivity: BaseHybridActivity(true, false) {
     }
 
     // 初始化函数
-    fun initMethod() {
+    private fun initMethod() {
         // 获取参数
-        setPwdType = intent.getStringExtra(SET_PWD_TYPE)
         themeName = intent.getStringExtra(THEME_NAME)
+        isAppAddPwd = intent.getBooleanExtra(IS_APP_ADD_PWD, false)
         pkgName = intent.getStringExtra(PKG_NAME)
-        if (setPwdType == null || themeName == null) {
+        if (themeName == null) {
             this.finish()
         }
         // 设置返回参数
@@ -127,15 +134,61 @@ class SetPwdActivity: BaseHybridActivity(true, false) {
     */
     fun setThemeAndPwd(pwd:String) {
         try {
-            lockAppsPrefs.setThemeAndPwd(themeName!!, pwd)
+            // 判断是否为为应用添加密码
+            if (isAppAddPwd) {
+                // 提示输入增加密码的名字
+                val editText = EditText(this@SetPwdActivity)
+                val inputDialog = AlertDialog.Builder(this@SetPwdActivity)
+                        .setTitle(getString(R.string.input_pwd_name)).setView(editText)
+                        .setPositiveButton(getString(R.string.ok),null)
+                        .setNegativeButton(getString(R.string.cancel),null).create()
+                // 设置窗口监听事件
+                inputDialog.setOnShowListener({
+                    val positionButton = inputDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                    val negativeButton = inputDialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+                    positionButton.setOnClickListener({
+                        // 判断名字是否为空
+                        if (editText.text.toString() == "") {
+                            Toast.makeText(this@SetPwdActivity,
+                                    getString(R.string.not_empty),
+                                    Toast.LENGTH_SHORT).show()
+                        }
+                        else {
+                            // 判断名字是否存在
+                            var nameExists = false
+                            for (theme in lockAppsPrefs.lockAppsConfig.lockApps[pkgName!!]!!.themes) {
+                                if (theme.name == editText.text.toString()) nameExists = true
+                            }
+                            if (nameExists) {
+                                Toast.makeText(this@SetPwdActivity,
+                                        getString(R.string.name_exists),
+                                        Toast.LENGTH_SHORT).show()
+                            }else {
+                                // 添加密码
+                                lockAppsPrefs.addAppPwd(pkgName!!, editText.text.toString(), themeName!!, pwd)
+                                resultIntent.putExtra(SET_PWD_STATE, true)
+                                inputDialog.dismiss()
+                                this@SetPwdActivity.finish()
+                            }
+                        }
+                    })
+                    negativeButton.setOnClickListener({
+                        // 取消设置
+                        resultIntent.putExtra(SET_PWD_STATE, false)
+                        inputDialog.dismiss()
+                        this@SetPwdActivity.finish()
+                    })
+                })
+                inputDialog.show()
+            }else {
+                lockAppsPrefs.setThemeAndPwd(themeName!!, pwd)
+            }
         }catch (e: Exception) {
             // 设置失败
             LoggerUtil.logAndroid(Log.WARN, "$TAG-setThemeAndPwd", "Exception=${e.localizedMessage}")
             resultIntent.putExtra(SET_PWD_STATE, false)
             this.finish()
         }
-        resultIntent.putExtra(SET_PWD_STATE, true)
-        this.finish()
     }
 
     /**

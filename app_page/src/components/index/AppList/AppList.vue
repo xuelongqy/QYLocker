@@ -30,9 +30,10 @@
     <!--App搜索框-->
     <app-search :onSearchKey="onSearchKey"/>
     <!--设置弹出框-->
-    <mu-dialog dialogClass="settings_dialog" :open="settingsDialogState" @close="onSettingsClose" :title="isSettingsFilterPage?settingsDialogAppInfo.appName+'-'+$t('appList.filterPage'):settingsDialogAppInfo.appName" scrollable>
+    <mu-dialog dialogClass="settings_dialog" :open="settingsDialogState" @close="onSettingsClose" :title="settingsDialogTitle" scrollable>
       <!--过滤页面-->
-      <mu-menu v-if="isSettingsFilterPage">
+      <mu-menu v-if="settingsDialogType === 'filterPage'">
+        <!--页面列表-->
         <mu-switch
           v-for="(activity,index) in settingsFilterPagesActivities" :key="index"
           class="filter_page_switch"
@@ -43,13 +44,24 @@
           labelLeft />
       </mu-menu>
       <!--设置项-->
-      <mu-menu v-else>
+      <mu-menu v-if="settingsDialogType === ''">
         <!--独立设置-->
         <mu-switch :label="$t('appList.independentSetting')" labelLeft class="independent_setting_switch" v-model="settingsDialogAppInfo.isIndependent"/>
-        <!--添加密码-->
-        <mu-menu-item :title="$t('appList.addPwd')"/>
+        <!--密码管理-->
+        <mu-menu-item :title="$t('appList.pwdManagement')" @click="onPwdManagement"/>
         <!--过滤页面-->
         <mu-menu-item :title="$t('appList.filterPage')" @click="onFilterPage"/>
+      </mu-menu>
+      <!--密码管理-->
+      <mu-menu v-if="settingsDialogType === 'pwdManagement'" style="text-align: center">
+        <!--密码列表-->
+        <div class="sd_pwd_box" v-for="(theme,index) in settingsDialogAppInfo.themes" :key="index">
+          <p class="sd_pwd_name">{{theme.name}}</p>
+          <!--删除按钮-->
+          <mu-icon-button icon="delete" class="sd_pwd_remove" @click="removeAppPwd(theme.name, index)"/>
+        </div>
+        <!--添加按钮-->
+        <mu-float-button icon="add" mini @click="addAppPwd"/>
       </mu-menu>
     </mu-dialog>
   </div>
@@ -89,14 +101,13 @@
           "isLock": false,
           "isSystemAPP": true,
           "packageName": "",
-          "password": "",
-          "theme": "",
+          "themes": [],
           "versionCode": 0,
           "versionName": "",
           filterActivity: []
         },
-        // 设置框过滤页面
-        isSettingsFilterPage: false,
+        // 弹窗类型
+        settingsDialogType: "",
         // 过滤页面数据
         settingsFilterPagesActivities: []
       }
@@ -124,6 +135,16 @@
       // 是否独立设置
       isIndependentSetting() {
         return this.settingsDialogAppInfo.isIndependent
+      },
+      // 弹窗标题名字
+      settingsDialogTitle() {
+        if (this.settingsDialogType === "") {
+          return this.settingsDialogAppInfo.appName
+        }else if (this.settingsDialogType === "filterPage") {
+          return this.settingsDialogAppInfo.appName+'-'+this.$t('appList.filterPage')
+        }else if (this.settingsDialogType === "pwdManagement") {
+          return this.settingsDialogAppInfo.appName+'-'+this.$t('appList.pwdManagement')
+        }
       }
     },
     // 监听器
@@ -168,15 +189,19 @@
       // 设置框关闭
       onSettingsClose: function () {
         this.settingsDialogState = false
-        this.isSettingsFilterPage = false
+        this.settingsDialogType = ""
         this.settingsFilterPagesActivities = []
       },
       // 打开过滤页面
       onFilterPage: function () {
-        this.isSettingsFilterPage = true
+        this.settingsDialogType = "filterPage"
         LockAppsUtil.getActivities((activities)=>{
           this.settingsFilterPagesActivities = activities
         },this.settingsDialogAppInfo.packageName)
+      },
+      // 打开密码管理页面
+      onPwdManagement: function () {
+        this.settingsDialogType = "pwdManagement"
       },
       // 修改过滤页面
       onFilterPageSwitch: function (activity, event) {
@@ -197,6 +222,19 @@
             value: this.settingsDialogAppInfo.filterActivity.splice(this.settingsDialogAppInfo.filterActivity.indexOf(activity),1)
           })
         }
+      },
+      // 添加应用密码
+      addAppPwd() {
+        this.$router.push("/index/theme/" + this.settingsDialogAppIndex)
+        this.onSettingsClose()
+      },
+      // 删除应用密码
+      removeAppPwd(name, index) {
+        LockAppsUtil.removeAppPwd(this.settingsDialogAppInfo.packageName, name)
+        this.$store.commit('removeAppPwd', {
+          appIndex: this.settingsDialogAppIndex,
+          themeIndex: index
+        })
       },
       // 判断字符串是否包含
       arrContains: function (arr, obj) {
@@ -259,6 +297,23 @@
   // 设置弹出窗口
   .settings_dialog {
     width: 90%;
+    // 密码盒子
+    .sd_pwd_box {
+      width: 100%;
+      height: 50px;
+      line-height: 50px;
+      margin-bottom: 10px;
+      .sd_pwd_name {
+        float: left;
+        padding: 0;
+        margin: 0 0 0 10px;
+        font-size: 1.2rem;
+      }
+      .sd_pwd_remove {
+        margin: 0 10px 0 0;
+        float: right;
+      }
+    }
   }
   // 独立开关按钮
   .independent_setting_switch {

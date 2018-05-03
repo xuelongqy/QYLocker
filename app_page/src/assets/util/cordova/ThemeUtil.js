@@ -27,7 +27,10 @@ export let importTheme = function (callBack, filePath) {
   )
 }
 
-// 获取主题列表
+/**
+ * 获取主题列表
+ * @param callBack 回调函数
+ */
 export let getThemeList = function (callBack) {
   ExecUtil.exec(
     function (themeList) {
@@ -41,7 +44,11 @@ export let getThemeList = function (callBack) {
   )
 }
 
-// 删除主题
+/**
+ * 删除主题
+ * @param callBack 回调函数
+ * @param themeName 主题名称
+ */
 export let deleteTheme = function (callBack, themeName) {
   ExecUtil.exec(
     function () {
@@ -56,8 +63,14 @@ export let deleteTheme = function (callBack, themeName) {
   )
 }
 
-// 设置主题密码
-export let setThemePwd = function (callBack, themeName) {
+/**
+ * 设置主题密码
+ * @param callBack 回调函数
+ * @param themeName 主题名字
+ * @param isAppAddPwd 是否为应用添加密码
+ * @param pkgName 应用包名
+ */
+export let setThemePwd = function (callBack, themeName, isAppAddPwd, pkgName) {
   ExecUtil.exec(
     function (isSuccess) {
       callBack(eval(isSuccess))
@@ -67,7 +80,7 @@ export let setThemePwd = function (callBack, themeName) {
     },
     "Theme",
     "setThemePwd",
-    [themeName]
+    [themeName,isAppAddPwd,pkgName]
   )
 }
 

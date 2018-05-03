@@ -55,15 +55,6 @@
     // 数据
     data() {
       return {
-        // 主题信息
-        themeInfo: {
-          id:-1,
-          images: [],
-          name: "",
-          author: "",
-          date: "",
-          describe: ""
-        },
         // 轮播参数
         swiperOption: {
           slidesPerView: 'auto',
@@ -76,18 +67,32 @@
         }
       }
     },
-    // 页面初始化
-    created() {
-      // 判断是否已经下载主题
-      // 获取主题信息
-      if (this.$route.params.themeTab == "tabDownload") {
-        this.themeInfo = this.$store.state.Theme.downloadedThemes[this.$route.params.index]
-      }else if (this.$route.params.themeTab == "tabStore") {
-        this.themeInfo = this.$store.state.Theme.storeThemes[this.$route.params.index]
-      }
-    },
     // 计算变量
     computed: {
+      // 主题信息
+      themeInfo() {
+        if (this.$route.params.themeTab == "tabDownload") {
+          return this.$store.state.Theme.downloadedThemes[this.$route.params.index]
+        }else if (this.$route.params.themeTab == "tabStore") {
+          return this.$store.state.Theme.storeThemes[this.$route.params.index]
+        }
+        return {
+          id:-1,
+          images: [],
+          name: "",
+          author: "",
+          date: "",
+          describe: ""
+        }
+      },
+      // 是否为应用添加密码
+      isAppAddPwd() {
+        return eval(this.$route.params.isAppAddPwd)
+      },
+      // 应用包名,当应用添加密码时有效
+      appIndex() {
+        return parseInt(this.$route.params.appIndex)
+      },
       // 判断是否未下载过的主题
       isDownloaded() {
         if (this.$route.params.themeTab== 'tabDownload') return true
@@ -106,11 +111,11 @@
       },
       // 可以修改
       canChange() {
-        return this.themeInfo.name == this.$store.state.LockAppsConfig.lockAppsConfig.theme
+        return (this.themeInfo.name == this.$store.state.LockAppsConfig.lockAppsConfig.theme) && !this.isAppAddPwd
       },
       // 可以删除
       canDelete() {
-        return this.canUse
+        return this.isDownloaded && (this.themeInfo.name != this.$store.state.LockAppsConfig.lockAppsConfig.theme)
       }
     },
     // 方法
@@ -127,13 +132,22 @@
         ThemeUtil.setThemePwd((state)=> {
           // 判断主题是否设置成功
           if (state) {
-            // 修改Vuex-Store仓库中的数据
-            this.$store.commit('setTheme', this.themeInfo.name)
+            // 判断是否为应用添加密码,修改Vuex-Store仓库中的数据
+            if (this.isAppAddPwd) {
+              this.$store.commit('addAppPwd', {
+                appIndex: this.appIndex,
+                "name": this.themeInfo.name,
+                "theme": this.themeInfo.name
+              })
+            }else {
+              this.$store.commit('setTheme', this.themeInfo.name)
+            }
             ToastUtil.showLongToast(this.$t('theme.themeSetSuccess'))
           }else {
+            // 主题设置失败
             ToastUtil.showLongToast(this.$t('theme.themeNoSet'))
           }
-        },this.themeInfo.name)
+        },this.themeInfo.name, this.isAppAddPwd, this.$store.state.LockAppsConfig.allAppsInfo[this.appIndex].packageName)
       }
     },
   }

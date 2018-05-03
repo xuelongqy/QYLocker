@@ -15,7 +15,7 @@
     </div>
     <!--软件图标盒子-->
     <div class="lp_app_icon_box">
-      <app-info/>
+      <app-info :appInfo="appInfo"/>
     </div>
     <!--密码输入盒子-->
     <div class="pwd_input_box">
@@ -65,13 +65,22 @@
         // 背景图片
         bgImageUrl: "",
         // 是否支持指纹
-        isFingerprint: false
+        isFingerprint: false,
+        // 应用信息
+        appInfo: {
+          name: "",
+          icon: ""
+        }
       }
     },
     // 页面创建时
     created() {
       // 绑定设备初始化完成事件
       document.addEventListener('deviceready', () => {
+        // 获取应用信息
+        ThemeUtil.getLockAppInfo((appInfo) => {
+          this.appInfo = appInfo
+        })
         // 获取背景图片
         ThemeUtil.getBgImg((img) => {
           this.bgImageUrl = img

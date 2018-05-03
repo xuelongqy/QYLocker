@@ -34,7 +34,12 @@ export default new Router({
           component: require('@/components/index/Theme/Theme.vue').default
         },
         {
-          path: 'theme-info/:themeTab/:index',
+          path: 'theme/:appIndex',
+          name: 'theme-app-add-pwd',
+          component: require('@/components/index/Theme/Theme.vue').default
+        },
+        {
+          path: 'theme-info/:themeTab/:index/:isAppAddPwd/:appIndex',
           name: 'theme-info',
           component: require('@/components/index/ThemeInfo/ThemeInfo.vue').default
         },

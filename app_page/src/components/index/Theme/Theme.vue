@@ -28,6 +28,9 @@
           :key = 'themeInfo.name'
           :index = 'index'
           :themeTab = 'activeTab'
+          :isAppAddPwd = "isAppAddPwd"
+          :appIndex = "appIndex"
+          :isUsed = '(themeInfo.name == $store.state.LockAppsConfig.lockAppsConfig.theme) && !isAppAddPwd'
           :isDownloaded = 'isDownloadedTheme(themeInfo.name)'
           :themeInfo = 'themeInfo'/>
       </scroller>
@@ -88,6 +91,14 @@
             }
           )
         }
+      },
+      // 是否为应用添加密码
+      isAppAddPwd() {
+        return (typeof this.$route.params.appIndex !== "undefined")
+      },
+      // 应用包名,当应用添加密码时有效
+      appIndex() {
+        return (typeof this.$route.params.appIndex === "undefined")?parseInt("-1"):parseInt(this.$route.params.appIndex)
       }
     },
     // 方法

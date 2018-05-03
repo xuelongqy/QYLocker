@@ -56,6 +56,18 @@ export default {
     setLockState(state, lockState) {
       Vue.set(state.lockAppsConfig, "isLock", lockState)
     },
+    // 添加密码
+    addAppPwd(state, {appIndex,name,theme}) {
+      state.allAppsInfo[appIndex].themes.push({
+        name: name,
+        theme: theme
+      })
+      Vue.set(state.allAppsInfo[appIndex], "themes", state.allAppsInfo[appIndex].themes)
+    },
+    // 删除密码
+    removeAppPwd(state, {appIndex, themeIndex}) {
+      Vue.delete(state.allAppsInfo[appIndex].themes, themeIndex)
+    },
     // 通过界面操作更新应用列表信息
     updateAppsInfoByView(state, {index, key, value}) {
       Vue.set(state.allAppsInfo[index], key, value)

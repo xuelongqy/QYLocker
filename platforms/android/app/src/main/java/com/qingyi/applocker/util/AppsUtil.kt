@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.util.Log
+import com.qingyi.applocker.bean.LockAppInfo
 import com.qingyi.applocker.filter.AppsFilter
 
 
@@ -103,5 +104,26 @@ class AppsUtil(val context: Context) {
             }
         }
         return activityList
+    }
+
+    /**
+     * @Title: getLockAppInfo方法
+     * @Class: AppsUtil
+     * @Description: 通过包名获取上锁应用信息
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/3 16:00
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param pkg[String] 应用包名
+     * @return [LockAppInfo] 上锁应用信息
+     * @throws
+    */
+    fun getLockAppInfo(pkg: String): LockAppInfo {
+        val lockAppInfo = LockAppInfo()
+        val pkgInfo = mContext.packageManager.getPackageInfo(pkg, 0)
+        lockAppInfo.name = pkgInfo.applicationInfo.loadLabel(mContext.packageManager).toString()
+        lockAppInfo.icon = ImageBase64Util.drawableToBase64(pkgInfo.applicationInfo.loadIcon(mContext.packageManager))
+        return lockAppInfo
     }
 }

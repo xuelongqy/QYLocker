@@ -14,7 +14,7 @@
       <!--主题图片-->
       <img class="theme_img" :src="themeInfo.images[0]" :alt="themeInfo.name" onerror="src='./static/image/ic_broken_image_grey.png'"/>
       <!--已使用标签-->
-      <mu-badge v-if="themeInfo.name == $store.state.LockAppsConfig.lockAppsConfig.theme"
+      <mu-badge v-if="isUsed"
         :content="this.$t('theme.used')" class="theme_badge" primary slot="right"/>
       <!--已下载标签-->
       <mu-badge v-if="isDownloaded"
@@ -61,6 +61,21 @@
           type: Boolean,
           default: false
         },
+        // 是否使用
+        isUsed: {
+          type: Boolean,
+          default: false
+        },
+        // 是否为应用添加密码
+        isAppAddPwd: {
+          type: Boolean,
+          default: false
+        },
+        // 应用包名
+        appIndex: {
+          type: Number,
+          default: ""
+        },
         // 主题下标
         index: {
           type: Number,
@@ -76,7 +91,7 @@
       methods: {
         // 主题点击事件
         onThemeClick() {
-          this.$router.push("/index/theme-info/" + this.themeTab + "/" + this.index)
+          this.$router.push("/index/theme-info/" + this.themeTab + "/" + this.index + "/" + this.isAppAddPwd + "/" + this.appIndex)
         }
       }
     }

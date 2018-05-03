@@ -10,4 +10,9 @@
     <string name="no_permissions">权限不够</string>
     <string name="set_permissions">请在设置页面勾选软件所需的权限。</string>
     <string name="settings">设置</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="input_pwd_name">请输入密码名字</string>
+    <string name="not_empty">不能为空</string>
+    <string name="name_exists">名字已存在</string>
 </resources>

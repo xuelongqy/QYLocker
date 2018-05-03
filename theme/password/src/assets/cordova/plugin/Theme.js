@@ -186,6 +186,31 @@ export let setThemeData = function (data) {
   )
 }
 
+/**
+ * @Title: getLockAppInfo方法
+ * @Description: 获取上锁应用信息
+ * @author XueLong xuelongqy@foxmail.com
+ * @date 2018/5/3 16:17
+ * @update_author
+ * @update_time
+ * @version V1.0
+ * @param callBack 回调函数,获取应用信息
+ * @return
+ * @throws
+*/
+export let getLockAppInfo = function (callBack) {
+  ExecUtil.exec(
+    function (appInfo) {
+      callBack(JSON.parse(appInfo))
+    },
+    function (error) {
+      callBack(JSON.parse(error))
+    },
+    "Theme",
+    "getLockAppInfo"
+  )
+}
+
 export default {
   cancelSetPwd,
   setPassword,
@@ -194,5 +219,6 @@ export default {
   isFingerprint,
   setFingerprintListener,
   getThemeData,
-  setThemeData
+  setThemeData,
+  getLockAppInfo
 }

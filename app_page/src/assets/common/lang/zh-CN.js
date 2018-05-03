@@ -54,6 +54,7 @@ module.exports = {
     "nonSysApps": "用户应用",
     "search": "搜索",
     "independentSetting": "独立设置",
+    "pwdManagement": "密码管理",
     "addPwd": "添加密码",
     "filterPage": "过滤页面",
     "setIndependentFail": "独立设置失败,请检验是否添加密码!"

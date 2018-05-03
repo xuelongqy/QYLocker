@@ -21,14 +21,15 @@
 <script>
   export default {
     name: "AppIcon",
-    // 数据
-    data() {
-      return {
-        appInfo: {
+    // 参数
+    props: {
+      appInfo: {
+        type: Object,
+        default: {
           name: "",
           icon: ""
         }
-      }
+      },
     }
   }
 </script>

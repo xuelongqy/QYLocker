@@ -54,6 +54,7 @@ module.exports = {
     "nonSysApps": "User",
     "search": "Search",
     "independentSetting": "Independent setting",
+    "pwdManagement": "Password management",
     "addPwd": "Add password",
     "filterPage": "Filter page",
     "setIndependentFail": "Independent setting failed,please verify that the password is added!"

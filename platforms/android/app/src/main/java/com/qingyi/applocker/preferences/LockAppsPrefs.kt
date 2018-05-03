@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.Expose
+import com.qingyi.applocker.bean.LockAppThemeBean
 import com.qingyi.applocker.util.LoggerUtil
 import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
 import java.security.MessageDigest
@@ -284,6 +285,52 @@ class LockAppsPrefs(val context: Context) {
     */
     fun verifyPassword(pwd:String):Boolean {
         return lockAppsConfig.password == encryptedPwd(pwd)
+    }
+
+    /**
+     * @Title: addPwd方法
+     * @Class: LockAppsPrefs
+     * @Description: 添加密码
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/3 10:27
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param pkg[String] 包名
+     * @param name[String] 密码名字
+     * @param pkg[String] 主题
+     * @param pkg[String] 密码
+     * @return
+     * @throws
+    */
+    fun addAppPwd(pkg:String, name:String, theme:String, password: String) {
+        val lockAppThemeBean = LockAppThemeBean(name, theme, encryptedPwd(password))
+        lockAppsConfig.lockApps[pkg]!!.themes.add(lockAppThemeBean)
+        lockAppsJson = gson.toJson(lockAppsConfig)
+    }
+
+    /**
+     * @Title: removePwd方法
+     * @Class: LockAppsPrefs
+     * @Description: 删除密码
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/3 10:28
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param pkg[String] 包名
+     * @param name[String] 密码名字
+     * @return
+     * @throws
+    */
+    fun removeAppPwd(pkg:String, name:String){
+        for (lockAppThemeBean in  lockAppsConfig.lockApps[pkg]!!.themes) {
+            if (lockAppThemeBean.name == name) {
+                lockAppsConfig.lockApps[pkg]!!.themes.remove(lockAppThemeBean)
+                lockAppsJson = gson.toJson(lockAppsConfig)
+                break
+            }
+        }
     }
 
     /**

@@ -6,10 +6,12 @@ import android.graphics.Color
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat
 import android.util.Log
 import com.qingyi.applocker.R
+import com.qingyi.applocker.bean.LockAppInfo
 import com.qingyi.applocker.bean.ThemeBean
 import com.qingyi.applocker.preferences.HistoryPrefs
 import com.qingyi.applocker.preferences.LockAppsPrefs
 import com.qingyi.applocker.preferences.SettingsPrefs
+import com.qingyi.applocker.util.AppsUtil
 import com.qingyi.applocker.util.FingerprintUtil
 import com.qingyi.applocker.util.LoggerUtil
 import com.qingyi.applocker.util.ThemeUtil
@@ -43,6 +45,8 @@ class AppLockActivity: BaseHybridActivity(true, false) {
     private var pkgName:String? = null
     // 页面名字
     private var activity:String? = null
+    // 应用信息工具
+    lateinit var appsUtil: AppsUtil
     // 加锁应用配置
     private lateinit var lockAppsPrefs: LockAppsPrefs
     // 历史配置
@@ -110,6 +114,8 @@ class AppLockActivity: BaseHybridActivity(true, false) {
         // 获取参数
         pkgName = intent.getStringExtra(PKG)
         activity = intent.getStringExtra(ACT)
+        // 初始化应用信息工具
+        appsUtil = AppsUtil(this.applicationContext)
         // 获取应用锁配置
         lockAppsPrefs = LockAppsPrefs(this)
         // 获取历史配置
@@ -225,6 +231,23 @@ class AppLockActivity: BaseHybridActivity(true, false) {
     */
     fun getThemeData():String {
         return themeUtil.getThemeData(lockTheme!!.name)
+    }
+
+    /**
+     * @Title: getLockAppInfo方法
+     * @Class: AppLockActivity
+     * @Description: 获取上锁应用信息
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/3 16:10
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param
+     * @return
+     * @throws
+    */
+    fun getLockAppInfo():LockAppInfo {
+        return appsUtil.getLockAppInfo(pkgName!!)
     }
 
     /**

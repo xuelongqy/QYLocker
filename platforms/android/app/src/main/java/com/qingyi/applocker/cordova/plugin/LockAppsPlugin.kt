@@ -18,7 +18,7 @@ import android.util.Log
 import com.google.gson.GsonBuilder
 import com.qingyi.applocker.util.LoggerUtil
 import android.content.Intent
-
+import com.qingyi.applocker.util.ImageBase64Util
 
 
 /**
@@ -169,6 +169,13 @@ class LockAppsPlugin : CordovaPlugin() {
                 }
                 return true
             }
+            // 删除密码
+            "removeAppPwd" -> {
+                cordova.threadPool.execute {
+                    lockAppsPrefs.removeAppPwd(args!!.getString(0), args.getString(1))
+                }
+                return true
+            }
         }
         return false
     }
@@ -198,7 +205,7 @@ class LockAppsPlugin : CordovaPlugin() {
             appInfoJsonBean.versionName = appInfo.versionName
             appInfoJsonBean.versionCode = appInfo.versionCode
             appInfoJsonBean.isSystemAPP = appInfo.isSystemAPP
-            appInfoJsonBean.appIcon = encodeIcon(appInfo.appIcon)
+            appInfoJsonBean.appIcon = ImageBase64Util.drawableToBase64(appInfo.appIcon)
             allAppsLockInfo[appInfoJsonBean.packageName] = appInfoJsonBean
         }
         // 读取加锁应用
@@ -215,40 +222,5 @@ class LockAppsPlugin : CordovaPlugin() {
             }
         }
         return gson.toJson(allAppsLockInfo.values)
-    }
-
-    /**
-     * @Title: encodeIcon方法
-     * @Class: LockAppsPlugin
-     * @Description: 将图标转换为编码
-     * @author XueLong xuelongqy@foxmail.com
-     * @date 2018/2/27 17:30
-     * @update_author
-     * @update_time
-     * @version V1.0
-     * @param icon[Drawable] 图标
-     * @return [String] 编码
-     * @throws
-    */
-    fun encodeIcon(icon: Drawable): String {
-        val bitmap = Bitmap
-                .createBitmap(
-                        icon.intrinsicWidth,
-                        icon.intrinsicHeight,
-                        Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        icon.setBounds(0, 0, icon.intrinsicWidth,
-                icon.intrinsicHeight)
-        icon.draw(canvas)
-        val size = bitmap.width * bitmap.height * 4
-
-        // 创建一个字节数组输出流,流的大小为size
-        val baos = ByteArrayOutputStream(size)
-        // 设置位图的压缩格式，质量为100%，并放入字节数组输出流中
-        bitmap.compress(Bitmap.CompressFormat.PNG, 80, baos)
-        // 将字节数组输出流转化为字节数组byte[]
-        val imagedata = baos.toByteArray()
-
-        return "data:image/png;base64," + Base64.encodeToString(imagedata, Base64.DEFAULT)
     }
 }

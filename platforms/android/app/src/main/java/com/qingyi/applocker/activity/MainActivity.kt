@@ -25,8 +25,8 @@ class MainActivity : BaseHybridActivity(true, false) {
 
         // Set by <content src="cordova_index.html" /> in config.xml
 //         loadUrl(launchUrl)
-//        loadUrl("http://192.168.1.113:8080")
-        loadUrl("http://192.168.1.4:8080")
+        loadUrl("http://192.168.1.113:8080")
+//        loadUrl("http://192.168.1.4:8080")
 
         initMethod()
     }
@@ -35,6 +35,5 @@ class MainActivity : BaseHybridActivity(true, false) {
          var lockerServiceUtil = LockerServiceUtil(this)
         // lockerServiceUtil.startUsageStatsLockerService()
          lockerServiceUtil.startAccessibilityLockerService()
-         LoggerUtil.logAndroid(Log.INFO,"AppInfoList",AppsUtil(this).getAllAppsInfo().toString())
     }
 }
