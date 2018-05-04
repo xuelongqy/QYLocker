@@ -1,8 +1,8 @@
 package com.qingyi.applocker.util
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
 import com.qingyi.applocker.activity.AppLockActivity
 import com.qingyi.applocker.preferences.HistoryPrefs
 import com.qingyi.applocker.preferences.LockAppsPrefs
@@ -64,7 +64,9 @@ class LockAppValidator(private val mContext: Context) {
                 return
             }
             // 打开解锁页面
-            val intent = Intent(mContext, AppLockActivity::class.java)
+            val intent = Intent()
+            intent.component = ComponentName(ThisApp.PACKAGE_NAME, AppLockActivity::class.java.name)
+            intent.flags = Intent.FLAG_ACTIVITY_NO_ANIMATION or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             intent.putExtra(AppLockActivity.PKG, pkg)
             intent.putExtra(AppLockActivity.ACT, activity)
             mContext.startActivity(intent)

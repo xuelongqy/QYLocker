@@ -147,7 +147,7 @@
             // 主题设置失败
             ToastUtil.showLongToast(this.$t('theme.themeNoSet'))
           }
-        },this.themeInfo.name, this.isAppAddPwd, this.$store.state.LockAppsConfig.allAppsInfo[this.appIndex].packageName)
+        },this.themeInfo.name, this.isAppAddPwd, this.isAppAddPwd?this.$store.state.LockAppsConfig.allAppsInfo[this.appIndex].packageName:"")
       }
     },
   }

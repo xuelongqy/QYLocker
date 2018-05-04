@@ -76,6 +76,17 @@
             android:name=".provider.SharedPreferencesProvider"
             android:exported="true"
             tools:ignore="ExportedContentProvider" />
+
+        <!--Xposed配置-->
+        <meta-data
+            android:name="xposedmodule"
+            android:value="true" />
+        <meta-data
+            android:name="xposeddescription"
+            android:value="Applocker for the Xposed Framework(基于Xposed框架的应用锁)" />
+        <meta-data
+            android:name="xposedminversion"
+            android:value="42" />
     </application>
     <uses-sdk android:minSdkVersion="22" android:targetSdkVersion="27" />
 </manifest>

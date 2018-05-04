@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.content.Intent
 import android.graphics.Color
 import android.support.v4.hardware.fingerprint.FingerprintManagerCompat
+import android.support.v4.widget.DrawerLayout
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
@@ -166,8 +167,15 @@ class AppLockActivity: BaseHybridActivity(true, false) {
                 // 验证成功
                 override fun onAuthenticateSucceeded(result: FingerprintManagerCompat.AuthenticationResult?) {
                     LoggerUtil.logAndroid(Log.INFO, "FingerPrintVerify", "success")
-                    // 添加历史
-                    historyPrefs.addHistory(pkgName!!, settingsPrefs.settingsConfig.resetLockModel)
+                    // 判断是否为主程序
+                    if (pkgName!! == this@AppLockActivity.pkgName && activity!! == MainActivity::class.java.name) {
+                        val intent = Intent()
+                        intent.putExtra(MainActivity.UNLOCK_MAIN, true)
+                        setResult(RESULT_OK, intent)
+                    }else {
+                        // 添加历史
+                        historyPrefs.addHistory(pkgName!!, settingsPrefs.settingsConfig.resetLockModel)
+                    }
                     // 关闭页面
                     this@AppLockActivity.finish()
                 }
@@ -176,8 +184,14 @@ class AppLockActivity: BaseHybridActivity(true, false) {
         }
         // 初始化主题工具
         themeUtil = ThemeUtil(this)
+        // 判断是否为主程序
+        if (pkgName!! == this.pkgName && activity!! == MainActivity::class.java.name) {
+            lockTheme = themeUtil.getThemeByName(lockAppsPrefs.lockAppsConfig.theme)
+            pwdName = getString(R.string.master_pwd)
+            al_drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+        }
         // 获取加锁主题
-        if (lockAppsPrefs.lockAppsConfig.lockApps[pkgName!!]!!.isIndependent) {
+        else if (lockAppsPrefs.lockAppsConfig.lockApps[pkgName!!]!!.isIndependent) {
             // 检验是否独立设置
             lockTheme = themeUtil.getThemeByName(lockAppsPrefs.lockAppsConfig.lockApps[pkgName!!]!!.themes[0].theme)
             pwdName = lockAppsPrefs.lockAppsConfig.lockApps[pkgName!!]!!.themes[0].name
@@ -186,6 +200,10 @@ class AppLockActivity: BaseHybridActivity(true, false) {
             // 检验是否设置过密码
             lockTheme = themeUtil.getThemeByName(lockAppsPrefs.lockAppsConfig.theme)
             pwdName = getString(R.string.master_pwd)
+            // 如果只有主密码并且没有高级模式则隐藏侧换栏目
+            if (lockAppsPrefs.lockAppsConfig.lockApps[pkgName!!]!!.themes.isEmpty() && !settingsPrefs.settingsConfig.advancedMode) {
+                al_drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            }
         }
     }
 
@@ -218,13 +236,18 @@ class AppLockActivity: BaseHybridActivity(true, false) {
         }
         // 设置密码列表
         val pwds = arrayListOf<String>()
-        // 判断是否独立设置
-        if (!lockAppsPrefs.lockAppsConfig.lockApps[pkgName!!]!!.isIndependent) {
+        // 判断是否为主程序
+        if (pkgName!! == this.pkgName && activity!! == MainActivity::class.java.name) {
             pwds.add(getString(R.string.master_pwd))
-        }
-        // 添加独立设置中的密码
-        for (theme in lockAppsPrefs.lockAppsConfig.lockApps[pkgName!!]!!.themes) {
-            pwds.add(theme.name)
+        }else {
+            // 判断是否独立设置
+            if (!lockAppsPrefs.lockAppsConfig.lockApps[pkgName!!]!!.isIndependent) {
+                pwds.add(getString(R.string.master_pwd))
+            }
+            // 添加独立设置中的密码
+            for (theme in lockAppsPrefs.lockAppsConfig.lockApps[pkgName!!]!!.themes) {
+                pwds.add(theme.name)
+            }
         }
         val pwdsAdapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, pwds)
         al_pwd_list.adapter = pwdsAdapter
@@ -259,6 +282,24 @@ class AppLockActivity: BaseHybridActivity(true, false) {
                 }
             }
         }
+    }
+
+    /**
+     * @Title: 重写onStop方法
+     * @Class: AppLockActivity
+     * @Description: 当解锁页面停止则销毁
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/4 10:02
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param
+     * @return
+     * @throws
+    */
+    override fun onStop() {
+        super.onStop()
+        this.finish()
     }
 
     /**
@@ -301,12 +342,19 @@ class AppLockActivity: BaseHybridActivity(true, false) {
         }
         // 判断密码是否正确
         if (isRight) {
-            // 添加历史
-            historyPrefs.addHistory(pkgName!!, settingsPrefs.settingsConfig.resetLockModel)
-            // 是否过滤页面
-            if (al_filter_switch.isChecked) {
-                // 添加过滤页面
-                lockAppsPrefs.addFilterActivity(pkgName!!, activity!!)
+            // 判断是否为主程序
+            if (pkgName!! == this.pkgName && activity!! == MainActivity::class.java.name) {
+                val intent = Intent()
+                intent.putExtra(MainActivity.UNLOCK_MAIN, true)
+                setResult(RESULT_OK, intent)
+            }else {
+                // 添加历史
+                historyPrefs.addHistory(pkgName!!, settingsPrefs.settingsConfig.resetLockModel)
+                // 是否过滤页面
+                if (al_filter_switch.isChecked) {
+                    // 添加过滤页面
+                    lockAppsPrefs.addFilterActivity(pkgName!!, activity!!)
+                }
             }
             // 关闭页面
             this.finish()

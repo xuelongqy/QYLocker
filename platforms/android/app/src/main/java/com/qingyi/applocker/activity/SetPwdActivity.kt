@@ -10,8 +10,6 @@ import com.qingyi.applocker.preferences.LockAppsPrefs
 import com.qingyi.applocker.util.LoggerUtil
 import com.qingyi.applocker.util.ThemeUtil
 import android.widget.Toast
-import android.content.DialogInterface
-import android.view.View
 import android.widget.EditText
 import com.qingyi.applocker.R
 
