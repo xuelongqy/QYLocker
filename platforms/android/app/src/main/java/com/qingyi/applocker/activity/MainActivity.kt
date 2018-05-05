@@ -2,8 +2,10 @@ package com.qingyi.applocker.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import com.qingyi.applocker.preferences.LockAppsPrefs
 import com.qingyi.applocker.util.LockerServiceUtil
+import com.qingyi.applocker.util.LoggerUtil
 import com.qingyi.applocker.util.ThemeUtil
 
 /**
@@ -39,9 +41,9 @@ class MainActivity : BaseHybridActivity(true, false) {
         }
 
         // Set by <content src="cordova_index.html" /> in config.xml
-//         loadUrl(launchUrl)
-        loadUrl("http://192.168.1.113:8080")
-//        loadUrl("http://192.168.1.4:8080")
+        // loadUrl(launchUrl)
+        // loadUrl("http://192.168.1.113:8080")
+        loadUrl("http://192.168.43.144:8080")
 
         initMethod()
     }
@@ -52,8 +54,8 @@ class MainActivity : BaseHybridActivity(true, false) {
         themeUtil = ThemeUtil(this)
 
          var lockerServiceUtil = LockerServiceUtil(this)
-        // lockerServiceUtil.startUsageStatsLockerService()
-         lockerServiceUtil.startAccessibilityLockerService()
+         // lockerServiceUtil.startUsageStatsLockerService()
+         // lockerServiceUtil.startAccessibilityLockerService()
     }
 
     /**
@@ -107,5 +109,6 @@ class MainActivity : BaseHybridActivity(true, false) {
                 }
             }
         }
+        super.onActivityResult(requestCode, resultCode, intent)
     }
 }

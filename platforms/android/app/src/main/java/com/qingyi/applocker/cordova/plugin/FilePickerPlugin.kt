@@ -7,11 +7,10 @@ import org.apache.cordova.CordovaWebView
 import org.apache.cordova.CallbackContext
 import org.apache.cordova.PluginResult
 import android.content.Intent
-import android.net.Uri
 import org.json.JSONArray
-import android.provider.MediaStore
+import android.util.Log
 import com.qingyi.applocker.util.FilePathUtil
-import java.io.File
+import com.qingyi.applocker.util.LoggerUtil
 
 
 class FilePickerPlugin: CordovaPlugin() {
@@ -54,7 +53,9 @@ class FilePickerPlugin: CordovaPlugin() {
         when (action) {
             // 选择文件
             "chooseFile" -> {
-                this.chooseFile(args!!.getString(0), args.getString(1),callbackContext!!)
+                cordova.threadPool.execute {
+                    this.chooseFile(args!!.getString(0), args.getString(1), callbackContext!!)
+                }
                 return true
             }
         }
@@ -68,7 +69,6 @@ class FilePickerPlugin: CordovaPlugin() {
      * @param accept   文件类型
      * @param callbackContext 回调
      */
-    @Synchronized
     private fun chooseFile(title: String, accept: String, callbackContext: CallbackContext) {
         if (this.chooseFileCallbackContext != null) {
             this.chooseFileCallbackContext = null
@@ -105,9 +105,9 @@ class FilePickerPlugin: CordovaPlugin() {
         when (resultCode) {
             Activity.RESULT_OK -> {
                 val uri = intent!!.data
-                if (CHOOSE_FILE_REQUEST === requestCode) {
+                if (CHOOSE_FILE_REQUEST == requestCode) {
                     if (this.chooseFileCallbackContext != null) {
-                        val file = File(uri.toString())
+                        LoggerUtil.logAndroid(Log.INFO, "FilePickerPlugin", "File = ${uri.path}")
                         this.chooseFileCallbackContext!!.success(FilePathUtil.getFilePathByUri(mActivity!!, uri))
                         //this.chooseFileCallbackContext!!.success(uri.path)
                     }

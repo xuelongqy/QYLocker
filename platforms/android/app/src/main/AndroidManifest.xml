@@ -21,7 +21,6 @@
         <!--启动页,App主页-->
         <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale"
             android:label="@string/activity_name"
-            android:launchMode="singleTop"
             android:name=".activity.MainActivity"
             android:theme="@android:style/Theme.Material.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize">
@@ -33,7 +32,6 @@
         <!--设置密码页面-->
         <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale"
             android:label="@string/activity_name"
-            android:launchMode="singleTop"
             android:name=".activity.SetPwdActivity"
             android:theme="@android:style/Theme.Material.Light.NoActionBar"
             android:windowSoftInputMode="adjustResize">
