@@ -34,6 +34,27 @@ class LockAppsPrefs(val context: Context) {
         private var cLockAppsJson: String? = null
         // 加锁应用配置对象
         private var cLockAppsConfig: LockAppsConfig? = null
+        // 获取配置对象
+        fun getLockAppsConfig(context: Context): LockAppsConfig {
+            val prefs: SharedPreferences = RemotePreferences(context,
+                    ThisApp.PREFERENCE_PROVIDER_AUTHORITY,
+                    ThisApp.PREFS_LOCK_APPS)
+            val preJson = prefs.getString(ThisApp.PREFS_LOCK_APPS_KEY, null)
+            if (preJson == null) {
+                return LockAppsConfig()
+            }else {
+                return GsonBuilder().create().fromJson(preJson, LockAppsConfig::class.java)
+            }
+        }
+        // 设置配置对象
+        fun setLockAppsConfig(context: Context, lockAppsConfig: LockAppsConfig) {
+            val prefs: SharedPreferences = RemotePreferences(context,
+                    ThisApp.PREFERENCE_PROVIDER_AUTHORITY,
+                    ThisApp.PREFS_LOCK_APPS)
+            val editor: SharedPreferences.Editor = prefs.edit()
+            editor.putString(ThisApp.PREFS_LOCK_APPS_KEY, GsonBuilder().create().toJson(lockAppsConfig))
+            editor.apply()
+        }
     }
 
     // 获取加锁应用配置

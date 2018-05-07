@@ -2,7 +2,10 @@ package com.qingyi.applocker.cordova.plugin
 
 import android.app.Activity
 import com.google.gson.GsonBuilder
+import com.qingyi.applocker.preferences.HistoryPrefs
 import com.qingyi.applocker.preferences.SettingsPrefs
+import com.qingyi.applocker.xposed.XposedUtil
+import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
 import org.apache.cordova.CallbackContext
 import org.apache.cordova.CordovaInterface
 import org.apache.cordova.CordovaPlugin
@@ -31,6 +34,8 @@ class SettingsPlugin : CordovaPlugin() {
     lateinit var mActivity: Activity
     // 加锁应用配置
     lateinit var settingsPrefs: SettingsPrefs
+    // 历史配置
+    lateinit var historyPrefs: HistoryPrefs
     // Json操作对象
     private val gson = GsonBuilder().create()
 
@@ -51,6 +56,7 @@ class SettingsPlugin : CordovaPlugin() {
 
         // 初始化对象
         settingsPrefs = SettingsPrefs(mActivity.applicationContext)
+        historyPrefs = HistoryPrefs(mActivity.applicationContext)
     }
 
     /**
@@ -72,8 +78,17 @@ class SettingsPlugin : CordovaPlugin() {
             // 获取设置的配置信息
             "getSettingsConfig" -> {
                 cordova.threadPool.execute {
-                    callbackContext!!.success(gson.toJson(settingsPrefs.settingsConfig))
-                    callbackContext.error("{}")
+                    // 判断是否启用Xposed模块
+                    if (XposedUtil.isXposedActive()) {
+                        val lockModel = settingsPrefs.settingsConfig.lockModel
+                        settingsPrefs.settingsConfig.lockModel = ThisApp.XPOSED
+                        callbackContext!!.success(gson.toJson(settingsPrefs.settingsConfig))
+                        callbackContext.error("{}")
+                        settingsPrefs.settingsConfig.lockModel = lockModel
+                    }else {
+                        callbackContext!!.success(gson.toJson(settingsPrefs.settingsConfig))
+                        callbackContext.error("{}")
+                    }
                 }
                 return true
             }
@@ -88,6 +103,8 @@ class SettingsPlugin : CordovaPlugin() {
             "setResetLockModel" -> {
                 cordova.threadPool.execute {
                     settingsPrefs.setResetLockModel(args!!.getString(0))
+                    // 清除历史
+                    historyPrefs.cleanHistory()
                 }
                 return true
             }

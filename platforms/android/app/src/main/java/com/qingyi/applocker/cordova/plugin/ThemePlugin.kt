@@ -6,6 +6,7 @@ import com.qingyi.applocker.util.ThemeUtil
 import org.json.JSONArray
 import android.content.Intent
 import android.util.Log
+import com.google.gson.JsonObject
 import com.qingyi.applocker.activity.AppLockActivity
 import com.qingyi.applocker.activity.SetPwdActivity
 import com.qingyi.applocker.bean.LockAppInfo
@@ -14,6 +15,7 @@ import com.qingyi.applocker.util.AppsUtil
 import com.qingyi.applocker.util.ImageBase64Util
 import com.qingyi.applocker.util.LoggerUtil
 import org.apache.cordova.*
+import org.json.JSONObject
 
 
 class ThemePlugin: CordovaPlugin() {
@@ -233,7 +235,9 @@ class ThemePlugin: CordovaPlugin() {
                 // 设置密码
                 if (SET_PWD_REQUEST === requestCode) {
                     if (this.setPwdCallbackContext != null) {
-                        this.setPwdCallbackContext!!.success(intent!!.getBooleanExtra(SetPwdActivity.SET_PWD_STATE, false).toString())
+                        val jo = JSONObject(hashMapOf<String,Any>("state" to intent!!.getBooleanExtra(SetPwdActivity.SET_PWD_STATE, false),
+                                "name" to intent.getStringExtra(SetPwdActivity.PWD_NAME)))
+                        this.setPwdCallbackContext!!.success(jo)
                     }
                 }
             }

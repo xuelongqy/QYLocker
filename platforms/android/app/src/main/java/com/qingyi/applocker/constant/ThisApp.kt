@@ -32,6 +32,11 @@ class ThisApp {
         const val THEME_WEBAPP = "webapp"
         const val THEME_IMAGE = "image"
 
+        // 应用锁模式
+        const val STACK_POLLING = "stackPolling"
+        const val LISTEN_APPS = "listenApps"
+        const val XPOSED = "xposed"
+
         // 重新锁定模式
         const val ONE_TO_ONE = "oneToOne"
         const val ONE_TO_ALL = "oneToAll"

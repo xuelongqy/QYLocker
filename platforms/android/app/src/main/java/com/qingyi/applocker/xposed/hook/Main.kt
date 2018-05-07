@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.util.Log
 import com.qingyi.applocker.util.LoggerUtil
+import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.XC_MethodHook
@@ -54,10 +55,15 @@ class Main: IXposedHookZygoteInit, IXposedHookLoadPackage {
             override fun beforeHookedMethod(param: MethodHookParam) {
                 // 获取上下文
                 val mContext = param.args[0] as Context
-//                when (lpparam.packageName) {
-//
-//                }
-                LockApps.validation(mContext, lpparam.packageName)
+                when (lpparam.packageName) {
+                    SystemUI.PACKAGE_NAME -> {
+                        SystemUI.initScreenOff(lpparam, mContext)
+                    }
+                    ThisApp.PACKAGE_NAME -> {
+                        QyLocker.initXposedActive(lpparam)
+                    }
+                }
+                LockApps.initValidation(mContext, lpparam.packageName)
             }
         })
     }

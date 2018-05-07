@@ -67,16 +67,16 @@ export let deleteTheme = function (callBack, themeName) {
  * 设置主题密码
  * @param callBack 回调函数
  * @param themeName 主题名字
- * @param isAppAddPwd 是否为应用添加密码
+ * @param isAppAddPwd 是否为应用添加密码，以及密码名字。格式为{"state":true, "name":""}
  * @param pkgName 应用包名
  */
 export let setThemePwd = function (callBack, themeName, isAppAddPwd, pkgName) {
   ExecUtil.exec(
-    function (isSuccess) {
-      callBack(eval(isSuccess))
+    function (data) {
+      callBack(data)
     },
-    function (error) {
-      callBack(eval(error))
+    function () {
+      callBack({"state":true, "name":""})
     },
     "Theme",
     "setThemePwd",

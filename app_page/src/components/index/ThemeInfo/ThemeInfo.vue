@@ -129,14 +129,14 @@
       },
       // 使用主题
       useTheme() {
-        ThemeUtil.setThemePwd((state)=> {
+        ThemeUtil.setThemePwd((data)=> {
           // 判断主题是否设置成功
-          if (state) {
+          if (data.state) {
             // 判断是否为应用添加密码,修改Vuex-Store仓库中的数据
             if (this.isAppAddPwd) {
               this.$store.commit('addAppPwd', {
                 appIndex: this.appIndex,
-                "name": this.themeInfo.name,
+                "name": data.name,
                 "theme": this.themeInfo.name
               })
             }else {

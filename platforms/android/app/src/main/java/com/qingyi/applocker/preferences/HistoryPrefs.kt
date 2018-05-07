@@ -26,6 +26,27 @@ class HistoryPrefs(val context: Context) {
         private var cHistoryJson: String? = null
         // 设置配置对象
         private var cHistoryConfig: HistoryConfig? = null
+        // 获取配置对象
+        fun getHistoryConfig(context: Context): HistoryConfig {
+            val prefs: SharedPreferences = RemotePreferences(context,
+                    ThisApp.PREFERENCE_PROVIDER_AUTHORITY,
+                    ThisApp.PREFS_HISTORY)
+            val preJson = prefs.getString(ThisApp.PREFS_HISTORY_KEY, null)
+            if (preJson == null) {
+                return HistoryConfig()
+            }else {
+                return GsonBuilder().create().fromJson(preJson, HistoryConfig::class.java)
+            }
+        }
+        // 设置配置对象
+        fun setHistoryConfig(context: Context, historyConfig: HistoryConfig) {
+            val prefs: SharedPreferences = RemotePreferences(context,
+                    ThisApp.PREFERENCE_PROVIDER_AUTHORITY,
+                    ThisApp.PREFS_HISTORY)
+            val editor: SharedPreferences.Editor = prefs.edit()
+            editor.putString(ThisApp.PREFS_HISTORY_KEY, GsonBuilder().create().toJson(historyConfig))
+            editor.apply()
+        }
     }
 
     // 获取加锁应用配置

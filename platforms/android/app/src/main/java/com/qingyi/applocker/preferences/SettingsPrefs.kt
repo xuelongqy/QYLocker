@@ -26,6 +26,27 @@ class SettingsPrefs(val context: Context) {
         private var cSettingsJson: String? = null
         // 设置配置对象
         private var cSettingsConfig: SettingsConfig? = null
+        // 获取配置对象
+        fun getSettingsConfig(context: Context): SettingsConfig {
+            val prefs: SharedPreferences = RemotePreferences(context,
+                    ThisApp.PREFERENCE_PROVIDER_AUTHORITY,
+                    ThisApp.PREFS_SETTINGS)
+            val preJson = prefs.getString(ThisApp.PREFS_SETTINGS_KEY, null)
+            if (preJson == null) {
+                return SettingsConfig()
+            }else {
+                return GsonBuilder().create().fromJson(preJson, SettingsConfig::class.java)
+            }
+        }
+        // 设置配置对象
+        fun setSettingsConfig(context: Context, settingsConfig: SettingsConfig) {
+            val prefs: SharedPreferences = RemotePreferences(context,
+                    ThisApp.PREFERENCE_PROVIDER_AUTHORITY,
+                    ThisApp.PREFS_SETTINGS)
+            val editor: SharedPreferences.Editor = prefs.edit()
+            editor.putString(ThisApp.PREFS_SETTINGS_KEY, GsonBuilder().create().toJson(settingsConfig))
+            editor.apply()
+        }
     }
 
     // 获取加锁应用配置
@@ -176,7 +197,7 @@ class SettingsPrefs(val context: Context) {
             // 背景图片
             var bgImageUrl: String = "",
             // 应用锁模式
-            var lockModel: String = "listenApps",
+            var lockModel: String = ThisApp.LISTEN_APPS,
             // 重新锁定
             var resetLockModel: String = ThisApp.ONE_TO_ONE,
             // 使用指纹

@@ -27,6 +27,8 @@ class SetPwdActivity: BaseHybridActivity(true, false) {
         val PKG_NAME = "pkg_name"
         // 设置状态
         val SET_PWD_STATE = "set_pwd_state"
+        // 密码名字
+        val PWD_NAME = "pwd_name"
     }
 
     // 主题名字
@@ -166,6 +168,7 @@ class SetPwdActivity: BaseHybridActivity(true, false) {
                                 // 添加密码
                                 lockAppsPrefs.addAppPwd(pkgName!!, editText.text.toString(), themeName!!, pwd)
                                 resultIntent.putExtra(SET_PWD_STATE, true)
+                                resultIntent.putExtra(PWD_NAME, editText.text.toString())
                                 inputDialog.dismiss()
                                 this@SetPwdActivity.finish()
                             }
@@ -180,7 +183,9 @@ class SetPwdActivity: BaseHybridActivity(true, false) {
                 })
                 inputDialog.show()
             }else {
+                resultIntent.putExtra(SET_PWD_STATE, true)
                 lockAppsPrefs.setThemeAndPwd(themeName!!, pwd)
+                this@SetPwdActivity.finish()
             }
         }catch (e: Exception) {
             // 设置失败

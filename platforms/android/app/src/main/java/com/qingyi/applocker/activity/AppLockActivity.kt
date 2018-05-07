@@ -19,6 +19,7 @@ import com.qingyi.applocker.util.AppsUtil
 import com.qingyi.applocker.util.FingerprintUtil
 import com.qingyi.applocker.util.LoggerUtil
 import com.qingyi.applocker.util.ThemeUtil
+import com.qingyi.applocker.xposed.XposedUtil
 import kotlinx.android.synthetic.main.activity_app_lock.*
 import org.apache.cordova.CallbackContext
 import org.apache.cordova.CordovaWebView
@@ -174,6 +175,10 @@ class AppLockActivity: BaseHybridActivity(true, false) {
                         setResult(RESULT_OK, intent)
                     }else {
                         // 添加历史
+                        // 判断Xposed模块是否激活
+                        if (XposedUtil.isXposedActive()) {
+                            historyPrefs.update()
+                        }
                         historyPrefs.addHistory(pkgName!!, settingsPrefs.settingsConfig.resetLockModel)
                     }
                     // 关闭页面
