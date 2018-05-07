@@ -30,8 +30,8 @@
       <!--应用锁模式选择弹出框-->
       <mu-dialog :open="lockModelDialogShow" :title="$t('settings.lockModelSet')" @close="lockModelDialogShow = false">
         <mu-menu>
-          <mu-radio :label="$t('settings.lockModelSetInfo.stackPolling')" v-model="lockModel" @change="lockModelChange" labelLeft name="lockModelGroup" :disabled="lockModel == 'xposed'" nativeValue="stackPolling" class="lock_model_radio"/>
-          <mu-radio :label="$t('settings.lockModelSetInfo.listenApps')" v-model="lockModel" @change="lockModelChange" labelLeft name="lockModelGroup" :disabled="lockModel == 'xposed'" nativeValue="listenApps" class="lock_model_radio"/>
+          <!--<mu-radio :label="$t('settings.lockModelSetInfo.stackPolling')" v-model="lockModel" @change="lockModelChange" labelLeft name="lockModelGroup" :disabled="lockModel == 'xposed'" nativeValue="stackPolling" class="lock_model_radio"/>-->
+          <mu-radio :label="$t('settings.lockModelSetInfo.listenApps')" v-model="lockModel" @change="lockModelChange" labelLeft name="lockModelGroup" disabled nativeValue="listenApps" class="lock_model_radio"/>
           <mu-radio :label="$t('settings.lockModelSetInfo.xposed')" v-model="lockModel" @change="lockModelChange" labelLeft name="lockModelGroup" disabled nativeValue="xposed" class="lock_model_radio"/>
         </mu-menu>
       </mu-dialog>

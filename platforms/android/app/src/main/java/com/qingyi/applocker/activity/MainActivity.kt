@@ -1,8 +1,13 @@
 package com.qingyi.applocker.activity
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
+import com.qingyi.applocker.R
 import com.qingyi.applocker.preferences.LockAppsPrefs
 import com.qingyi.applocker.util.LockerServiceUtil
 import com.qingyi.applocker.util.LoggerUtil
@@ -15,7 +20,7 @@ import com.qingyi.applocker.util.ThemeUtil
  * @author qingyi xuelongqy@foxmail.com
  * @date 2017/9/13 15:00
  */
-class MainActivity : BaseHybridActivity(true, false) {
+class MainActivity : BaseHybridActivity(true, false, true) {
     // 伴生对象
     companion object {
         // 类的标识
@@ -28,6 +33,8 @@ class MainActivity : BaseHybridActivity(true, false) {
     private lateinit var lockAppsPrefs: LockAppsPrefs
     // 主题工具
     private lateinit var themeUtil: ThemeUtil
+    // 应用锁服务工具
+    private lateinit var lockerServiceUtil: LockerServiceUtil
     // 是否解锁此软件
     private var isUnlockThis = false
 
@@ -52,8 +59,8 @@ class MainActivity : BaseHybridActivity(true, false) {
         // 初始变量
         lockAppsPrefs = LockAppsPrefs(this)
         themeUtil = ThemeUtil(this)
-
-         var lockerServiceUtil = LockerServiceUtil(this)
+        // 应用锁服务工具
+        lockerServiceUtil = LockerServiceUtil(this.applicationContext)
          // lockerServiceUtil.startUsageStatsLockerService()
          // lockerServiceUtil.startAccessibilityLockerService()
     }
@@ -73,15 +80,35 @@ class MainActivity : BaseHybridActivity(true, false) {
     */
     override fun onStart() {
         // 主程序启动密码
-        if (lockAppsPrefs.lockAppsConfig.theme != ""
+        if (!isUnlockThis &&
+                lockAppsPrefs.lockAppsConfig.theme != ""
                 && lockAppsPrefs.lockAppsConfig.password != ""
-                && themeUtil.getThemeByName(lockAppsPrefs.lockAppsConfig.theme) != null
-                && !isUnlockThis) {
+                && themeUtil.getThemeByName(lockAppsPrefs.lockAppsConfig.theme) != null) {
             // 当设置主题和密码后启动解锁页面
             val intent = Intent(this, AppLockActivity::class.java)
             intent.putExtra(AppLockActivity.PKG, this.packageName)
             intent.putExtra(AppLockActivity.ACT, this::class.java.name)
             this.startActivityForResult(intent, LOCK_PAGE_REQUEST_CODE)
+        }
+        // 判断服务权限
+        if (isUnlockThis && !lockerServiceUtil.havePermission()) {
+            // 申请权限
+            val lockerServicePermissionsDialog = AlertDialog.Builder(this)
+                    .setTitle(R.string.no_permissions)
+                    .setMessage(R.string.no_locker_Service_permissions)
+                    .setPositiveButton(R.string.settings, { dialog: DialogInterface, which: Int ->
+                        // 申请权限
+                        lockerServiceUtil.requestPermission()
+                        // 启动服务
+                        // lockerServiceUtil.startLockerService()
+                        dialog.dismiss()
+                    }).setCancelable(false).create()
+            lockerServicePermissionsDialog.show()
+        }
+        // 判断服务是否启动
+        else if (lockerServiceUtil.isLockerServiceStart()) {
+            // 启动服务
+            lockerServiceUtil.startLockerService()
         }
         super.onStart()
     }

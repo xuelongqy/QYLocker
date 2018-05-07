@@ -1,13 +1,19 @@
 package com.qingyi.applocker.util
 
+import android.app.ActivityManager
 import android.app.AppOpsManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.provider.Settings
 import android.util.Log
+import com.qingyi.applocker.preferences.SettingsPrefs
+import com.qingyi.applocker.receiver.LockerServiceBroadcastReceiver
 import com.qingyi.applocker.service.AccessibilityLockerService
 import com.qingyi.applocker.service.UsageStatsLockerService
+import com.qingyi.applocker.xposed.XposedUtil
+import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
 
 /**
  * 应用锁服务助手
@@ -68,7 +74,7 @@ class LockerServiceUtil(context: Context) {
          * @return 是否拥有权限
          */
         fun haveAccessibilityPermission(context: Context): Boolean {
-            var accessibilityEnabled:Int
+            val accessibilityEnabled:Int
             try {
                 accessibilityEnabled = Settings.Secure.getInt(context.contentResolver,
                         android.provider.Settings.Secure.ACCESSIBILITY_ENABLED)
@@ -113,12 +119,15 @@ class LockerServiceUtil(context: Context) {
     fun startUsageStatsLockerService() {
         //判断是否拥有权限
         if(!havaUsageStatsManagerPermission(mContext)){
-            setUsageStatsManagerPermission(mContext);
-            return
+            // 启动服务
+            val intent = Intent(mContext, UsageStatsLockerService::class.java)
+            mContext.startService(intent)
         }
-        //启动服务
-        var intent = Intent(mContext, UsageStatsLockerService::class.java)
-        mContext.startService(intent)
+    }
+    fun stopUsageStatsLockerService() {
+        // 停止服务
+        val intent = Intent(mContext, UsageStatsLockerService::class.java)
+        mContext.stopService(intent)
     }
 
     /**
@@ -131,12 +140,171 @@ class LockerServiceUtil(context: Context) {
     fun startAccessibilityLockerService() {
         //判断是否拥有权限
         if(!haveAccessibilityPermission(mContext)){
-            setAccessibilityPermission(mContext)
-            return
+            //启动服务
+            val intent = Intent(mContext, AccessibilityLockerService::class.java)
+            mContext.startService(intent)
         }
-        //启动服务
-        var intent = Intent(mContext, AccessibilityLockerService::class.java)
-        mContext.startService(intent)
+    }
+    fun stopAccessibilityLockerService() {
+        // 停止服务
+        val intent = Intent(mContext, AccessibilityLockerService::class.java)
+        mContext.stopService(intent)
     }
 
+    /**
+     * @Title: isLockerServiceStart方法
+     * @Class: LockerServiceUtil
+     * @Description: 获取应用锁服务是否启动
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/7 21:01
+     * @update_author
+     * @update_time
+     * @param
+     * @return [Boolean] 应用锁服务是否启动
+     * @throws
+     * @version V1.0
+    */
+    fun isLockerServiceStart(): Boolean {
+        // 判断Xposed模块是否启动
+        if (XposedUtil.isXposedActive()) return true
+        // 获取应用锁模式
+        val lockModel = SettingsPrefs(mContext).settingsConfig.lockModel
+        val service: ComponentName
+        when(lockModel) {
+            ThisApp.LISTEN_APPS -> {
+                service = ComponentName(mContext, AccessibilityLockerService::class.java)
+            }
+            ThisApp.STACK_POLLING -> {
+                service = ComponentName(mContext, UsageStatsLockerService::class.java)
+            }
+            else -> return false
+        }
+        // 判断服务是否运行
+        val serviceIntent = (mContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager).getRunningServiceControlPanel(service)
+        return serviceIntent != null
+    }
+
+    /**
+     * @Title: havePermission方法
+     * @Class: LockerServiceUtil
+     * @Description: 判断是否拥有权限
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/7 21:39
+     * @update_author
+     * @update_time
+     * @param
+     * @return [Boolean] 是否拥有权限
+     * @throws
+     * @version V1.0
+    */
+    fun havePermission(): Boolean {
+        // 判断Xposed模块是否启动
+        if (XposedUtil.isXposedActive()) return true
+        // 获取应用锁模式
+        val lockModel = SettingsPrefs(mContext).settingsConfig.lockModel
+        // 判断模式
+        when(lockModel) {
+            ThisApp.LISTEN_APPS -> {
+                return haveAccessibilityPermission(mContext)
+            }
+            ThisApp.STACK_POLLING -> {
+                return havaUsageStatsManagerPermission(mContext)
+            }
+            else -> return false
+        }
+    }
+
+    /**
+     * @Title: requestPermission方法
+     * @Class: LockerServiceUtil
+     * @Description: 申请权限
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/7 21:38
+     * @update_author
+     * @update_time
+     * @param
+     * @return
+     * @throws
+     * @version V1.0
+    */
+    fun requestPermission() {
+        // 判断是否拥有权限
+        if (havePermission()) return
+        // 获取应用锁模式
+        val lockModel = SettingsPrefs(mContext).settingsConfig.lockModel
+        // 判断模式
+        when(lockModel) {
+            ThisApp.LISTEN_APPS -> {
+                setAccessibilityPermission(mContext)
+            }
+            ThisApp.STACK_POLLING -> {
+                setUsageStatsManagerPermission(mContext)
+            }
+            else -> return
+        }
+    }
+
+    /**
+     * @Title: startLockerService方法
+     * @Class: LockerServiceUtil
+     * @Description: 启动应用锁服务
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/7 21:28
+     * @update_author
+     * @update_time
+     * @param
+     * @return
+     * @throws
+     * @version V1.0
+    */
+    fun startLockerService() {
+        // 判断服务是否启动
+        if (isLockerServiceStart()) return
+        // 获取应用锁模式
+        val lockModel = SettingsPrefs(mContext).settingsConfig.lockModel
+        // 判断模式
+        when(lockModel) {
+            ThisApp.LISTEN_APPS -> {
+                startAccessibilityLockerService()
+            }
+            ThisApp.STACK_POLLING -> {
+                startUsageStatsLockerService()
+            }
+            else -> return
+        }
+    }
+
+    /**
+     * @Title: stopLockerService方法
+     * @Class: LockerServiceUtil
+     * @Description: 关闭应用锁服务
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/7 21:33
+     * @update_author
+     * @update_time
+     * @param
+     * @return
+     * @throws
+     * @version V1.0
+    */
+    fun stopLockerService() {
+        // 判断服务是否启动
+        if (!isLockerServiceStart()) return
+        // 获取应用锁模式
+        val lockModel = SettingsPrefs(mContext).settingsConfig.lockModel
+        // 判断模式
+        when(lockModel) {
+            ThisApp.LISTEN_APPS -> {
+                stopAccessibilityLockerService()
+            }
+            ThisApp.STACK_POLLING -> {
+                stopUsageStatsLockerService()
+            }
+            else -> return
+        }
+        // 发送关闭服务广播
+        val intent = Intent()
+        intent.action = LockerServiceBroadcastReceiver.STOP_SERVICE
+        mContext.sendBroadcast(intent)
+    }
 }

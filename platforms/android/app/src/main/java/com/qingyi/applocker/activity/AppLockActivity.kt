@@ -180,6 +180,11 @@ class AppLockActivity: BaseHybridActivity(true, false) {
                             historyPrefs.update()
                         }
                         historyPrefs.addHistory(pkgName!!, settingsPrefs.settingsConfig.resetLockModel)
+                        // 是否过滤页面
+                        if (al_filter_switch.isChecked) {
+                            // 添加过滤页面
+                            lockAppsPrefs.addFilterActivity(pkgName!!, activity!!)
+                        }
                     }
                     // 关闭页面
                     this@AppLockActivity.finish()

@@ -23,16 +23,19 @@ import org.apache.cordova.CordovaActivity
  * @date 2017/8/19 22:06
  */
 open class BaseHybridActivity(): CordovaActivity() {
-    //状态栏透明
+    // 状态栏透明
     private var transparent_StatusBar:Boolean = false
-    //导航栏透明
+    // 导航栏透明
     private var transparent_NavigationBar:Boolean = false
+    // 是否需要申请权限
+    private var needRequestPermissions: Boolean = false
     // 前往权限设置弹窗
     lateinit var goSettingsDialog: AlertDialog
 
-    constructor(transparent_StatusBar: Boolean, transparent_NavigationBar: Boolean) : this() {
+    constructor(transparent_StatusBar: Boolean, transparent_NavigationBar: Boolean, needRequestPermissions: Boolean = false) : this() {
         this.transparent_StatusBar = transparent_StatusBar
         this.transparent_NavigationBar = transparent_NavigationBar
+        this.needRequestPermissions = needRequestPermissions
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +81,9 @@ open class BaseHybridActivity(): CordovaActivity() {
     */
     override fun onStart() {
         // 申请权限
-        requestPermissions()
+        if (needRequestPermissions) {
+            requestPermissions()
+        }
         super.onStart()
     }
 

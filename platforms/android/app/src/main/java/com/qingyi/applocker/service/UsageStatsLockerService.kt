@@ -12,6 +12,7 @@ import com.qingyi.applocker.activity.MainActivity
 import android.os.Build
 import com.qingyi.applocker.activity.AppLockActivity
 import com.qingyi.applocker.filter.AppsFilter
+import com.qingyi.applocker.receiver.LockerServiceBroadcastReceiver
 import com.qingyi.applocker.receiver.ScreenBroadcastReceiver
 import com.qingyi.applocker.util.LockAppValidator
 import com.qingyi.applocker.util.LoggerUtil
@@ -47,6 +48,8 @@ class UsageStatsLockerService: IntentService("QYLocker-UsageStatsService") {
     private lateinit var lockAppValidator: LockAppValidator
     // 屏幕广播接收器
     private var screenBroadcastReceiver: ScreenBroadcastReceiver? = null
+    // 应用锁服务广播接收器
+    private lateinit var lockerServiceBroadcastReceiver: LockerServiceBroadcastReceiver
 
     /**
      * 重写创建监听方法
@@ -83,6 +86,12 @@ class UsageStatsLockerService: IntentService("QYLocker-UsageStatsService") {
             screenBroadcastReceiver = ScreenBroadcastReceiver(this)
         }
         screenBroadcastReceiver!!.start()
+        // 初始化应用锁服务广播接收器
+        lockerServiceBroadcastReceiver = LockerServiceBroadcastReceiver(this, object: LockerServiceBroadcastReceiver.LockerServiceBroadcastListener {
+            override fun onStopService() {
+                this@UsageStatsLockerService.stopSelf()
+            }
+        })
         return super.onStartCommand(intent, Service.START_FLAG_REDELIVERY, startId)
     }
 
@@ -101,6 +110,8 @@ class UsageStatsLockerService: IntentService("QYLocker-UsageStatsService") {
         if (screenBroadcastReceiver != null) {
             screenBroadcastReceiver!!.stop()
         }
+        // 停止服务器广播接收器
+        unregisterReceiver(lockerServiceBroadcastReceiver)
         super.onDestroy()
     }
 

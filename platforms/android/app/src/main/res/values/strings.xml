@@ -8,6 +8,7 @@
     <string name="traditional_mode">Traditional mode</string>
     <string name="efficient_mode">Efficient mode</string>
     <string name="no_permissions">Not enough permissions</string>
+    <string name="no_locker_Service_permissions">Lack of application lock service permissions</string>
     <string name="set_permissions">Please set the permissions required to check the software on the page.</string>
     <string name="settings">Settings</string>
     <string name="ok">OK</string>
@@ -19,4 +20,5 @@
     <string name="activity_label">Activity: </string>
     <string name="filter">Filter</string>
     <string name="master_pwd">The master password</string>
+    <string name="device_admin_description">Protect QYLocker from being uninstalled and disabled</string>
 </resources>

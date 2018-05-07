@@ -1,9 +1,18 @@
 package com.qingyi.applocker.cordova.plugin
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.app.admin.DevicePolicyManager
+import android.content.ComponentName
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
 import com.google.gson.GsonBuilder
+import com.qingyi.applocker.R
 import com.qingyi.applocker.preferences.HistoryPrefs
 import com.qingyi.applocker.preferences.SettingsPrefs
+import com.qingyi.applocker.receiver.UninstallProtectionReceiver
+import com.qingyi.applocker.util.LockerServiceUtil
 import com.qingyi.applocker.xposed.XposedUtil
 import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
 import org.apache.cordova.CallbackContext
@@ -31,11 +40,17 @@ class SettingsPlugin : CordovaPlugin() {
     }
 
     // 缓存调用插件的Activity
-    lateinit var mActivity: Activity
+    private lateinit var mActivity: Activity
     // 加锁应用配置
-    lateinit var settingsPrefs: SettingsPrefs
+    private lateinit var settingsPrefs: SettingsPrefs
     // 历史配置
-    lateinit var historyPrefs: HistoryPrefs
+    private lateinit var historyPrefs: HistoryPrefs
+    // 应用锁服务工具
+    private lateinit var lockerServiceUtil: LockerServiceUtil
+    // 系统设备管理器工具
+    private lateinit var devicePolicyManager: DevicePolicyManager
+    // 设备管理名字
+    private lateinit var deviceAdmin: ComponentName
     // Json操作对象
     private val gson = GsonBuilder().create()
 
@@ -57,6 +72,9 @@ class SettingsPlugin : CordovaPlugin() {
         // 初始化对象
         settingsPrefs = SettingsPrefs(mActivity.applicationContext)
         historyPrefs = HistoryPrefs(mActivity.applicationContext)
+        lockerServiceUtil = LockerServiceUtil(mActivity.applicationContext)
+        devicePolicyManager = mActivity.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+        deviceAdmin = ComponentName(mActivity, UninstallProtectionReceiver::class.java)
     }
 
     /**
@@ -78,24 +96,50 @@ class SettingsPlugin : CordovaPlugin() {
             // 获取设置的配置信息
             "getSettingsConfig" -> {
                 cordova.threadPool.execute {
+                    val settingsConfig = SettingsPrefs.SettingsConfig()
+                    settingsConfig.clon(settingsPrefs.settingsConfig)
                     // 判断是否启用Xposed模块
                     if (XposedUtil.isXposedActive()) {
-                        val lockModel = settingsPrefs.settingsConfig.lockModel
-                        settingsPrefs.settingsConfig.lockModel = ThisApp.XPOSED
-                        callbackContext!!.success(gson.toJson(settingsPrefs.settingsConfig))
-                        callbackContext.error("{}")
-                        settingsPrefs.settingsConfig.lockModel = lockModel
-                    }else {
-                        callbackContext!!.success(gson.toJson(settingsPrefs.settingsConfig))
-                        callbackContext.error("{}")
+                        settingsConfig.lockModel = ThisApp.XPOSED
                     }
+                    // 判断是否使用设备管理器
+                    settingsConfig.preventUninstall = devicePolicyManager.isAdminActive(deviceAdmin)
+                    if (settingsConfig.preventUninstall != settingsPrefs.settingsConfig.preventUninstall) {
+                        settingsPrefs.setPreventUninstall(settingsConfig.preventUninstall)
+                    }
+                    callbackContext!!.success(gson.toJson(settingsConfig))
+                    callbackContext.error("{}")
                 }
                 return true
             }
             // 设置应用锁模式
             "setLockModel" -> {
                 cordova.threadPool.execute {
-                    settingsPrefs.setLockModel(args!!.getString(0))
+                    // 获取应用锁模式
+                    val lockModel = args!!.getString(0)
+                    // 不为Xpose模式
+                    if (lockModel != ThisApp.XPOSED) {
+                        settingsPrefs.setLockModel(args.getString(0))
+                        // 关闭之前服务
+                        lockerServiceUtil.stopLockerService()
+                        // 判断服务权限
+                        if (!lockerServiceUtil.havePermission()) {
+                            mActivity.runOnUiThread {
+                                // 申请权限
+                                val lockerServicePermissionsDialog = AlertDialog.Builder(mActivity)
+                                        .setTitle(R.string.no_permissions)
+                                        .setMessage(R.string.no_locker_Service_permissions)
+                                        .setPositiveButton(R.string.settings, { dialog: DialogInterface, which: Int ->
+                                            // 申请权限
+                                            lockerServiceUtil.requestPermission()
+                                            // 启动服务
+                                            lockerServiceUtil.startLockerService()
+                                            dialog.dismiss()
+                                        }).setCancelable(false).create()
+                                lockerServicePermissionsDialog.show()
+                            }
+                        }
+                    }
                 }
                 return true
             }
@@ -132,11 +176,21 @@ class SettingsPlugin : CordovaPlugin() {
             // 设置防止卸载
             "setPreventUninstall" -> {
                 cordova.threadPool.execute {
-                    settingsPrefs.setPreventUninstall(args!!.getBoolean(0))
+                    // 获取是否防止卸载状态
+                    val isPreventUninstall = args!!.getBoolean(0)
+                    // 设置设备管理器状态
+                    if (isPreventUninstall) {
+                        val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN)
+                        intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, deviceAdmin)
+                        mActivity.startActivity(intent)
+                    }else {
+                        devicePolicyManager.removeActiveAdmin(deviceAdmin)
+                    }
+                    settingsPrefs.setPreventUninstall(isPreventUninstall)
                 }
                 return true
             }
-            // 设置防止卸载
+            // 设置背景图片
             "setBgImageUrl" -> {
                 cordova.threadPool.execute {
                     settingsPrefs.setBgImageUrl(args!!.getString(0))

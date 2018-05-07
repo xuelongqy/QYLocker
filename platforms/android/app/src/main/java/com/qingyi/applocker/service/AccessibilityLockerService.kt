@@ -15,8 +15,11 @@ import android.app.NotificationManager
 import android.app.NotificationChannel
 import android.content.Context
 import com.qingyi.applocker.filter.AppsFilter
+import com.qingyi.applocker.receiver.AppPackageBroadcastReceiver
+import com.qingyi.applocker.receiver.LockerServiceBroadcastReceiver
 import com.qingyi.applocker.receiver.ScreenBroadcastReceiver
 import com.qingyi.applocker.util.LockAppValidator
+import com.qingyi.applocker.xposed.XposedUtil
 
 
 /**
@@ -43,6 +46,10 @@ class AccessibilityLockerService: AccessibilityService() {
     private lateinit var lockAppValidator: LockAppValidator
     // 屏幕广播接收器
     private var screenBroadcastReceiver: ScreenBroadcastReceiver? = null
+    // 应用锁服务广播接收器
+    private lateinit var lockerServiceBroadcastReceiver: LockerServiceBroadcastReceiver
+    // 应用包管理广播接收器
+    private lateinit var appPackageBroadcastReceiver: AppPackageBroadcastReceiver
 
     /**
      * 重写启动命令方法
@@ -68,6 +75,13 @@ class AccessibilityLockerService: AccessibilityService() {
      * @date 2017/8/15 20:28
      */
     override fun onServiceConnected() {
+        // 判断是否启动Xposed模块,如果启动则关闭此服务
+        if (XposedUtil.isXposedActive()) {
+            this.stopSelf()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                this.disableSelf()
+            }
+        }
         //启动前台服务
         startNotification()
         // 初始化验证器
@@ -77,6 +91,17 @@ class AccessibilityLockerService: AccessibilityService() {
             screenBroadcastReceiver = ScreenBroadcastReceiver(this)
         }
         screenBroadcastReceiver!!.start()
+        // 初始化应用锁服务广播接收器
+        lockerServiceBroadcastReceiver = LockerServiceBroadcastReceiver(this, object: LockerServiceBroadcastReceiver.LockerServiceBroadcastListener {
+            override fun onStopService() {
+                this@AccessibilityLockerService.stopSelf()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    this@AccessibilityLockerService.disableSelf()
+                }
+            }
+        })
+        // 初始化应用包管理广播接收器
+        appPackageBroadcastReceiver = AppPackageBroadcastReceiver(this)
         super.onServiceConnected()
     }
 
@@ -92,21 +117,24 @@ class AccessibilityLockerService: AccessibilityService() {
     }
 
     /**
-     * 系统断开服务时调用方法
-     * @Title: onUnbind
-     * @Description: 系统断开服务时调用方法
+     * 关闭服务时调用方法
+     * @Title: onDestroy
+     * @Description: 关闭服务时调用方法
      * @author qingyi xuelongqy@foxmail.com
      * @date 2017/8/15 20:29
-     * @param intent 上下文
      */
-    override fun onUnbind(intent: Intent?): Boolean {
+    override fun onDestroy() {
         // 关闭前台服务
         stopForeground(true)
         // 停止屏幕广播接收器
         if (screenBroadcastReceiver != null) {
             screenBroadcastReceiver!!.stop()
         }
-        return super.onUnbind(intent)
+        // 停止服务器广播接收器
+        unregisterReceiver(lockerServiceBroadcastReceiver)
+        // 停止应用包管理广播接收器
+        unregisterReceiver(appPackageBroadcastReceiver)
+        return super.onDestroy()
     }
 
     /**

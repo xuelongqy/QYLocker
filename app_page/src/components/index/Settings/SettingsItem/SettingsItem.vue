@@ -101,6 +101,10 @@
         }
         // 设置项信息
         .setting_info {
+          font-size: 0.8rem;
+          line-height: 1rem;
+          width: 200px;
+          word-break:break-word;
           color: gray;
         }
       }

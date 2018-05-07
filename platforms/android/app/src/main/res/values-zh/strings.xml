@@ -8,6 +8,7 @@
     <string name="traditional_mode">传统模式</string>
     <string name="efficient_mode">高效模式</string>
     <string name="no_permissions">权限不够</string>
+    <string name="no_locker_Service_permissions">缺少应用锁服务权限</string>
     <string name="set_permissions">请在设置页面勾选软件所需的权限。</string>
     <string name="settings">设置</string>
     <string name="ok">确定</string>
@@ -19,4 +20,5 @@
     <string name="activity_label">页面: </string>
     <string name="filter">过滤</string>
     <string name="master_pwd">主密码</string>
+    <string name="device_admin_description">保护轻易锁防止被卸载和禁用</string>
 </resources>

@@ -208,5 +208,15 @@ class SettingsPrefs(val context: Context) {
             var lockNewApp: Boolean = false,
             // 防止卸载
             var preventUninstall: Boolean = false
-    )
+    ){
+        fun clon(config: SettingsConfig) {
+            this.bgImageUrl = config.bgImageUrl
+            this.lockModel = config.lockModel
+            this.resetLockModel = config.resetLockModel
+            this.useFingerprint = config.useFingerprint
+            this.advancedMode = config.advancedMode
+            this.lockNewApp = config.lockNewApp
+            this.preventUninstall = config.preventUninstall
+        }
+    }
 }

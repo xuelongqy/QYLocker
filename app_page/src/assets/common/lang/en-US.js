@@ -16,7 +16,7 @@ module.exports = {
     "translators": "KnockYouth"
   },
   index: {
-    "menu": "menu",
+    "menu": "Menu",
     "menu_list": [
       {
         "name": "App list",
