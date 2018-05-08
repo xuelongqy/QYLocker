@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ @Title: bg_app_added_dialog.xml
+ @Description: 新应用体添加弹窗背景
+ @author XueLong xuelongqy@foxmail.com
+ @date 2018/5/8 11:41
+ @update_author
+ @update_time
+ @version V1.0
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@android:color/white"/>
+    <corners android:radius="2dp"/>
+</shape>

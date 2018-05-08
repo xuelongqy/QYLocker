@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ @Title: activity_app_added.xml
+ @Description: 新应用添加弹窗
+ @author XueLong xuelongqy@foxmail.com
+ @date 2018/5/8 11:31
+ @update_author
+ @update_time
+ @version V1.0
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="280dp"
+    android:layout_height="350dp"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/bg_app_added_dialog">
+    <!--头部-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:background="@drawable/bg_app_added_dialog_header">
+        <!--应用图标-->
+        <ImageButton
+            android:id="@+id/aa_app_icon"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+    <!--内容-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:layout_weight="1">
+        <!--名字-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@android:color/black"
+                android:text="@string/lock_the"/>
+            <TextView
+                android:id="@+id/aa_app_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@android:color/black"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@android:color/black"
+                android:text="?"/>
+        </LinearLayout>
+        <!--信息-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_app_label"/>
+    </LinearLayout>
+    <!--按钮-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:orientation="horizontal">
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+        <!--取消按钮-->
+        <Button
+            android:id="@+id/aa_later_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/later"
+            android:textColor="@color/colorPrimary"
+            style="?android:attr/buttonBarNegativeButtonStyle"/>
+        <!--确定按钮-->
+        <Button
+            android:id="@+id/aa_lock_app_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lock"
+            android:textColor="@color/colorPrimary"
+            style="?android:attr/buttonBarPositiveButtonStyle"/>
+    </LinearLayout>
+</LinearLayout>

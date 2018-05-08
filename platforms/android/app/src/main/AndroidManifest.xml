@@ -36,8 +36,7 @@
             android:label="@string/activity_name"
             android:name=".activity.SetPwdActivity"
             android:theme="@android:style/Theme.Material.Light.NoActionBar"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
+            android:windowSoftInputMode="adjustResize"/>
 
         <!--锁屏界面Activity-->
         <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale"
@@ -49,9 +48,12 @@
             android:taskAffinity=""
             android:name=".activity.AppLockActivity"
             android:theme="@android:style/Theme.Material.Light.NoActionBar"
-            android:windowSoftInputMode="adjustResize"
-            >
-        </activity>
+            android:windowSoftInputMode="adjustResize"/>
+
+        <!--添加应用页面-->
+        <activity android:name=".activity.AppAddedActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/DialogStyle"/>
 
         <!--开机启动广播接收器-->
         <!--<receiver android:name=".receiver.BootCompleteReceiver">-->

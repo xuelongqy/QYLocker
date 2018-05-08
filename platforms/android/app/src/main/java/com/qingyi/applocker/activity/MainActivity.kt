@@ -3,14 +3,10 @@ package com.qingyi.applocker.activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
-import android.util.Log
 import com.qingyi.applocker.R
 import com.qingyi.applocker.preferences.LockAppsPrefs
 import com.qingyi.applocker.util.LockerServiceUtil
-import com.qingyi.applocker.util.LoggerUtil
 import com.qingyi.applocker.util.ThemeUtil
 
 /**

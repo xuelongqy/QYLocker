@@ -21,4 +21,8 @@
     <string name="filter">Filter</string>
     <string name="master_pwd">The master password</string>
     <string name="device_admin_description">Protect QYLocker from being uninstalled and disabled</string>
+    <string name="lock">Lock</string>
+    <string name="later">Later</string>
+    <string name="lock_the">Lock the</string>
+    <string name="add_app_label">Lock the application and unlock before starting.</string>
 </resources>

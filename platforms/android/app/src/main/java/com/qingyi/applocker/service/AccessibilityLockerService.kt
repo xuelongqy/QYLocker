@@ -15,7 +15,7 @@ import android.app.NotificationManager
 import android.app.NotificationChannel
 import android.content.Context
 import com.qingyi.applocker.filter.AppsFilter
-import com.qingyi.applocker.receiver.AppPackageBroadcastReceiver
+import com.qingyi.applocker.receiver.PackageChangeReceiver
 import com.qingyi.applocker.receiver.LockerServiceBroadcastReceiver
 import com.qingyi.applocker.receiver.ScreenBroadcastReceiver
 import com.qingyi.applocker.util.LockAppValidator
@@ -49,7 +49,7 @@ class AccessibilityLockerService: AccessibilityService() {
     // 应用锁服务广播接收器
     private lateinit var lockerServiceBroadcastReceiver: LockerServiceBroadcastReceiver
     // 应用包管理广播接收器
-    private lateinit var appPackageBroadcastReceiver: AppPackageBroadcastReceiver
+    private lateinit var packageChangeReceiver: PackageChangeReceiver
 
     /**
      * 重写启动命令方法
@@ -101,7 +101,7 @@ class AccessibilityLockerService: AccessibilityService() {
             }
         })
         // 初始化应用包管理广播接收器
-        appPackageBroadcastReceiver = AppPackageBroadcastReceiver(this)
+        packageChangeReceiver = PackageChangeReceiver(this)
         super.onServiceConnected()
     }
 
@@ -133,7 +133,7 @@ class AccessibilityLockerService: AccessibilityService() {
         // 停止服务器广播接收器
         unregisterReceiver(lockerServiceBroadcastReceiver)
         // 停止应用包管理广播接收器
-        unregisterReceiver(appPackageBroadcastReceiver)
+        unregisterReceiver(packageChangeReceiver)
         return super.onDestroy()
     }
 
