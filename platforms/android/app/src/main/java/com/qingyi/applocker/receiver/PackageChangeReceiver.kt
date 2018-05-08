@@ -2,6 +2,7 @@ package com.qingyi.applocker.receiver
 
 import android.content.*
 import android.util.Log
+import com.google.gson.GsonBuilder
 import com.qingyi.applocker.activity.AppAddedActivity
 import com.qingyi.applocker.activity.AppLockActivity
 import com.qingyi.applocker.preferences.LockAppsPrefs
@@ -46,7 +47,7 @@ class PackageChangeReceiver(val mContext: Context): BroadcastReceiver() {
                 if (!settingsPrefs.settingsConfig.lockNewApp || lockAppsPrefs.lockAppsConfig.lockApps.keys.contains(packageName)) return
                 // 打开新应用弹窗
                 val appAddedIntent = Intent(context, AppAddedActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
                 appAddedIntent.putExtra(AppAddedActivity.PACKAGE_NAME, packageName)
                 context.startActivity(appAddedIntent)
             }

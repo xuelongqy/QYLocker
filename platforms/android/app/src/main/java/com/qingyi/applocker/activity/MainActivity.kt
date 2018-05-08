@@ -85,6 +85,8 @@ class MainActivity : BaseHybridActivity(true, false, true) {
             intent.putExtra(AppLockActivity.PKG, this.packageName)
             intent.putExtra(AppLockActivity.ACT, this::class.java.name)
             this.startActivityForResult(intent, LOCK_PAGE_REQUEST_CODE)
+        }else {
+            isUnlockThis = true
         }
         // 判断服务权限
         if (isUnlockThis && !lockerServiceUtil.havePermission()) {

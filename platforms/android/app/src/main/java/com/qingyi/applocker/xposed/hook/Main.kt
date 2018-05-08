@@ -57,10 +57,16 @@ class Main: IXposedHookZygoteInit, IXposedHookLoadPackage {
                 val mContext = param.args[0] as Context
                 when (lpparam.packageName) {
                     SystemUI.PACKAGE_NAME -> {
+                        // 屏幕关闭
                         SystemUI.initScreenOff(lpparam, mContext)
                     }
                     ThisApp.PACKAGE_NAME -> {
+                        // 设置Xposed模块激活
                         QyLocker.initXposedActive(lpparam)
+                    }
+                    PackageChange.PACKAGE_NAME -> {
+                        // 应用包改变(安装、卸载、更新)
+                        PackageChange.initPackageChange(lpparam, mContext)
                     }
                 }
                 LockApps.initValidation(mContext, lpparam.packageName)
