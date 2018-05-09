@@ -1,5 +1,20 @@
 <template>
   <div id="index">
+    <!--主干区域-->
+    <div class="index_main">
+      <!--左边区域盒子-->
+      <div class="index_main_left_box">
+        <p class="index_main_text">{{this.$t('index.hithertoUnknown')}}</p>
+        <p class="index_main_text">{{this.$t('index.lockerApp')}}</p>
+        <p class="index_main_label">{{this.$t('index.upToYou')}}</p>
+        <mu-raised-button class="index_main_download_btn" :label="$t('index.downloadSoft')" primary/>
+        <mu-raised-button class="index_main_more_theme_btn" :label="$t('index.moreTheme')"/>
+      </div>
+      <div class="index_main_right_box">
+        <!--App截图-->
+        <img class="index_main_app_ss" src="../../assets/app_screenshots.png">
+      </div>
+    </div>
     <!--底部栏-->
     <mu-flexbox class="index_footer_box">
       <mu-flexbox-item class="index_footer_item">
@@ -36,9 +51,9 @@
 <script>
   export default {
     name: 'HelloWorld',
+    // 数据
     data() {
       return {
-        msg: 'Welcome to Your Vue.js App'
       }
     }
   }
@@ -50,6 +65,49 @@
   #index {
     height: 100%;
     width: 100%;
+    text-align: left;
+    // 主干区域
+    .index_main {
+      position: absolute;
+      width: 100%;
+      padding-top: 80px;
+      height: calc(100% - 80px);
+      overflow: auto;
+      text-align: center;
+      // 左侧区域
+      .index_main_left_box {
+        display: inline-block;
+        vertical-align: center;
+        margin: 20px 50px;
+        color: white;
+        width: 250px;
+        text-align: center;
+        .index_main_text {
+          font-size: 1.5rem;
+          margin: 0;
+          padding: 0;
+        }
+        .index_main_label {
+          margin: 50px 0;
+        }
+        .index_main_download_btn {
+          margin-right: 20px;
+        }
+        .index_main_more_theme_btn {
+          background: transparent;
+        }
+      }
+      // 右侧区域
+      .index_main_right_box {
+        display: inline-block;
+        vertical-align: top;
+        // App截图
+        .index_main_app_ss {
+          margin: 0 50px;
+          width: 200px;
+        }
+      }
+    }
     // 底部栏
     .index_footer_box {
       position: absolute;

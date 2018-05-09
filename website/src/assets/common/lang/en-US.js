@@ -18,7 +18,7 @@ module.exports = {
   app: {
     "home": "Home",
     "theme": "Theme",
-    "lockScreen": "LockScreen",
+    "lockScreen": "Lock theme",
     "download": "DownLoad"
   },
   index: {
@@ -27,6 +27,11 @@ module.exports = {
     "efficient": "Efficient",
     "efficientLabel": "Excellent equipment management ability",
     "custom": "Custom",
-    "customLabel": "Random use of the theme"
+    "customLabel": "Random use of the theme",
+    "hithertoUnknown": "This is an unprecedented one",
+    "lockerApp": "Locker App",
+    "upToYou": "What it looks like depends on you",
+    "downloadSoft": "Download",
+    "moreTheme": "More theme"
   }
 }

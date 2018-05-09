@@ -18,7 +18,7 @@ module.exports = {
   app: {
     "home": "主页",
     "theme": "主题",
-    "lockScreen": "锁屏",
+    "lockScreen": "锁屏主题",
     "download": "下载"
   },
   index: {
@@ -27,6 +27,11 @@ module.exports = {
     "efficient": "高效",
     "efficientLabel": "优秀的设备管理能力",
     "custom": "自定义",
-    "customLabel": "百变主题随意使用"
+    "customLabel": "百变主题随意使用",
+    "hithertoUnknown": "这是一个前所未有的",
+    "lockerApp": "应用锁App",
+    "upToYou": "它的样子完全取决于你",
+    "downloadSoft": "下载软件",
+    "moreTheme": "更多主题"
   }
 }
