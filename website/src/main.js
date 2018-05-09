@@ -9,6 +9,7 @@ import lang from './assets/common/lang/lang'
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
 import 'muse-ui/dist/theme-light.css'
+import axios from 'axios'
 
 Vue.config.productionTip = false
 
@@ -17,6 +18,8 @@ Vue.use(MuseUI)
 // 添加多国语言支持
 Vue.use(VueI18n)
 const i18n = lang.createI18n()
+// 添加axios
+Vue.prototype.$http = axios
 
 /* eslint-disable no-new */
 new Vue({
