@@ -14,5 +14,19 @@ module.exports = {
     "author": "KnockYouth",
     "email": "xuelongqy@foxmail.com",
     "translators": "KnockYouth"
+  },
+  app: {
+    "home": "主页",
+    "theme": "主题",
+    "lockScreen": "锁屏",
+    "download": "下载"
+  },
+  index: {
+    "safe": "安全",
+    "safeLabel": "严格保护您的数据",
+    "efficient": "高效",
+    "efficientLabel": "优秀的设备管理能力",
+    "custom": "自定义",
+    "customLabel": "百变主题随意使用"
   }
 }

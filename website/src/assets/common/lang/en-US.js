@@ -14,5 +14,19 @@ module.exports = {
     "author": "KnockYouth",
     "email": "xuelongqy@foxmail.com",
     "translators": "KnockYouth"
+  },
+  app: {
+    "home": "Home",
+    "theme": "Theme",
+    "lockScreen": "LockScreen",
+    "download": "DownLoad"
+  },
+  index: {
+    "safe": "Safe",
+    "safeLabel": "Strictly protect your data",
+    "efficient": "Efficient",
+    "efficientLabel": "Excellent equipment management ability",
+    "custom": "Custom",
+    "customLabel": "Random use of the theme"
   }
 }
