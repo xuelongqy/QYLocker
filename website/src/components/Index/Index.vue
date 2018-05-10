@@ -3,20 +3,20 @@
     <!--主干区域-->
     <div class="index_main">
       <!--左边区域盒子-->
-      <div class="index_main_left_box">
+      <div class="index_main_left_box animated bounceInLeft">
         <p class="index_main_text">{{this.$t('index.hithertoUnknown')}}</p>
         <p class="index_main_text">{{this.$t('index.lockerApp')}}</p>
         <p class="index_main_label">{{this.$t('index.upToYou')}}</p>
         <mu-raised-button class="index_main_download_btn" :label="$t('index.downloadSoft')" primary/>
-        <mu-raised-button class="index_main_more_theme_btn" :label="$t('index.moreTheme')"/>
+        <mu-raised-button class="index_main_more_theme_btn" :label="$t('index.moreTheme')" @click="$router.push('/theme')"/>
       </div>
-      <div class="index_main_right_box">
+      <div class="index_main_right_box animated pulse">
         <!--App截图-->
         <img class="index_main_app_ss" src="../../assets/app_screenshots.png">
       </div>
     </div>
     <!--底部栏-->
-    <mu-flexbox class="index_footer_box">
+    <mu-flexbox class="index_footer_box animated bounceInUp">
       <mu-flexbox-item class="index_footer_item">
         <!--图标-->
         <mu-icon value="security" :size="40" color="white"/>

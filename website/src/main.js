@@ -9,7 +9,10 @@ import lang from './assets/common/lang/lang'
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
 import 'muse-ui/dist/theme-light.css'
+import 'animate.css/animate.css'
 import axios from 'axios'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+import 'swiper/dist/css/swiper.css'
 
 Vue.config.productionTip = false
 
@@ -20,6 +23,8 @@ Vue.use(VueI18n)
 const i18n = lang.createI18n()
 // 添加axios
 Vue.prototype.$http = axios
+// 添加翻页轮播插件
+Vue.use(VueAwesomeSwiper)
 
 /* eslint-disable no-new */
 new Vue({

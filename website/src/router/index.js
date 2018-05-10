@@ -9,6 +9,11 @@ export default new Router({
       path: '/',
       name: 'index',
       component: require('@/components/Index/Index').default
+    },
+    {
+      path: '/theme',
+      name: 'theme',
+      component: require('@/components/Theme/Theme').default
     }
   ]
 })

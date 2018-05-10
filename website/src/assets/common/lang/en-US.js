@@ -19,7 +19,29 @@ module.exports = {
     "home": "Home",
     "theme": "Theme",
     "lockScreen": "Lock theme",
-    "download": "DownLoad"
+    "download": "DownLoad",
+    "noLogin": "Not login",
+    "login": "Login",
+    "myTheme": "My Theme",
+    "shareTheme": "Share Theme",
+    "about": "About",
+    "userLogin": "User login",
+    "userRegistration": "User Registration",
+    "userName": "Username",
+    "email": "Email",
+    "phone": "Phone",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "inputPassword": "Please input the password",
+    "registeredAccount": "Registered account",
+    "userNameError": "Incorrect user name format",
+    "emailError": "Incorrect email format",
+    "phoneError": "The phone number format is not correct",
+    "pwdError": "Please enter a 6-16-bit letter or number",
+    "confirmPwdError": "The two passwords do not match",
+    "wrongPwd": "Wrong password",
+    "selectFile": "Select the file",
+    "anonymousUpload": "Anonymous upload"
   },
   index: {
     "safe": "Safe",
@@ -33,5 +55,12 @@ module.exports = {
     "upToYou": "What it looks like depends on you",
     "downloadSoft": "Download",
     "moreTheme": "More theme"
+  },
+  theme: {
+    "searchTheme": "Search theme",
+    "author": "Author",
+    "version": "Version",
+    "date": "Date",
+    "describe": "Describe"
   }
 }
