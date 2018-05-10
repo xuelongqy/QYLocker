@@ -136,6 +136,12 @@
       },
       // 登陆或者注册
       onLogin() {
+        // 清除错误提示
+        this.userNameError = ""
+        this.emailError = ""
+        this.phoneError = ""
+        this.pwdError = ""
+        this.confirmPwdError = ""
         // 输入验证
         if (this.inputValidation()) {
           alert("ok")
