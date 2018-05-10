@@ -41,7 +41,7 @@
         this.pwdError = ""
         // 输入验证
         if (this.inputValidation()) {
-          alert("ok")
+          this.$router.push('/management')
         }
       },
       // 输入验证

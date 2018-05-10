@@ -24,5 +24,29 @@ module.exports = {
     "userNameError": "Incorrect user name format",
     "pwdError": "Please enter a 6-16-bit letter or number",
     "wrongPwd": "Wrong password"
+  },
+  management: {
+    "inputContent": "Please enter content",
+    "all": "All",
+    "waitCheck": "Wait check",
+    "putOffed": "Put off",
+    "check": "Check",
+    "putOff": "Put off",
+    "putOn": "Put on",
+    "delete": "Delete",
+    "pass": "Pass",
+    "rejected": "Rejected",
+    "rejectedMsg": "Rejected message",
+    "cancel": "Cancel",
+    "ok": "Ok",
+    "confirm": "Confirm"
+  },
+  theme: {
+    "theme": "theme",
+    "searchTheme": "Search theme",
+    "author": "Author",
+    "version": "Version",
+    "date": "Date",
+    "describe": "Describe"
   }
 }

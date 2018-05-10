@@ -9,6 +9,11 @@ export default new Router({
       path: '/',
       name: 'login',
       component: require('@/components/Login/Login').default
+    },
+    {
+      path: '/management',
+      name: 'management',
+      component: require('@/components/Management/Management').default
     }
   ]
 })

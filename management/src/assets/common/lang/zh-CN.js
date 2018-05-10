@@ -24,5 +24,29 @@ module.exports = {
     "userNameError": "用户名格式不正确",
     "pwdError": "请输入6-16位的字母或数字",
     "wrongPwd": "密码错误"
+  },
+  management: {
+    "inputContent": "请输入内容",
+    "all": "全部",
+    "waitCheck": "待审核",
+    "putOffed": "已下架",
+    "check": "审核",
+    "putOff": "下架",
+    "putOn": "上架",
+    "delete": "删除",
+    "pass": "通过",
+    "rejected": "驳回",
+    "rejectedMsg": "驳回信息",
+    "cancel": "取消",
+    "ok": "确认",
+    "confirm": "确认"
+  },
+  theme: {
+    "theme": "主题",
+    "searchTheme": "主题搜索",
+    "author": "作者",
+    "version": "版本",
+    "date": "日期",
+    "describe": "描述"
   }
 }
