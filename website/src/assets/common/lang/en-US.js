@@ -41,7 +41,8 @@ module.exports = {
     "confirmPwdError": "The two passwords do not match",
     "wrongPwd": "Wrong password",
     "selectFile": "Select the file",
-    "anonymousUpload": "Anonymous upload"
+    "anonymousUpload": "Anonymous upload",
+    "upload": "Upload"
   },
   index: {
     "safe": "Safe",
@@ -62,5 +63,10 @@ module.exports = {
     "version": "Version",
     "date": "Date",
     "describe": "Describe"
+  },
+  myTheme: {
+    "themeState": "Theme status",
+    "msg": "Message",
+    "updateTheme": "Update theme"
   }
 }

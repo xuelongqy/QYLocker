@@ -41,7 +41,8 @@ module.exports = {
     "confirmPwdError": "两次密码不一致",
     "wrongPwd": "密码错误",
     "selectFile": "选择文件",
-    "anonymousUpload": "匿名上传"
+    "anonymousUpload": "匿名上传",
+    "upload": "上传"
   },
   index: {
     "safe": "安全",
@@ -62,5 +63,10 @@ module.exports = {
     "version": "版本",
     "date": "日期",
     "describe": "描述"
+  },
+  myTheme: {
+    "themeState": "主题状态",
+    "msg": "信息",
+    "updateTheme": "更新主题"
   }
 }

@@ -14,6 +14,11 @@ export default new Router({
       path: '/theme',
       name: 'theme',
       component: require('@/components/Theme/Theme').default
+    },
+    {
+      path: '/my-theme',
+      name: 'my-theme',
+      component: require('@/components/MyTheme/MyTheme').default
     }
   ]
 })

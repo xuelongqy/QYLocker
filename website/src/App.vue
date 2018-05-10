@@ -28,7 +28,7 @@
         <!--更多菜单-->
         <mu-menu>
           <mu-divider />
-          <mu-menu-item :title="$t('app.myTheme')" leftIcon="color_lens"/>
+          <mu-menu-item :title="$t('app.myTheme')" leftIcon="color_lens" @click="onMyTheme"/>
           <mu-menu-item :title="$t('app.shareTheme')" leftIcon="share" @click="share_theme_dialog_open = true"/>
           <mu-menu-item :title="$t('app.about')" leftIcon="info"/>
         </mu-menu>
@@ -205,6 +205,10 @@
         //   .then(response=>{
         //     console.log(response.data);
         //   })
+      },
+      // 我的主题
+      onMyTheme() {
+        this.$router.push('/my-theme')
       }
     }
   }

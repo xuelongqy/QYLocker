@@ -145,11 +145,11 @@
         // 主题条目
         .theme_item {
           display: inline-block;
-          width: 180px;
+          width: 150px;
           margin: 10px;
           text-align: left;
           img {
-            width: 180px;
+            width: 150px;
           }
         }
         // 主题分页
