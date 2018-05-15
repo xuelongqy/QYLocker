@@ -8,6 +8,7 @@ import android.content.Intent
 import android.util.Log
 import com.google.gson.JsonObject
 import com.qingyi.applocker.activity.AppLockActivity
+import com.qingyi.applocker.activity.MainActivity
 import com.qingyi.applocker.activity.SetPwdActivity
 import com.qingyi.applocker.bean.LockAppInfo
 import com.qingyi.applocker.preferences.SettingsPrefs
@@ -178,9 +179,13 @@ class ThemePlugin: CordovaPlugin() {
             // 设置主题数据(主题所需自定义的额外数据)
             "setThemeData" -> {
                 cordova.threadPool.execute {
-                    // 仅仅在设置主题页面使用
+                    // 设置主题界面
                     if (mActivity is SetPwdActivity) {
                         (mActivity as SetPwdActivity).setThemeData(args!!.getString(0))
+                    }
+                    // 解锁界面
+                    else if(mActivity is AppLockActivity){
+                        (mActivity as AppLockActivity).setThemeData(args!!.getString(0))
                     }
                 }
                 return true
@@ -209,6 +214,15 @@ class ThemePlugin: CordovaPlugin() {
                         callbackContext!!.success(gson.toJson((mActivity as AppLockActivity).getLockAppInfo()))
                         callbackContext.error(gson.toJson(LockAppInfo()))
                     }
+                }
+                return true
+            }
+            // 下载主题
+            "downloadTheme" -> {
+                cordova.threadPool.execute {
+                    // 获取下载地址
+                    val downloadUrl = args!!.getString(0)
+                    (mActivity as MainActivity).downloadTheme(downloadUrl, callbackContext!!)
                 }
                 return true
             }

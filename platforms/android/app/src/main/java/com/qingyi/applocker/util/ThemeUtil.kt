@@ -45,9 +45,9 @@ class ThemeUtil(val context: Context) {
      * @return
      * @throws
     */
-    fun importTheme(filePath: String):Boolean {
+    fun importTheme(file: File):Boolean {
         // 获取主题文件
-        var theme = ZipFile(File(filePath))
+        var theme = ZipFile(file)
         // 验证目录结构
         val themeJsonEntry = theme.getEntry(ThisApp.THEME_INFO_FILE)
         val webappEntry = theme.getEntry(ThisApp.THEME_WEBAPP)
@@ -76,6 +76,9 @@ class ThemeUtil(val context: Context) {
             LoggerUtil.logAndroid(Log.INFO, "importTheme", "is not theme file")
             return false
         }
+    }
+    fun importTheme(filePath: String):Boolean {
+        return importTheme(File(filePath))
     }
 
     /**

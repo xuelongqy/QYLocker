@@ -406,6 +406,23 @@ class AppLockActivity: BaseHybridActivity(true, false) {
     }
 
     /**
+     * @Title: setThemeData方法
+     * @Class: AppLockActivity
+     * @Description: 设置主题额外数据
+     * @author XueLong xuelongqy@foxmail.com
+     * @date 2018/5/2 13:47
+     * @update_author
+     * @update_time
+     * @version V1.0
+     * @param data[String] 数据
+     * @return
+     * @throws
+     */
+    fun setThemeData(data: String) {
+        themeUtil.setThemeData(lockTheme!!.name, data)
+    }
+
+    /**
      * 监听返回键
      * @Title: onBackPressed
      * @Description: 监听返回键

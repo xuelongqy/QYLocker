@@ -101,7 +101,7 @@
   // 主题卡片
   .theme_card {
     width: 100%;
-    height: 150px;
+    height: 150px !important;
     text-align: center;
     border-bottom: 1px gainsboro solid;
 

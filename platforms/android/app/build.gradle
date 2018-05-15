@@ -20,6 +20,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 buildscript {
     repositories {
@@ -288,6 +289,11 @@ dependencies {
     implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.5@aar'
     implementation "com.android.support:appcompat-v7:27.1.1"
     implementation "com.android.support:support-fragment:27.1.1"
+    // 下载Aria
+    implementation('com.arialyy.aria:aria-core:3.4'){
+        exclude group: 'com.android.support'
+    }
+    kapt 'com.arialyy.aria:aria-compiler:3.4'
 }
 
 def promptForReleaseKeyPassword() {
