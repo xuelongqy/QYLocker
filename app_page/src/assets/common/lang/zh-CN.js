@@ -75,7 +75,13 @@ module.exports = {
     "chooseTheme": "选择主题",
     "importFail": "导入失败,请检验主题格式",
     "themeSetSuccess": "主题设置成功",
-    "themeNoSet": "主题未设置"
+    "themeNoSet": "主题未设置",
+    "startDownload": "开始下载",
+    "downloadSuccess": "下载成功",
+    "downloadFailure": "下载失败",
+    "delete": "删除",
+    "cancel": "取消",
+    "ok": "确定"
   },
   settings: {
     "unselected": "未选择",

@@ -1,7 +1,7 @@
 <template>
   <div id="theme">
     <!--环形加载条-->
-    <div class="theme_load_box" v-if="$store.state.Theme.loadThemesInfo">
+    <div class="theme_load_box" v-if="loadThemesInfo">
       <div class="theme_load_bar_box">
         <mu-paper class="al_load_bar" circle :zDepth="3">
           <mu-circular-progress class="al_load_bar_progress" :size="30"/>
@@ -15,7 +15,7 @@
     </mu-tabs>
     <!--主题列表-->
     <div class="theme_apps_tab">
-      <scroller
+      <scroller ref="themeScroller"
         :on-refresh="refresh"
         :on-infinite="infinite">
         <!--导入主题-->
@@ -63,7 +63,7 @@
       }
     },
     // 页面创建时
-    created() {
+    mounted() {
       // 获取应用信息
       if (this.$store.state.Theme.downloadedThemes.length === 0) {
         this.$store.dispatch('getDownloadedThemesInfo')
@@ -99,6 +99,33 @@
       // 应用包名,当应用添加密码时有效
       appIndex() {
         return (typeof this.$route.params.appIndex === "undefined")?parseInt("-1"):parseInt(this.$route.params.appIndex)
+      },
+      // 刷新状态
+      loadThemesInfo() {
+        return this.$store.state.Theme.loadThemesInfo
+      },
+      // 滑到底部没有更多主题
+      noMoreTheme() {
+        return this.$store.state.Theme.noMoreTheme
+      }
+    },
+    // 观察器
+    watch: {
+      // 刷新状态
+      loadThemesInfo(newValue, oldValue) {
+        if (newValue) {
+          this.$refs.themeScroller.loadingState = 2
+        }else {
+          this.$refs.themeScroller.loadingState = 0
+        }
+      },
+      // 监听没有更多主题
+      noMoreTheme(newValue, oldValue) {
+        if (newValue) {
+          // 关闭下拉刷新
+          this.$refs.themeScroller.loadingState = 2
+          this.infiniteDoneCallback(true)
+        }
       }
     },
     // 方法
@@ -109,6 +136,10 @@
           this.infiniteDoneCallback()
         }
         this.activeTab = val
+        // 判断是否为商店主题
+        if (this.activeTab == 'tabStore' && this.$store.state.Theme.storeThemes.length == 0) {
+          this.$store.dispatch('getOnlineThemesInfo', this.searchKey)
+        }
       },
       // 搜索关键字改变时
       onSearchKey(searchKey) {
@@ -116,6 +147,10 @@
       },
       // 搜索按钮确定事件
       onSearch(searchKey) {
+        // 获取应用信息
+        if (this.activeTab == 'tabStore') {
+          this.$store.dispatch('getOnlineThemesInfo', searchKey)
+        }
       },
       // 下拉刷新
       refresh(done) {
@@ -133,9 +168,8 @@
         // 如果是下载的主题则不进行操作
         if (this.activeTab == "tabDownload") {
           done()
-          this.infiniteDoneCallback = null
         }else if (this.activeTab == "tabStore") {
-          this.$store.dispatch('getOnlineThemesInfoMore')
+          this.$store.dispatch('getOnlineThemesInfoMore', this.searchKey)
         }
       },
       // 判断是否为下载过的主题

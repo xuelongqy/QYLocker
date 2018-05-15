@@ -91,7 +91,7 @@
     // 方法
     methods: {
       onSearchBtn() {
-        if (this.onSearch != null && this.searchKey != null && this.searchKey !== "") {
+        if (this.onSearch != null && this.searchKey != null) {
           this.onSearch(this.searchKey)
         }
       }

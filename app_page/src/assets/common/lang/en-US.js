@@ -76,7 +76,13 @@ module.exports = {
     "chooseTheme": "Choose theme",
     "importFail": "Import failed, please check the theme format",
     "themeSetSuccess": "Theme setting success",
-    "themeNoSet": "Theme not set"
+    "themeNoSet": "Theme not set",
+    "startDownload": "Start download",
+    "downloadSuccess": "Download successful",
+    "downloadFailure": "Download failed",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "ok": "Ok"
   },
   settings: {
     "unselected": "Unselected",

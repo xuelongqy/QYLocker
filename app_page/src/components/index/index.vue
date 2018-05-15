@@ -8,7 +8,7 @@
         <div id="index_drawer_header_bg"></div>
         <!--头部内容容器-->
         <div class="index_drawer_header_content_box">
-          <a class="index_drawer_header_img" href="javascript:void(0)"><img class="circle" src="./assets/img/side-nev_head.jpg"></a>
+          <a class="index_drawer_header_img" href="javascript:void(0)"><img class="circle" src="./assets/img/logo.png"></a>
           <!--侧边栏信息盒子-->
           <div class="index_drawer_header_info_box">
             <a class="index_drawer_header_name" href="javascript:void(0)"><span class="white-text name">{{ this.$t('comm.appName') }}</span></a>

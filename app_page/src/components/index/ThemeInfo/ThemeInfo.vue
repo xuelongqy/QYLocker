@@ -35,14 +35,19 @@
     <!--主题底部栏-->
     <mu-paper class="tf_footer" :zDepth="2">
       <!--下载按钮-->
-      <mu-raised-button v-if="canDownload" :label="$t('theme.download')" class="tf_operation_btn" primary/>
+      <mu-raised-button v-if="canDownload" :label="$t('theme.download')" class="tf_operation_btn" primary @click="downloadTheme"/>
       <!--使用按钮-->
       <mu-raised-button v-if="canUse" :label="$t('theme.use')" class="tf_operation_btn" secondary @click="useTheme"/>
       <!--修改密码按钮-->
       <mu-raised-button v-if="canChange" :label="$t('theme.changePwd')" class="tf_operation_btn" backgroundColor="#a4c639" @click="useTheme"/>
       <!--删除按钮-->
-      <mu-icon-button v-if="canDelete" class="tf_delete_btn" icon="delete" @click="deleteTheme"/>
+      <mu-icon-button v-if="canDelete" class="tf_delete_btn" icon="delete" @click="delete_dialog = true"/>
     </mu-paper>
+    <mu-dialog :open="delete_dialog" :title="$t('theme.delete')" @close="delete_dialog = false">
+      {{$t('theme.delete')}} - themeInfo.name ?
+      <mu-flat-button slot="actions" @click="delete_dialog = false" primary :label="$t('theme.cancel')"/>
+      <mu-flat-button slot="actions" primary @click="deleteTheme" :label="$t('theme.ok')"/>
+    </mu-dialog>
   </div>
 </template>
 
@@ -64,7 +69,9 @@
             clickable: true,
             hide: true
           }
-        }
+        },
+        // 删除提示框
+        delete_dialog: false
       }
     },
     // 计算变量
@@ -96,7 +103,7 @@
       // 判断是否未下载过的主题
       isDownloaded() {
         if (this.$route.params.themeTab== 'tabDownload') return true
-        for (var index in this.this.$store.state.Theme.downloadedThemes) {
+        for (var index in this.$store.state.Theme.downloadedThemes) {
           if (this.$store.state.Theme.downloadedThemes[index].name == this.themeInfo.name) return true
         }
         return false
@@ -148,6 +155,20 @@
             ToastUtil.showLongToast(this.$t('theme.themeNoSet'))
           }
         },this.themeInfo.name, this.isAppAddPwd, this.isAppAddPwd?this.$store.state.LockAppsConfig.allAppsInfo[this.appIndex].packageName:"")
+      },
+      // 下载主题
+      downloadTheme() {
+        ToastUtil.showLongToast(this.$t('theme.startDownload'))
+        ThemeUtil.downloadTheme((status) => {
+          // 判断是否下载成功
+          if (status) {
+            ToastUtil.showLongToast(this.$t('theme.downloadSuccess'))
+            // 更新下载的主题列表
+            this.$store.dispatch('getDownloadedThemesInfo')
+          }else {
+            ToastUtil.showLongToast(this.$t('theme.downloadFailure'))
+          }
+        },this.themeInfo.file)
       }
     },
   }

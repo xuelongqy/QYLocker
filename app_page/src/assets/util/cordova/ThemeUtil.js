@@ -34,7 +34,11 @@ export let importTheme = function (callBack, filePath) {
 export let getThemeList = function (callBack) {
   ExecUtil.exec(
     function (themeList) {
-      callBack(JSON.parse(themeList))
+      if (typeof themeList == 'undefined') {
+        callBack([])
+      }else {
+        callBack(JSON.parse(themeList))
+      }
     },
     function (error) {
       callBack(JSON.parse(error))
@@ -84,9 +88,29 @@ export let setThemePwd = function (callBack, themeName, isAppAddPwd, pkgName) {
   )
 }
 
+/**
+ * 下载主题
+ * @param callBack 回调函数
+ * @param themeUrl 主题链接
+ */
+export let downloadTheme = function (callBack, themeUrl) {
+  ExecUtil.exec(
+    function (status) {
+      callBack(eval(status))
+    },
+    function (error) {
+      callBack(eval(error))
+    },
+    "Theme",
+    "downloadTheme",
+    [themeUrl]
+  )
+}
+
 export default {
   importTheme,
   getThemeList,
   deleteTheme,
-  setThemePwd
+  setThemePwd,
+  downloadTheme
 }
