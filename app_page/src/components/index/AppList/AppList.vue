@@ -317,16 +317,16 @@
   }
   // 独立开关按钮
   .independent_setting_switch {
-    height: 48px;
-    line-height: 48px;
+    height: 48px !important;
+    line-height: 48px !important;
     width: 100%;
     padding: 12px 16px;
     text-align: center;
   }
   // 过滤页面开关按钮
   .filter_page_switch {
-    height: 48px;
-    line-height: 48px;
+    height: 48px !important;
+    line-height: 48px !important;
     width: 100%;
     padding-right: 12px;
   }
