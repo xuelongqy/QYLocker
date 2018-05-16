@@ -102,7 +102,7 @@
   // App条目
   .al_app_item {
     width: 100%;
-    height: 50px;
+    height: 50px !important;
     text-align: center;
     // App条目盒子
     .al_app_item_box {
