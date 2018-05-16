@@ -25,4 +25,6 @@
     <string name="later">Later</string>
     <string name="lock_the">Lock the</string>
     <string name="add_app_label">Lock the application and unlock before starting.</string>
+    <string name="downloadSuccess">Download successful</string>
+    <string name="downloadFailure">Download failed</string>
 </resources>

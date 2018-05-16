@@ -222,7 +222,10 @@ class ThemePlugin: CordovaPlugin() {
                 cordova.threadPool.execute {
                     // 获取下载地址
                     val downloadUrl = args!!.getString(0)
-                    (mActivity as MainActivity).downloadTheme(downloadUrl, callbackContext!!)
+                    val mPlugin = PluginResult(PluginResult.Status.NO_RESULT)
+                    mPlugin.keepCallback = true
+                    callbackContext!!.sendPluginResult(mPlugin)
+                    (mActivity as MainActivity).downloadTheme(downloadUrl, callbackContext)
                 }
                 return true
             }

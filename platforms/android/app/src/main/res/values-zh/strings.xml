@@ -25,4 +25,6 @@
     <string name="later">以后</string>
     <string name="lock_the">锁定</string>
     <string name="add_app_label">将应用进行加锁,启动之前需要进行解锁。</string>
+    <string name="downloadSuccess">下载成功</string>
+    <string name="downloadFailure">下载失败</string>
 </resources>

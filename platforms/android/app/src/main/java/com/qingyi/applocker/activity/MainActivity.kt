@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
+import android.widget.Toast
 import com.arialyy.aria.core.Aria
 import com.qingyi.applocker.R
 import com.qingyi.applocker.preferences.LockAppsPrefs
@@ -236,16 +237,37 @@ class MainActivity : BaseHybridActivity(true, false, true) {
      * @version V1.0
     */
     fun downloadTheme(downloadUrl: String, downloadCallbackContext: CallbackContext) {
+        runOnUiThread {
+            this.downloadCallbackContext = downloadCallbackContext
+        }
         // 判断是否有任务
         if (Aria.download(this).allNotCompletTask != null && !Aria.download(this).allNotCompletTask.isEmpty()) {
-            downloadCallbackContext.success(false.toString())
+            if (downloadCallbackContext != null) {
+                downloadCallbackContext.success(false.toString())
+            }else {
+                runOnUiThread {
+                    Toast.makeText(this, R.string.downloadFailure, Toast.LENGTH_LONG).show()
+                }
+            }
             return
         }
-        this.downloadCallbackContext = downloadCallbackContext
         // 获取下载目录
         val downloadPath = Environment.getExternalStorageDirectory().absolutePath + File.separator + "Download" + File.separator + "QYLocker-Theme-" + Date().time + ".zip"
         // 下载文件
-        Aria.download(this).load(downloadUrl).setFilePath(downloadPath).start()
+        runOnUiThread {
+            try {
+                Aria.download(this).load(downloadUrl).setFilePath(downloadPath).start()
+            }catch (e: Exception) {
+                LoggerUtil.logAndroid(Log.WARN, "$TAG.downloadTheme", e.localizedMessage)
+                if (downloadCallbackContext != null) {
+                    downloadCallbackContext.success(false.toString())
+                }else {
+                    runOnUiThread {
+                        Toast.makeText(this, R.string.downloadFailure, Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -265,6 +287,21 @@ class MainActivity : BaseHybridActivity(true, false, true) {
     fun ariaTaskComplete(task: DownloadTask) {
         //在这里处理任务完成的状态
         LoggerUtil.logAndroid(Log.INFO, "ariaTaskComplete", task.downloadPath)
-        downloadCallbackContext!!.success(themeUtil.importTheme(task.downloadPath).toString())
+        if (downloadCallbackContext != null) {
+            try {
+                downloadCallbackContext!!.success(themeUtil.importTheme(task.downloadPath).toString())
+                // 删除主题文件
+                // File(task.downloadPath).delete()
+            }catch (e: Exception) {
+                LoggerUtil.logAndroid(Log.WARN, "$TAG.ariaTaskComplete", e.localizedMessage)
+                runOnUiThread {
+                    Toast.makeText(this, R.string.downloadFailure, Toast.LENGTH_LONG).show()
+                }
+            }
+        }else {
+            runOnUiThread {
+                Toast.makeText(this, R.string.downloadSuccess, Toast.LENGTH_LONG).show()
+            }
+        }
     }
 }
