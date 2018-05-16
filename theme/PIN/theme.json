@@ -1,0 +1,9 @@
+{
+  "name": "PIN",
+  "author": "KnoYo",
+  "describe": "Use the PIN to unlock.",
+  "version": "0.1",
+  "date": "2018-04-20",
+  "lockPage": "index.html",
+  "setPwdPage": "index.html#/set-pwd"
+}
