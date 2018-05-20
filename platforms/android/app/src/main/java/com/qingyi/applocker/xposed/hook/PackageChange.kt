@@ -7,6 +7,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import com.qingyi.applocker.activity.AppAddedActivity
+import com.qingyi.applocker.preferences.LockAppsPrefs
+import com.qingyi.applocker.preferences.SettingsPrefs
 import com.qingyi.applocker.util.LoggerUtil
 import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
 import de.robv.android.xposed.XC_MethodHook
@@ -31,6 +33,8 @@ object PackageChange {
     val CLASS_NAME = "com.android.server.pm.PackageManagerService"
 
     fun initPackageChange(lPParam: XC_LoadPackage.LoadPackageParam, mContext: Context) {
+        // 判断是否锁定新应用
+        if (!SettingsPrefs.getSettingsConfig(mContext).lockNewApp) return
         try {
             XposedHelpers.findAndHookMethod(CLASS_NAME, lPParam.classLoader, "sendPackageBroadcast",
                     String::class.java,
@@ -45,6 +49,8 @@ object PackageChange {
                 override fun beforeHookedMethod(param: MethodHookParam) {
                     val action = param.args[0] as String
                     val pkg = param.args[1] as String
+                    // 判断是否已经加锁
+                    if (LockAppsPrefs.getLockAppsConfig(mContext).lockApps.containsKey(pkg)) return
                     when (action) {
                         // 新应用安装
                         Intent.ACTION_PACKAGE_ADDED -> {

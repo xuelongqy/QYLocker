@@ -44,7 +44,7 @@ class PackageChangeReceiver(val mContext: Context): BroadcastReceiver() {
                 // 获取应用包名
                 val packageName = intent.data.schemeSpecificPart
                 // 判断是否开启锁定新应用
-                if (!settingsPrefs.settingsConfig.lockNewApp || lockAppsPrefs.lockAppsConfig.lockApps.keys.contains(packageName)) return
+                if (!settingsPrefs.settingsConfig.lockNewApp || lockAppsPrefs.lockAppsConfig.lockApps.containsKey(packageName)) return
                 // 打开新应用弹窗
                 val appAddedIntent = Intent(context, AppAddedActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT

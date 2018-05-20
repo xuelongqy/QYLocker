@@ -3,6 +3,9 @@ package com.qingyi.applocker.xposed.hook
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import com.qingyi.applocker.preferences.HistoryPrefs
+import com.qingyi.applocker.preferences.LockAppsPrefs
+import com.qingyi.applocker.preferences.SettingsPrefs
 import com.qingyi.applocker.util.LoggerUtil
 import com.xposed.qingyi.cmprotectedappsplus.constant.ThisApp
 import de.robv.android.xposed.IXposedHookLoadPackage
@@ -23,6 +26,36 @@ import de.robv.android.xposed.XposedHelpers.findAndHookMethod
  * @exception
 */
 class Main: IXposedHookZygoteInit, IXposedHookLoadPackage {
+    // 半生对象
+    companion object {
+        // 上下文
+        lateinit var mContext: Context
+        // 历史配置
+        var historyConfigr: HistoryPrefs.HistoryConfig? = null
+            get() {
+                if (field == null) {
+                    field = HistoryPrefs.getHistoryConfig(mContext)
+                }
+                return field
+            }
+        // 应用锁配置
+        var lockAppsConfig: LockAppsPrefs.LockAppsConfig? = null
+            get() {
+                if (field == null) {
+                    field = LockAppsPrefs.getLockAppsConfig(mContext)
+                }
+                return field
+            }
+        // 设置配置
+        var settingsConfig: SettingsPrefs.SettingsConfig? = null
+            get() {
+                if (field == null) {
+                    LoggerUtil.logAll(Log.INFO, "${Main::class.java.name}.settingsConfig", "get()")
+                    field = SettingsPrefs.getSettingsConfig(mContext)
+                }
+                return field
+            }
+    }
 
     // Xposed模块初始化完成
     @Throws(Throwable::class)
@@ -54,7 +87,7 @@ class Main: IXposedHookZygoteInit, IXposedHookLoadPackage {
             @Throws(Throwable::class)
             override fun beforeHookedMethod(param: MethodHookParam) {
                 // 获取上下文
-                val mContext = param.args[0] as Context
+                mContext = param.args[0] as Context
                 when (lpparam.packageName) {
                     SystemUI.PACKAGE_NAME -> {
                         // 屏幕关闭
